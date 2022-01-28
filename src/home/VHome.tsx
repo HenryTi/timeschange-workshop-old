@@ -29,7 +29,7 @@ export class VHome extends VPage<CHome> {
 					开心
 				</div>
 			</header>
-			<ul className="text-left my-3 mr-3">
+			<ul className="text-left my-3 me-3">
 				{this.items.map((v, index) => <li key={index} className="my-2">{v}</li>)}
 			</ul>
 		</div>;

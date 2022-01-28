@@ -3,6 +3,7 @@ export const zh = {
 	relation: '关系',
 	discover: '发现',
 	supervise: '团队',
+	ids: '基础ID',
 	test: '测试',
 	debug: 'Debug',
 	me: '我',

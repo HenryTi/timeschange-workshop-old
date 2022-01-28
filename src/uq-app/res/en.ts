@@ -3,6 +3,7 @@ export const en = {
 	relation: 'Relation',
 	discover: 'Discover',
 	supervise: 'Supervise',
+	ids: 'Items',
 	test: 'Test',
 	debug: 'Debug',
 	me: 'Me',

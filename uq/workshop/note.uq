@@ -1,0 +1,16 @@
+ID Note MINUTEID (
+    id,
+    staff ID Person,
+    client ID Person,
+    note TEXT,
+);
+
+IX *IxPersonNote (
+    ix Person,
+    xi Note,
+);
+
+IX *IxStaffClient (
+    ix Person,
+    xi Person,
+);

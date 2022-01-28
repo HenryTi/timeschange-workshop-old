@@ -13,12 +13,12 @@ export const appConfig: AppConfig = {
 	uqs: [
 		{
 			dev: bz,
-			name: 'hello-tonwa',
-			alias: 'HelloTonwa',
+			name: 'workshop',
+			alias: 'Workshop',
 			version: '0.1.0',
 		},
 	],
 	noUnit: true,
 	oem: undefined,
-	htmlTitle: 'Hello Tonwa',
+	htmlTitle: 'Timeschange Workshop',
 };

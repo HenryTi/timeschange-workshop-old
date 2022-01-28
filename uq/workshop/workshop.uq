@@ -1,0 +1,33 @@
+ID Workshop GLOBAL (
+    id,
+    KEY no,
+    name CHAR(100),
+    vice TEXT,
+    SYS (create),
+);
+
+-- 针对Workshop上的一节课, id就是时间
+ID WorkshopClass MINUTEID (
+    id,
+    workshop ID Workshop,
+    date DATE,
+    time Time,
+    INDEX workshop_id(workshop, id) UNIQUE,
+);
+
+IX IxClassStaff (
+    ix WorkshopClass,
+    xi Person,                  -- staff
+);
+
+IX IxClassClient (
+    ix WorkshopClass,
+    xi Person,                  -- attended client
+);
+
+ID ClientNote MINUTEID (
+    id,
+    staff ID Person,
+    client ID Person,
+    memo TEXT,
+);

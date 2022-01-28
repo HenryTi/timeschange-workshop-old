@@ -62,13 +62,13 @@ export class VEditMe extends VPage<CMe>{
             '',
             {
                 type: 'component',
-                component: <IconText iconClass="text-info mr-2" icon="key" text={this.t('changePassword')} />,
+                component: <IconText iconClass="text-info me-2" icon="key" text={this.t('changePassword')} />,
                 onClick: this.changePassword
             },
             '',
             {
                 type: 'component',
-                component: <IconText iconClass="text-info mr-2" icon="key" text={this.t('quitUser')} />,
+                component: <IconText iconClass="text-info me-2" icon="key" text={this.t('quitUser')} />,
                 onClick: this.userQuit
             },
             '',

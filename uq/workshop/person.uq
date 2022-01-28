@@ -1,0 +1,60 @@
+ENUM Gender (
+    female = 0,
+    male = 1,
+);
+
+ID Person ver 0.2 GLOBAL (
+    id,
+    KEY no,
+    name CHAR(100),
+    vice CHAR(50),
+    firstName CHAR(50),
+    lastName CHAR(50),
+    middleName CHAR(50),
+    gender ENUM Gender,
+    year SMALLINT,
+    month TINYINT,
+    day TINYINT,
+);
+
+ID PersonCategory ver 0.1 CONST (
+    id,
+    KEY name CHAR(50),
+)
++ (name)
+VALUES
+('staff'),
+('volunteer'),
+('client'),
+('donator'),
+('board');
+
+IX *IXPerson (
+    ix PersonCategory,
+    xi Person,
+);
+
+QUERY PersonSearch(
+    category ID,
+    key CHAR(30),
+) 
+RETURNS ret (
+    #Person
+)
+{
+    SET key=CONCAT('%', key, '%');
+    INTO ret SELECT b.id, b.no, b.name, b.vice,
+        b.firstName, b.lastName, b.middleName,
+        b.gender, b.year, b.month, b.day
+        FROM IXPerson as a
+            JOIN Person as b ON a.xi=b.id
+        WHERE a.ix=category
+            AND (b.no LIKE key
+                OR b.name LIKE key
+                OR b.vice LIKE key
+                OR b.firstName LIKE key
+                OR b.lastName LIKE key
+                OR b.middleName LIKE key
+            )
+        ORDER BY b.id ASC;
+};

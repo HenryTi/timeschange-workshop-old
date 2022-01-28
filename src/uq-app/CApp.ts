@@ -8,6 +8,8 @@ import { makeObservable, observable, runInAction } from "mobx";
 import { start } from "tonwa";
 import { appConfig } from "./appConfig";
 import { Tonwa } from "tonwa-core";
+import { CIds } from "CIds";
+import { CActs } from "CActs";
 
 const gaps = [10, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 15, 15, 15, 30, 30, 60];
 
@@ -25,6 +27,8 @@ export class CApp extends CUqApp {
 	}
 
 	cHome: CHome;
+	cActs: CActs;
+	cIds: CIds;
 	cMe: CMe;
 
 	protected async internalStart(isUserLogin: boolean) {
@@ -37,8 +41,11 @@ export class CApp extends CUqApp {
 		await this.loadBaseData();
 
 		this.cHome = this.newC(CHome);
+		this.cActs = new CActs(this);
+		this.cIds = new CIds(this);
 		this.cMe = this.newC(CMe);
 		this.cHome.load();
+		await this.cIds.load();
 		this.openVPage(VMain, undefined, this.dispose);
 		// 加上下面一句，可以实现主动页面刷新
 		this.timer = setInterval(this.callTick, 1000);
@@ -67,23 +74,7 @@ export class CApp extends CUqApp {
 
 
 	private async loadBaseData() {
-		/*
-		let { JkMe } = this.uqs;
-		let [retItemTitles, retPostTitles, retAccountTitles, roleOps, myTimezone] = await Promise.all([
-			JkMe.GetItemTitles.query({}),
-			JkMe.GetPostTitles.query({}),
-			JkMe.GetAccountTitles.query({}),
-			JkMe.GetRoleOps.query({}),
-			JkMe.$getMyTimezone.query({}),
-		]);
-		for (let it of retItemTitles.ret) this.itemTitles[it.id as Item] = it;
-		for (let pt of retPostTitles.ret) this.postTitles[pt.id as Post] = pt;
-		for (let at of retAccountTitles.ret) this.accountTitles[at.id as EnumAccount] = at;
-		this.ops = roleOps.ret;
-		let tz = myTimezone.ret[0];
-		this.timezone = tz.timezone;
-		this.unitTimezone = tz.unitTimeZone;
-		*/
+		// let { BzWorkshop } = this.uqs;
 	}
 
 	// 数据服务器提醒客户端刷新，下面代码重新调入的数据

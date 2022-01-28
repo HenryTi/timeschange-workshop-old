@@ -16,7 +16,7 @@ export class VMe extends VPage<CMe> {
                 type: 'component',
                 component: <LMR className="w-100" onClick={this.about}
                     right={<FA className="align-self-center" name="angle-right" />}>
-                    <IconText iconClass="text-info mr-2"
+                    <IconText iconClass="text-info me-2"
                         icon="smile-o"
                         text={<>{this.t('aboutTheApp')} <small>版本 {appConfig.version}</small></>} />
                 </LMR>,
@@ -56,7 +56,7 @@ export class VMe extends VPage<CMe> {
         if (user === undefined) return null;
         let { id, name, nick, icon } = user;
         return <LMR className="py-2 cursor-pointer w-100"
-            left={<Image className="w-3c h-3c mr-3" src={icon || '.user-o'} />}
+            left={<Image className="w-3c h-3c me-3" src={icon || '.user-o'} />}
             right={<FA className="align-self-end" name="angle-right" />}
             onClick={this.controller.showEditMe}>
             <div>
