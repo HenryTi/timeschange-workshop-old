@@ -1,24 +1,25 @@
 import { Schema, UiSchema, UiTextAreaItem, UiTextItem } from "tonwa-react";
 import { Uq } from "tonwa-core";
 import { CId } from "../CId";
-import { renderItem } from "./renderItem";
+import { renderWorkshopItem } from "./renderItem";
 import { CIds } from "CIds";
+import { VEditWithSession } from "./VEditWithSession";
+import { CSession } from "./CSession";
 
 export class CWorkshop extends CId {
     readonly cIds: CIds;
+    readonly cSession: CSession;
     constructor(cIds: CIds) {
         let { nav, uqs } = cIds;
         super(nav, uqs);
         this.cIds = cIds;
+        this.cSession = new CSession(this);
     }
     get uq(): Uq { return this.uqs.BzWorkshop; };
     get ID() { return this.uqs.BzWorkshop.Workshop; }
     get caption() { return 'Workshop' }
     get schema(): Schema {
-        return [
-            ...this.uqs.BzWorkshop.Workshop.ui.fieldArr,
-            { name: 'submit', type: 'submit' }
-        ];
+        return this.uqs.BzWorkshop.Workshop.ui.fieldArr;
     }
     get uiSchema(): UiSchema {
         return {
@@ -30,6 +31,7 @@ export class CWorkshop extends CId {
                     "widget": "text",
                     "label": "No",
                     "defaultValue": this.initNO,
+                    readOnly: true,
                 } as UiTextItem,
                 name: {
                     "name": "name",
@@ -55,6 +57,10 @@ export class CWorkshop extends CId {
         };
     }
 
+    protected async loadOnEdit() {
+        await this.cSession.loadToList()
+    }
+
     protected async loadList(): Promise<any[]> {
         let list = await this.uqs.BzWorkshop.QueryID({
             ID: this.ID,
@@ -72,6 +78,8 @@ export class CWorkshop extends CId {
     }
 
     renderListItem(item: any): JSX.Element {
-        return renderItem(item);
+        return renderWorkshopItem(item);
     }
+
+    get VEdit() { return VEditWithSession as any; }
 }

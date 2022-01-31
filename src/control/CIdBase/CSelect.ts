@@ -1,4 +1,4 @@
-import { setReact, shallowReact } from "control";
+import { setReact, shallowReact } from "Control";
 import { IdValue } from ".";
 import { Control } from "../Control";
 import { Page } from "../Page";
@@ -40,7 +40,7 @@ export abstract class CSelect<R extends IdValue | IdValue[]> extends Control {
 
     onNew = async () => {
         this.cId.setAfterAdd(async (ids: number[]) => {
-            let ret = await this.cId.loadItems(ids);
+            let ret = await this.cId.loadItemsFromIds(ids);
             setReact(() => {
                 this.shallowData.items.unshift(...ret);
             });

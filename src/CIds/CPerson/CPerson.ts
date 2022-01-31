@@ -16,10 +16,7 @@ export abstract class CPerson extends CId {
     get ID() { return this.uqs.BzWorkshop.Person; }
     get caption() { return 'Staff' }
     get schema(): Schema {
-        return [
-            ...this.uqs.BzWorkshop.Person.ui.fieldArr,
-            { name: 'submit', type: 'submit' }
-        ];
+        return this.uqs.BzWorkshop.Person.ui.fieldArr;
     }
     get uiSchema(): UiSchema {
         return {

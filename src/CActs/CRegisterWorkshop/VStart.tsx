@@ -1,4 +1,4 @@
-import { Page } from "control";
+import { Page } from "Control";
 import { CRegisterWorkshop } from ".";
 
 export class VStart extends Page<CRegisterWorkshop> {

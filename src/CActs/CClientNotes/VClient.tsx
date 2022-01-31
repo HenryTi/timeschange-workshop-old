@@ -1,4 +1,4 @@
-import { Page } from "control";
+import { Page } from "Control";
 import { EasyTime, FA, List } from "tonwa-react";
 import { dateFromMinuteId } from "tonwa-core";
 import { Note } from "uq-app/uqs/BzWorkshop";
@@ -24,7 +24,7 @@ export class VClient extends Page<CClientNotes> {
     }
 
     private renderNote = (noteObj: Note, index: number) => {
-        let { id, note, staff, client } = noteObj;
+        let { id, note } = noteObj;
         return <div className="d-block">
             <div className="px-3 py-1 border-bottom small text-muted"><EasyTime date={dateFromMinuteId(id)} /></div>
             <div className="px-3 py-2">{

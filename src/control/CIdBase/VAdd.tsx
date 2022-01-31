@@ -8,6 +8,7 @@ export class VAdd extends Page<CIdBase> {
     }
     content(): JSX.Element {
         let { schema, uiSchema } = this.control;
+        schema = [...schema, { name: 'submit', type: 'submit' }];
         return <div className="p-3">
             <Form schema={schema} uiSchema={uiSchema} fieldLabelSize={2}
                 onButtonClick={this.onSave}

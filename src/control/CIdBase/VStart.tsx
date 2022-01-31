@@ -10,10 +10,9 @@ export class VStart extends Page<CIdBase> {
         </button>;
     }
     content() {
-        return this.react(() => <div className="">
-            <List items={this.control.deepData.list}
-                item={{ render: this.renderItem, onClick: this.control.onItemClick }} />
-        </div>);
+        return this.react(() => <List items={this.control.deepData.list}
+            item={{ render: this.renderItem, onClick: this.control.onItemClick }} />
+        );
     }
 
     private renderItem = (item: any, index: number) => {

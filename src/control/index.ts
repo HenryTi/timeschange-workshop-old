@@ -3,4 +3,5 @@ export * from './View';
 export * from './Nav';
 export * from './Page';
 export * from './Reactive';
-export * from './CId';
+export * from './CIdBase';
+export * from './CEdit';

@@ -13,4 +13,38 @@ IX *IxPersonNote (
 IX *IxStaffClient (
     ix Person,
     xi Person,
+    tick INT,
 );
+
+ACT SaveNote (
+    #Note
+)
+RETURNS ret (
+    id ID Note,
+) {
+    IF id IS NULL {
+        SET id=ID(Note new);
+    }
+    SET staff=a.xi FROM UserObject as a WHERE a.ix=$user;
+    IF staff IS NULL {
+        RETURN;
+    }
+    WITH Note as a ID=id SET a.staff=staff, a.client=client, a.note=note;
+    WITH IxPersonNote IX=client XI=id;
+    WITH IxStaffClient IX=staff XI=client SET tick=UNIX_TIMESTAMP();
+    INTO ret SELECT id;
+};
+
+QUERY MyClients() 
+RETURNS ret (
+    #Person
+) {
+    INTO ret SELECT b.id, b.no, b.name, b.vice, 
+        b.firstName, b.lastName, b.middleName,
+        b.gender, b.year, b.month, b.day
+        FROM UserObject as u
+            JOIN IxStaffClient as a ON u.xi=a.ix
+            JOIN Person as b ON a.xi=b.id
+        WHERE u.ix=$user
+        ORDER BY a.tick DESC;
+};

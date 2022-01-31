@@ -2,7 +2,7 @@
 import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId, FieldItemInt, UI, TFunc } from 'tonwa-react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, uqStringify, setRes } from "tonwa-core";
-import { IxStaffClient } from "./BzWorkshop";
+import { IxWorkshopSession } from "./BzWorkshop";
 
 /*--fields--*/
 const fields = {
@@ -18,22 +18,15 @@ const fields = {
 		"isKey": false,
 		"label": "Xi"
 	} as FieldItemId,
-	tick: {
-		"name": "tick",
-		"type": "integer",
-		"isKey": false,
-		"widget": "updown",
-		"label": "Tick"
-	} as FieldItemInt,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.xi, fields.tick, 
+	fields.xi, 
 ];
 
 export const ui: UI = {
-	label: "IxStaffClient",
+	label: "IxWorkshopSession",
 	fieldArr,
 	fields,
 };
@@ -51,6 +44,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxStaffClient):JSX.Element {
+export function render(item: IxWorkshopSession):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

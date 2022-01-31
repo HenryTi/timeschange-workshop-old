@@ -1,4 +1,4 @@
-//=== UqApp builder created on Thu Jan 27 2022 17:32:19 GMT-0500 (北美东部标准时间) ===//
+//=== UqApp builder created on Sun Jan 30 2022 20:45:30 GMT-0500 (北美东部标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIX } from "tonwa-core";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,6 +45,19 @@ export interface Param$setMyTimezone {
 export interface Result$setMyTimezone {
 }
 
+export interface ParamSaveNote {
+	id: number;
+	staff: number;
+	client: number;
+	note: string;
+}
+export interface ReturnSaveNoteRet {
+	id: number;
+}
+export interface ResultSaveNote {
+	ret: ReturnSaveNoteRet[];
+}
+
 export interface Param$poked {
 }
 export interface Return$pokedRet {
@@ -87,18 +100,30 @@ export interface ResultPersonSearch {
 	ret: ReturnPersonSearchRet[];
 }
 
+export interface ParamMyClients {
+}
+export interface ReturnMyClientsRet {
+	id: number;
+	no: string;
+	name: string;
+	vice: string;
+	firstName: string;
+	lastName: string;
+	middleName: string;
+	gender: any;
+	year: number;
+	month: number;
+	day: number;
+}
+export interface ResultMyClients {
+	ret: ReturnMyClientsRet[];
+}
+
 export interface Workshop {
 	id?: number;
 	no?: string;
 	name: string;
 	vice: string;
-}
-
-export interface WorkshopClass {
-	id?: number;
-	workshop: number;
-	date: any;
-	time: any;
 }
 
 export interface PersonCategory {
@@ -134,6 +159,14 @@ export interface Note {
 	note: string;
 }
 
+export interface Session {
+	id?: number;
+	date: any;
+	vice: string;
+	time: any;
+	span: number;
+}
+
 export interface IXPerson {
 	ix: number;
 	xi: number;
@@ -152,19 +185,26 @@ export interface UserObject {
 export interface IxStaffClient {
 	ix: number;
 	xi: number;
+	tick: number;
+}
+
+export interface IxWorkshopSession {
+	ix: number;
+	xi: number;
 }
 
 export interface ParamActs {
 	workshop?: Workshop[];
-	workshopClass?: WorkshopClass[];
 	personCategory?: PersonCategory[];
 	person?: Person[];
 	clientNote?: ClientNote[];
 	note?: Note[];
+	session?: Session[];
 	iXPerson?: IXPerson[];
 	ixPersonNote?: IxPersonNote[];
 	userObject?: UserObject[];
 	ixStaffClient?: IxStaffClient[];
+	ixWorkshopSession?: IxWorkshopSession[];
 }
 
 
@@ -177,19 +217,22 @@ export interface UqExt extends Uq {
 	$user: UqTuid<Tuid$user>&{tv:(id:number, render?:Render<any>)=>JSX.Element};
 	$sheet: UqTuid<Tuid$sheet>&{tv:(id:number, render?:Render<any>)=>JSX.Element};
 	$setMyTimezone: UqAction<Param$setMyTimezone, Result$setMyTimezone>;
+	SaveNote: UqAction<ParamSaveNote, ResultSaveNote>;
 	$poked: UqQuery<Param$poked, Result$poked>;
 	$getUnitTime: UqQuery<Param$getUnitTime, Result$getUnitTime>;
 	PersonSearch: UqQuery<ParamPersonSearch, ResultPersonSearch>;
+	MyClients: UqQuery<ParamMyClients, ResultMyClients>;
 	Workshop: UqID<any> & IDXEntity<any>;
-	WorkshopClass: UqID<any> & IDXEntity<any>;
 	PersonCategory: UqID<any> & IDXEntity<any>;
 	Person: UqID<any> & IDXEntity<any>;
 	ClientNote: UqID<any> & IDXEntity<any>;
 	Note: UqID<any> & IDXEntity<any>;
+	Session: UqID<any> & IDXEntity<any>;
 	IXPerson: UqIX<any>;
 	IxPersonNote: UqIX<any>;
 	UserObject: UqIX<any>;
 	IxStaffClient: UqIX<any>;
+	IxWorkshopSession: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

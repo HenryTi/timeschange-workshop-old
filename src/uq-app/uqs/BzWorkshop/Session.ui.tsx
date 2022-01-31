@@ -2,7 +2,7 @@
 import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId, FieldItemInt, UI, TFunc } from 'tonwa-react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, uqStringify, setRes } from "tonwa-core";
-import { WorkshopClass } from "./BzWorkshop";
+import { Session } from "./BzWorkshop";
 
 /*--fields--*/
 const fields = {
@@ -12,31 +12,39 @@ const fields = {
 		"isKey": false,
 		"label": "Id"
 	} as FieldItemId,
-	workshop: {
-		"name": "workshop",
-		"type": "id",
-		"isKey": false,
-		"label": "Workshop"
-	} as FieldItemId,
 	date: {
 		"name": "date",
 		"isKey": false,
 		"label": "Date"
 	} as undefined,
+	vice: {
+		"name": "vice",
+		"type": "string",
+		"isKey": false,
+		"widget": "string",
+		"label": "Vice"
+	} as FieldItemString,
 	time: {
 		"name": "time",
 		"isKey": false,
 		"label": "Time"
 	} as undefined,
+	span: {
+		"name": "span",
+		"type": "integer",
+		"isKey": false,
+		"widget": "updown",
+		"label": "Span"
+	} as FieldItemInt,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.workshop, fields.date, fields.time, 
+	fields.date, fields.vice, fields.time, fields.span, 
 ];
 
 export const ui: UI = {
-	label: "WorkshopClass",
+	label: "Session",
 	fieldArr,
 	fields,
 };
@@ -54,6 +62,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: WorkshopClass):JSX.Element {
+export function render(item: Session):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

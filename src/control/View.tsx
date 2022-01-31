@@ -18,4 +18,8 @@ export class View<C extends Control = any, P = any> {
         let V = observer(func.bind(this));
         return <V />;
     }
+
+    protected res(t: string): string | JSX.Element {
+        return t;
+    }
 }

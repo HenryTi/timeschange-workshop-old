@@ -1,4 +1,4 @@
-import { Page } from "control";
+import { Page } from "Control";
 import { FA, LMR } from "tonwa-react";
 import { CActs } from "./CActs";
 

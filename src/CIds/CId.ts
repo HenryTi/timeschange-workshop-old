@@ -1,4 +1,4 @@
-import { CIdBase, Nav } from "control";
+import { CIdBase, Nav } from "Control";
 import { UQs } from "uq-app";
 
 export abstract class CId extends CIdBase {
@@ -8,11 +8,15 @@ export abstract class CId extends CIdBase {
         this.uqs = uqs;
     }
 
-    async loadItems(ids: number[]): Promise<any[]> {
+    async loadItemsFromIds(ids: number[]): Promise<any[]> {
         let list = await this.uqs.BzWorkshop.ID({
             IDX: this.ID,
             id: ids,
         });
         return list;
+    }
+
+    async savePropValue(id: number, name: string, value: any): Promise<void> {
+        await this.uqs.BzWorkshop.ActIDProp(this.ID, id, name, value);
     }
 }

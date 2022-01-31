@@ -1,4 +1,4 @@
-import { Control } from "control";
+import { Control } from "Control";
 import { UQs } from "uq-app";
 import { CActs } from "./CActs";
 

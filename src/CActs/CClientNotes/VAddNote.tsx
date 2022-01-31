@@ -1,4 +1,4 @@
-import { Page } from "control";
+import { Page } from "Control";
 import { ButtonSchema, Context, Form, Schema, StringSchema, UiButton, UiSchema, UiTextAreaItem } from "tonwa-react";
 import { CClientNotes } from ".";
 

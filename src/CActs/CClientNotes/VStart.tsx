@@ -1,6 +1,5 @@
-import { Page } from "control";
+import { Page } from "Control";
 import { FA, List, LMR } from "tonwa-react";
-import { Person } from "uq-app/uqs/BzWorkshop";
 import { CClientNotes } from "./CClientNotes";
 
 export class VStart extends Page<CClientNotes> {
@@ -15,9 +14,10 @@ export class VStart extends Page<CClientNotes> {
     }
 
     content(): JSX.Element {
-        let { cClient } = this.control;
+        //let { cClient } = this.control;
+        let { clients } = this.control.deepData;
         return <div className="">
-            <List items={cClient.deepData.list}
+            <List items={clients}
                 item={{ render: this.renderItem, onClick: this.control.showClient }} />
         </div>;
     }

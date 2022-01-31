@@ -6,22 +6,28 @@ ID Workshop GLOBAL (
     SYS (create),
 );
 
--- 针对Workshop上的一节课, id就是时间
-ID WorkshopClass MINUTEID (
+-- one class of workshop
+ID Session GLOBAL (
     id,
-    workshop ID Workshop,
     date DATE,
-    time Time,
-    INDEX workshop_id(workshop, id) UNIQUE,
+    vice CHAR(200),
+    time TIME,
+    span SMALLINT,              -- minutes
 );
 
-IX IxClassStaff (
-    ix WorkshopClass,
+IX *IxWorkshopSession (
+    ix,
+    xi,
+);
+
+-- Planed workshop staff，session real staff
+IX IxWorkshopStaff (
+    ix Session,
     xi Person,                  -- staff
 );
 
-IX IxClassClient (
-    ix WorkshopClass,
+IX IxSessionClient (
+    ix Session,
     xi Person,                  -- attended client
 );
 

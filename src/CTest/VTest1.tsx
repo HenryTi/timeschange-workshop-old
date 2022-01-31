@@ -1,4 +1,4 @@
-import { Page } from "control";
+import { Page } from "Control";
 import { CTest } from "./CTest";
 
 export class VTest1 extends Page<CTest> {

@@ -1,4 +1,4 @@
-import { Control } from "control";
+import { Control } from "Control";
 import { CApp, UQs } from "uq-app";
 import { AppNav } from "./AppNav";
 

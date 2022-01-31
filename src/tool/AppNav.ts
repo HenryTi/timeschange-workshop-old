@@ -1,4 +1,4 @@
-import { Nav as ControlNav } from "control";
+import { Nav as ControlNav } from "Control";
 import { Nav } from "tonwa-core";
 
 export class AppNav implements ControlNav {

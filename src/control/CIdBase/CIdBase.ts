@@ -10,6 +10,7 @@ import { VRefSelectMulti, VRefSelectOne } from "./VSelect";
 import { IdCache } from "./IdCache";
 import { VValue } from "./VValue";
 import { Nav } from "../Nav";
+import { Page } from "Control";
 
 export enum EnumSelectType {
     listAll,            // 一次列出所有的项目，供选择
@@ -37,15 +38,16 @@ export type ValueRender = (value: IdValue) => JSX.Element;
 export type ValuesRender = (values: JSX.Element[]) => JSX.Element;
 export type RefRender = (onClick: () => void, content: JSX.Element) => JSX.Element;
 
-interface DeepData {
+interface IDDeep {
     list: IdValue[];
+    currentItem: any;
 }
 
 export abstract class CIdBase extends Control {
     initNO: string;
-    currentItem: any;
-    readonly deepData = deepReact<DeepData>({
+    readonly deepData = deepReact<IDDeep>({
         list: null,
+        currentItem: null,
     });
     readonly catch: IdCache;
 
@@ -60,6 +62,10 @@ export abstract class CIdBase extends Control {
     abstract get schema(): Schema;
     abstract get uiSchema(): UiSchema;
     get icon(): string { return null; }
+
+    protected setIDDeepList(list: any[]) {
+        this.deepData.list = list;
+    }
 
     protected async initAdd() {
         let ID = this.ID;
@@ -91,25 +97,18 @@ export abstract class CIdBase extends Control {
     }
 
     async loadValue(id: number): Promise<IdValue> {
-        /*let ret = [{
-            id: 1,
-            name: 'aa',
-            no: '101',
-            vice: 'kkk',
-            icon: 'tt',
-        }];*/
         let ret = await this.uq.ID({ IDX: this.ID, id: id });
         if (ret.length === 0) return null;
         return ret[0] as IdValue;
     }
 
     protected abstract loadList(): Promise<any[]>;
-    abstract loadItems(ids: number[]): Promise<any[]>;
+    abstract loadItemsFromIds(ids: number[]): Promise<any[]>;
 
     async loadToList() {
         let list = await this.loadList();
         setReact(() => {
-            this.deepData.list = list as any[];
+            this.setIDDeepList(list);
         });
     }
 
@@ -118,20 +117,38 @@ export abstract class CIdBase extends Control {
         this.addedIds.push(id);
     }
 
+    savePropValue(id: number, name: string, value: any): Promise<void> {
+        return;
+    }
+
     protected abstract saveId(data: any): Promise<number>;
 
     async search(key: string): Promise<any[]> {
         return null;
     }
 
+    get VStart(): new (c: CIdBase) => Page<CIdBase> {
+        return VStart;
+    }
+
     async openMain() {
-        this.open(VStart);
+        this.open(this.VStart);
         await this.loadToList();
     }
 
-    onItemClick = (item: any) => {
-        this.currentItem = item;
-        this.open(VEdit);
+    get VEdit(): new (c: CIdBase) => Page<CIdBase> {
+        return VEdit;
+    }
+
+    protected async loadOnEdit() {
+    }
+
+    onItemClick = async (item: any) => {
+        setReact(async () => {
+            this.deepData.currentItem = item;
+            await this.loadOnEdit();
+            this.open(this.VEdit);
+        });
     }
 
     renderListItem(item: any): JSX.Element {
