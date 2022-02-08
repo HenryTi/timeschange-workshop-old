@@ -1,14 +1,16 @@
-ID Note MINUTEID (
+ID Note MINUTE (
     id,
     staff ID Person,
     client ID Person,
     note TEXT,
 );
 
+/*
 IX *IxPersonNote (
     ix Person,
     xi Note,
 );
+*/
 
 IX *IxStaffClient (
     ix Person,
@@ -30,7 +32,9 @@ RETURNS ret (
         RETURN;
     }
     WITH Note as a ID=id SET a.staff=staff, a.client=client, a.note=note;
-    WITH IxPersonNote IX=client XI=id;
+    -- WITH IxPersonNote IX=client XI=id;
+    WITH IxPersonLog IX=client XI=id;
+    WITH IxPersonLog IX=staff XI=id;
     WITH IxStaffClient IX=staff XI=client SET tick=UNIX_TIMESTAMP();
     INTO ret SELECT id;
 };

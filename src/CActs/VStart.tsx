@@ -17,7 +17,7 @@ export class VStart extends Page<CActs> {
         let { showClientNotes, showRegisterWorkshop } = this.control;
         let arr: DirItem[] = [
             { icon: 'user-o', caption: 'Client notes', onClick: showClientNotes },
-            { icon: 'user-o', caption: 'Register workshop', onClick: showRegisterWorkshop },
+            { icon: 'user-o', caption: 'Workshops', onClick: showRegisterWorkshop },
         ];
         return <div className="">
             {

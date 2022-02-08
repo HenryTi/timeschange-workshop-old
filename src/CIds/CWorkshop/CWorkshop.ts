@@ -1,23 +1,28 @@
-import { Schema, UiSchema, UiTextAreaItem, UiTextItem } from "tonwa-react";
+import { Schema, UiSchema, UiTextAreaItem, UiTextItem, UiPick } from "tonwa-react";
 import { Uq } from "tonwa-core";
 import { CId } from "../CId";
 import { renderWorkshopItem } from "./renderItem";
 import { CIds } from "CIds";
-import { VEditWithSession } from "./VEditWithSession";
+import { VEditWorkshop } from "./VEditWorkshop";
 import { CSession } from "./CSession";
+import { CIdPick } from "../CIdPick";
+import { IdValue } from "Control";
+import { Workshop } from "uq-app/uqs/BzWorkshop";
+import { VAddWorkshop } from "./VAddWorkshop";
 
 export class CWorkshop extends CId {
-    readonly cIds: CIds;
     readonly cSession: CSession;
+
     constructor(cIds: CIds) {
-        let { nav, uqs } = cIds;
-        super(nav, uqs);
-        this.cIds = cIds;
+        super(cIds);
         this.cSession = new CSession(this);
     }
+    get tagGroupName() { return 'workshop-tags'; }
     get uq(): Uq { return this.uqs.BzWorkshop; };
-    get ID() { return this.uqs.BzWorkshop.Workshop; }
+    getID() { return this.uqs.BzWorkshop.Workshop; }
     get caption() { return 'Workshop' }
+    get icon() { return 'book'; }
+    get iconClass(): string { return 'text-warning'; }
     get schema(): Schema {
         return this.uqs.BzWorkshop.Workshop.ui.fieldArr;
     }
@@ -40,14 +45,20 @@ export class CWorkshop extends CId {
                     "widget": "text",
                     "label": "Name",
                 } as UiTextItem,
-                discription: {
-                    "name": "discription",
+                vice: {
+                    "name": "vice",
                     "isKey": false,
                     "widget": "textarea",
                     "label": "Discription",
                     "placeholder": "Workshop discription",
                     "rows": 6,
                 } as UiTextAreaItem,
+                staff: {
+                    name: 'staff',
+                    widget: 'pick',
+                    label: 'Staff',
+                    pick: new CIdPick(this.cIds.cStaff, this.deepData.currentItem?.staff),
+                } as UiPick,
                 submit: {
                     "label": "Save Workshop",
                     "widget": "button",
@@ -58,6 +69,7 @@ export class CWorkshop extends CId {
     }
 
     protected async loadOnEdit() {
+        await this.cTagInput.loadOnEdit(this.tagGroupName, this.deepData.currentItem.id);
         await this.cSession.loadToList()
     }
 
@@ -77,9 +89,26 @@ export class CWorkshop extends CId {
         return ret.workshop[0];
     }
 
-    renderListItem(item: any): JSX.Element {
+    renderItemInList(item: any): JSX.Element {
         return renderWorkshopItem(item);
     }
 
-    get VEdit() { return VEditWithSession as any; }
+    get VAdd() { return VAddWorkshop as any; }
+    get VEdit() { return VEditWorkshop as any; }
+
+    renderIdValue(idValue: IdValue): JSX.Element {
+        return renderWorkshopItem(idValue as Workshop);
+    }
+
+    async savePropValue(id: number, name: string, value: any): Promise<void> {
+        let { BzWorkshop } = this.uqs;
+        switch (name) {
+            default:
+                await BzWorkshop.ActIDProp(this.ID, id, name, value);
+                break;
+            case 'staff':
+                await BzWorkshop.SaveWorkshopStaff.submit({ id, staff: value });
+                break;
+        }
+    }
 }

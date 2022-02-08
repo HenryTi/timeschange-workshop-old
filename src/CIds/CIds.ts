@@ -1,3 +1,4 @@
+import { CTag } from "CTag";
 import { CAppControl } from "tool";
 import { CApp } from "uq-app";
 import { PersonCategory } from "uq-app/uqs/BzWorkshop";
@@ -7,9 +8,10 @@ import { CWorkshop } from "./CWorkshop";
 import { VStart } from "./VStart";
 
 export class CIds extends CAppControl {
-    cWorkshop: CWorkshop;
-    cClient: CClient;
-    cStaff: CStaff;
+    readonly cWorkshop: CWorkshop;
+    readonly cClient: CClient;
+    readonly cStaff: CStaff;
+    readonly cTag: CTag;
 
     personCategories: PersonCategory[];
     personCatClient: PersonCategory;
@@ -20,6 +22,7 @@ export class CIds extends CAppControl {
         this.cWorkshop = new CWorkshop(this);
         this.cClient = new CClient(this);
         this.cStaff = new CStaff(this);
+        this.cTag = cApp.cTag;
     }
 
     load = async () => {

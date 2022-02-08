@@ -1,8 +1,4 @@
-import React from "react";
 import { Page } from "../Page";
-import { View } from "../View";
-import { setReact, shallowReact } from "../Reactive";
-import { CIdBase, ValueRender, ValuesRender, RefRender, Render } from "./CIdBase";
 import { CSelect, CSelectMulti, CSelectOne } from "./CSelect";
 import { FA, List, SearchBox } from "tonwa-react";
 import { IdValue, SelectOptions } from ".";
@@ -43,7 +39,7 @@ export class VSelectOne extends VSelect<CSelectOne> {
         let vItem: any;
         let valueRender = this.props?.valueRender;
         if (valueRender !== undefined) vItem = valueRender(item);
-        else vItem = cId.renderSelectItem(item);
+        else vItem = cId.renderItemOnSelect(item);
         let { icon } = cId;
         let vIcon: any;
         if (icon) {
@@ -79,78 +75,5 @@ export class VSelectMulti extends VSelect<CSelectMulti> {
             { id: 78905346 } as IdValue,
             { id: 78905347 } as IdValue,
         ]);
-    }
-}
-
-interface VRefSelectProps {
-    options?: SelectOptions;
-    initRender: Render;
-    refRender: RefRender;
-    valueRender: ValueRender;
-    valuesRender?: ValuesRender;
-}
-
-export abstract class VRefSelect<C extends CIdBase> extends View<C, VRefSelectProps> {
-    readonly shallowValue = shallowReact<{
-        ids: IdValue[];
-    }>({
-        ids: null,
-    });
-
-    protected onClick = async () => {
-        let value = await this.select();
-        setReact(() => {
-            this.shallowValue.ids = value;
-        });
-    }
-
-    protected abstract select(): Promise<IdValue[]>;
-
-    render() {
-        return this.react(() => {
-            let { initRender, refRender } = this.props;
-            let { ids } = this.shallowValue;
-            let content: JSX.Element;
-            if (ids === null || ids === undefined) {
-                content = initRender();
-            }
-            else {
-                content = this.renderContent(ids);
-            }
-            return refRender(this.onClick, content);
-        })
-    }
-
-    protected abstract renderContent(values: any[]): JSX.Element
-}
-
-export class VRefSelectOne<C extends CIdBase> extends VRefSelect<C> {
-    protected async select(): Promise<IdValue[]> {
-        let idValue = await this.control.selectOne();
-        return [idValue];
-    }
-
-    protected renderContent(ids: (number | IdValue)[]): JSX.Element {
-        return this.control.renderId(ids[0], this.props.valueRender);
-    }
-}
-
-export class VRefSelectMulti<C extends CIdBase> extends VRefSelect<C> {
-    protected async select(): Promise<IdValue[]> {
-        return await this.control.selectMulti();
-    }
-
-    protected renderContent(ids: (number | IdValue)[]): JSX.Element {
-        let { valueRender, valuesRender } = this.props;
-        if (valuesRender) return valuesRender(ids.map((v, index) =>
-
-            <React.Fragment key={index}>{this.control.renderId(v, valueRender)}</React.Fragment>
-        ));
-        return <>{ids.map((v, index) => {
-            return <React.Fragment key={index}>{
-                this.control.renderId(v, valueRender)}
-                <span className="d-inline-block me-3" />
-            </React.Fragment>
-        })}</>;
     }
 }

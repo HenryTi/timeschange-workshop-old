@@ -3,7 +3,7 @@ import { LMR } from "tonwa-react";
 export function renderPerson(item: any) {
     let { no, name, firstName, lastName, middleName } = item;
     return <>
-        <div className="small text-muted">{no}</div>
+        <div className="small text-muted me-3">{no}</div>
         <div>{name ?? <>{lastName} {middleName} {firstName}</>}</div>
     </>;
 }

@@ -34,6 +34,11 @@ IX *IXPerson (
     xi Person,
 );
 
+IX *IxPersonLog ver 0.1 (
+    ix Person,
+    xi TYPE Minute,                 -- unique minute id
+);
+
 QUERY PersonSearch(
     category ID,
     key CHAR(30),
@@ -57,4 +62,25 @@ RETURNS ret (
                 OR b.middleName LIKE key
             )
         ORDER BY b.id ASC;
+};
+
+QUERY GetPersonLog ver 0.9 (
+    person ID,
+)
+RETURNS ret (
+    log ID,
+    type CHAR(50),
+    value TEXT,
+) {
+    TABLE logs(id ID);
+    INTO logs 
+        SELECT a.xi as id
+        FROM IxPersonLog as a
+        WHERE a.ix=person
+        ORDER BY a.xi DESC;
+    FOR (VAR id ID OF SELECT id FROM Logs) {
+        VAR type CHAR(50), value TEXT;
+        Value IxPersonLog XI=id TYPE INTO type VALUE INTO value;
+        INTO ret SELECT id as log, type, value;
+    }
 };

@@ -1,19 +1,13 @@
 import { Schema, UiSchema, UiTextItem } from "tonwa-react";
 import { Uq } from "tonwa-core";
-import { CIds } from "CIds";
 import { CId } from "../CId";
 import { renderPerson, renderSelectPerson } from "./renderPerson";
+import { IdValue } from "Control";
 
 export abstract class CPerson extends CId {
-    readonly cIds: CIds;
-    constructor(cIds: CIds) {
-        let { nav, uqs } = cIds;
-        super(nav, uqs);
-        this.cIds = cIds;
-    }
     abstract get catId(): number;
     get uq(): Uq { return this.uqs.BzWorkshop; };
-    get ID() { return this.uqs.BzWorkshop.Person; }
+    getID() { return this.uqs.BzWorkshop.Person; }
     get caption() { return 'Staff' }
     get schema(): Schema {
         return this.uqs.BzWorkshop.Person.ui.fieldArr;
@@ -99,11 +93,15 @@ export abstract class CPerson extends CId {
         return ret.ret;
     }
 
-    renderListItem(item: any): JSX.Element {
+    renderItemInList(item: any): JSX.Element {
         return renderPerson(item);
     }
 
-    renderSelectItem(item: any): JSX.Element {
+    renderItemOnSelect(item: any): JSX.Element {
         return renderSelectPerson(item);
+    }
+
+    renderIdValue(item: IdValue): JSX.Element {
+        return renderPerson(item);
     }
 }

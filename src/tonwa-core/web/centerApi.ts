@@ -1,0 +1,14 @@
+import { User } from '../tool';
+import { CenterApiBase } from './uqApi';
+
+export class CenterApi extends CenterApiBase {
+    async userAppUnits(app: number): Promise<any[]> {
+        return await this.get('tie/user-app-units', { app: app });
+    }
+    async userFromId(userId: number): Promise<any> {
+        return await this.get('user/user-name-nick-icon-from-id', { userId: userId });
+    }
+    async userFromKey(userName: string): Promise<User> {
+        return await this.get('tie/user-from-key', { key: userName });
+    }
+}

@@ -6,6 +6,13 @@ import { IxStaffClient } from "./BzWorkshop";
 
 /*--fields--*/
 const fields = {
+	tick: {
+		"name": "tick",
+		"type": "integer",
+		"isKey": false,
+		"widget": "updown",
+		"label": "Tick"
+	} as FieldItemInt,
 	ix: {
 		"name": "ix",
 		"type": "id",
@@ -18,18 +25,11 @@ const fields = {
 		"isKey": false,
 		"label": "Xi"
 	} as FieldItemId,
-	tick: {
-		"name": "tick",
-		"type": "integer",
-		"isKey": false,
-		"widget": "updown",
-		"label": "Tick"
-	} as FieldItemInt,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.xi, fields.tick, 
+	fields.tick, fields.xi, 
 ];
 
 export const ui: UI = {

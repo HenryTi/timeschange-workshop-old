@@ -1,6 +1,6 @@
 import { CClient } from "CIds";
 import { deepReact, setReact } from "Control";
-import { Note, Person } from "uq-app/uqs/BzWorkshop";
+import { Note, Person, SessionPerson } from "uq-app/uqs/BzWorkshop";
 import { CAct } from "../CAct";
 import { VAddNote } from "./VAddNote";
 import { VClient } from "./VClient";
@@ -8,7 +8,7 @@ import { VStart } from "./VStart";
 
 export class CClientNotes extends CAct {
     readonly deepData: {
-        notes: Note[];
+        notes: (Note | SessionPerson)[];
         clients: Person[];
     } = deepReact({
         notes: null,
@@ -19,9 +19,6 @@ export class CClientNotes extends CAct {
     async openMain(): Promise<void> {
         let { cClient } = this.cActs.cApp.cIds;
         this.cClient = cClient;
-        /*
-        await cClient.loadToList();
-        */
         await this.loadClients();
         this.open(VStart);
     }
@@ -42,14 +39,26 @@ export class CClientNotes extends CAct {
 
     showClient = async (client: Person) => {
         let { BzWorkshop } = this.uqs;
+        /*
         let ret = await BzWorkshop.QueryID<Note>({
-            IX: [BzWorkshop.IxPersonNote],
+            IX: [BzWorkshop.IxPersonLog],
             ix: client.id,
             IDX: [BzWorkshop.Note],
             order: 'desc'
         });
+        */
+        let ret = await BzWorkshop.GetPersonLog.query({ person: client.id });
+        let notes: any[] = [];
+        for (let row of ret.ret) {
+            let { type, value } = row;
+            let obj: any = BzWorkshop.IDValue(type, value);
+            if (obj !== undefined) {
+                obj['$type'] = type;
+                notes.push(obj);
+            }
+        }
         setReact(() => {
-            this.deepData.notes = ret;
+            this.deepData.notes = notes;
         });
         this.open(VClient, client);
     }
@@ -67,23 +76,8 @@ export class CClientNotes extends CAct {
         };
         let { BzWorkshop } = this.uqs;
         let ret = await BzWorkshop.SaveNote.submitReturns(note as any);
-        /*
-        let ret = await BzWorkshop.ActIX({
-            IX: BzWorkshop.IxPersonNote,
-            values: [
-                { ix: 0, xi: note }
-            ],
-        });
-        let noteId = ret[0];
-        await BzWorkshop.Acts({
-            ixPersonNote: [
-                { ix: 10, xi: noteId },
-                { ix: client.id, xi: noteId },
-            ],
-        })
-        note.id = noteId;
-        */
         note.id = ret.ret[0].id;
+        (note as any)['$type'] = 'note';
         setReact(() => {
             let { notes, clients } = this.deepData;
             notes.unshift(note);

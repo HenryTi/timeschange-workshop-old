@@ -1,13 +1,13 @@
 import { createEdit, setReact } from "Control";
-import { FA, LMR } from "tonwa-react";
+import { LMR, Pick } from "tonwa-react";
 import { Page } from "../Page";
-import { CIdBase, IdValue } from "./CIdBase";
+import { CIdBase } from "./CIdBase";
 
-const cnRow = 'px-3 py-2 bg-white border-bottom cursor-pointer';
+//const cnRow = 'px-3 py-2 bg-white border-bottom cursor-pointer';
 
 export class VEdit<C extends CIdBase = any> extends Page<C> {
     header(): string | boolean | JSX.Element {
-        return 'Detail';
+        return this.control.caption + ' ' + this.control.deepData.currentItem.no;
     }
 
     protected renderProps() {
@@ -19,13 +19,14 @@ export class VEdit<C extends CIdBase = any> extends Page<C> {
             }
             let vProps = schema.map((v, index) => {
                 let { name } = v;
-                let right = <FA name="pencil-square-o" className="text-primary" />;
                 let uiItem = uiSchema.items[name];
                 let label: string | JSX.Element;
                 let readOnly: boolean;
+                let pick: Pick;
                 if (uiItem) {
                     label = uiItem.label ?? name;
                     readOnly = uiItem.readOnly;
+                    pick = (uiItem as any).pick;
                 }
                 else {
                     label = name;
@@ -33,11 +34,13 @@ export class VEdit<C extends CIdBase = any> extends Page<C> {
                 }
                 let value = currentItem[name];
                 let cEdit = createEdit(this.control.nav, {
+                    pick,
                     itemSchema: v,
                     uiItem,
                     value,
                     onChanged: this.propValueSave
                 });
+                let right = cEdit.renderEditIcon();
                 let onEdit: any;
                 let cn = 'mb-3 row bg-white align-items-center ';
                 if (readOnly === true) {
@@ -62,13 +65,10 @@ export class VEdit<C extends CIdBase = any> extends Page<C> {
     }
 
     content() {
-        return <div className="p-3">
+        return <div className="py-3">
             {this.renderProps()}
+            {this.renderTagInput()}
         </div>
-        /*
-        {this.control.refSelectOne(this.refRender, this.initRender, this.valueRender)}
-        {this.control.refSelectMulti(this.refRender, this.initRender, this.valueRender)}
-        */
     }
 
     private propValueSave = async (name: string, value: any) => {
@@ -78,21 +78,13 @@ export class VEdit<C extends CIdBase = any> extends Page<C> {
             deepData.currentItem[name] = value;
         });
     }
-    /*
-    private refRender = (onClick: () => void, content: JSX.Element) => {
-        return <div onClick={onClick} className={cnRow}>
-            {content}
+
+    protected renderTagInput() {
+        let vTagInput = this.control.renderTagInput();
+        if (!vTagInput) return null;
+        return <div className="my-3 border rounded-3 pt-2">
+            <div className="px-3 pb-2 small text-muted">Tags</div>
+            {vTagInput}
         </div>;
     }
-
-    private initRender = () => {
-        return <span>{this.control.caption}</span>;
-    }
-
-    private valueRender = (value: IdValue) => {
-        let { name, no, vice, icon } = value;
-        return <>{name} {no} {vice} {icon}</>;
-    }
-    */
 }
-

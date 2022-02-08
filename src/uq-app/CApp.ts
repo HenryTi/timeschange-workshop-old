@@ -10,6 +10,8 @@ import { appConfig } from "./appConfig";
 import { Tonwa } from "tonwa-core";
 import { CIds } from "CIds";
 import { CActs } from "CActs";
+import { AppNav } from "tool";
+import { CTag } from "CTag";
 
 const gaps = [10, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 15, 15, 15, 30, 30, 60];
 
@@ -26,6 +28,8 @@ export class CApp extends CUqApp {
 		super(tonwa, appConfig);
 	}
 
+	appNav: AppNav;
+	cTag: CTag;
 	cHome: CHome;
 	cActs: CActs;
 	cIds: CIds;
@@ -37,9 +41,11 @@ export class CApp extends CUqApp {
 		});
 		this.setRes(res);
 		setUI(this.uqs);
+		this.appNav = new AppNav(this.getTonwa().nav);
 
 		await this.loadBaseData();
 
+		this.cTag = new CTag(this);
 		this.cHome = this.newC(CHome);
 		this.cActs = new CActs(this);
 		this.cIds = new CIds(this);

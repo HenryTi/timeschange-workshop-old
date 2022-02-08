@@ -32,11 +32,17 @@ const fields = {
 		"isKey": false,
 		"label": "Vice"
 	} as undefined,
+	staff: {
+		"name": "staff",
+		"type": "id",
+		"isKey": false,
+		"label": "Staff"
+	} as FieldItemId,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.no, fields.name, fields.vice, 
+	fields.no, fields.name, fields.vice, fields.staff, 
 ];
 
 export const ui: UI = {

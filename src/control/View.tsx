@@ -15,11 +15,15 @@ export class View<C extends Control = any, P = any> {
     }
 
     protected react(func: () => JSX.Element): JSX.Element {
-        let V = observer(func.bind(this));
+        let V = observer(func);
         return <V />;
     }
 
     protected res(t: string): string | JSX.Element {
         return t;
+    }
+
+    async confirm(msg: string): Promise<boolean> {
+        return window.confirm(msg);
     }
 }

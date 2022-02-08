@@ -1,14 +1,15 @@
 import { Nav, Page, shallowReact } from "Control";
-import { FieldRule, ItemSchema, UiItem } from "tonwa-react";
+import { FieldRule, ItemSchema, Pick, UiItem } from "tonwa-react";
 import { Control } from "../Control";
-import { VRef } from "./VRef";
+import { VEditIcon, VRef } from "./VRef";
 
 export interface EditProps {
     readonly itemSchema: ItemSchema;
     readonly uiItem: UiItem;
-    readonly onChanged: (name: string, value: any) => void;
+    readonly onChanged: (name: string, value: any) => Promise<void>;
     readonly value: any;
-    readonly refClassName?: string;
+    readonly pick?: Pick;
+    readonly exView?: JSX.Element;      // can add extra action or message on the bottom of page
 }
 
 export abstract class CEdit extends Control {
@@ -28,6 +29,8 @@ export abstract class CEdit extends Control {
         let { itemSchema, uiItem } = this.props;
         return uiItem?.label ?? itemSchema.name;
     }
+
+    renderEditIcon() { return this.render(VEditIcon); }
 
     verifyValue(value: any): string {
         let { uiItem } = this.props;

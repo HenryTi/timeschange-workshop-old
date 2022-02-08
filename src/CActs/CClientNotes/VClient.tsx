@@ -1,7 +1,7 @@
 import { Page } from "Control";
 import { EasyTime, FA, List } from "tonwa-react";
 import { dateFromMinuteId } from "tonwa-core";
-import { Note } from "uq-app/uqs/BzWorkshop";
+import { Note, SessionPerson } from "uq-app/uqs/BzWorkshop";
 import { CClientNotes } from ".";
 
 export class VClient extends Page<CClientNotes> {
@@ -19,17 +19,46 @@ export class VClient extends Page<CClientNotes> {
     content(): JSX.Element {
         return <div className="">
             <List items={this.control.deepData.notes}
-                item={{ render: this.renderNote, className: "mt-1 mb-3", key: (item) => item.id }} />
+                item={{ render: this.renderLog, className: "mt-1 mb-3", key: (item) => item.id }} />
         </div>;
     }
 
-    private renderNote = (noteObj: Note, index: number) => {
-        let { id, note } = noteObj;
+    private renderLog = (log: any, index: number) => {
+        let { id } = log;
         return <div className="d-block">
             <div className="px-3 py-1 border-bottom small text-muted"><EasyTime date={dateFromMinuteId(id)} /></div>
             <div className="px-3 py-2">{
-                note.split('\n').map((v, index) => <div key={index} className="my-1">{v}</div>)
+                this.renderLogContent(log)
             }</div>
         </div>;
+    }
+
+    private renderLogContent(log: any) {
+        let { $type } = log;
+        switch ($type) {
+            default: return <>unknown type {$type}</>;
+            case 'note': return this.renderNote(log);
+            case 'sessionperson': return this.renderSessionPerson(log);
+        }
+    }
+
+    private renderNote(note: Note) {
+        let { note: noteContent } = note;
+        return <>{noteContent.split('\n').map((v, index) =>
+            <div key={index} className="my-1">{v}</div>
+        )}</>;
+    }
+
+    private renderSessionPerson(sessionPerson: SessionPerson) {
+        let { cActs } = this.control;
+        let { cApp } = cActs;
+        let { cWorkshop, cStaff } = cApp.cIds;
+        let { cSession } = cWorkshop;
+        let { session, person, workshop } = sessionPerson;
+        return <>
+            <div>{cWorkshop.renderId(workshop)}</div>
+            <div>{cSession.renderId(session)}</div>
+            <div>{cStaff.renderId(person)}</div>
+        </>;
     }
 }

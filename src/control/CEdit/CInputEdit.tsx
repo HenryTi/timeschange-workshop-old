@@ -15,7 +15,7 @@ abstract class CEditWithPage extends CEdit {
     abstract get Page(): new (c: CEdit) => Page<CEdit>;
 }
 
-class VEditPage<C extends CEditWithPage> extends Page<C> {
+abstract class VEditPage<C extends CEditWithPage> extends Page<C> {
     shallowData: {
         isChanged: boolean;
         error: string;
@@ -43,15 +43,17 @@ class VEditPage<C extends CEditWithPage> extends Page<C> {
         this.control.close();
     }
 
+    abstract get InputType(): string;
+
     content() {
         let { error } = this.shallowData;
-        let { uiItem } = this.control.props;
+        let { uiItem, exView } = this.control.props;
         let onKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
             if (this.shallowData.isChanged === false) return;
             if (evt.key === 'Enter') this.onSave();
         }
         return <div className="m-3">
-            <input type="text"
+            <input type={this.InputType}
                 onChange={this.onChange}
                 onKeyDown={onKeyDown}
                 onBlur={this.onBlur}
@@ -62,6 +64,7 @@ class VEditPage<C extends CEditWithPage> extends Page<C> {
                 <div className="small muted m-2">{(uiItem as UiInputItem)?.placeholder}</div>
             }
             {error && <div className="text-danger">{error}</div>}
+            {exView}
         </div>;
     }
 
@@ -92,31 +95,36 @@ export class CStringEdit extends CEditWithPage {
 }
 
 class VStringPage extends VEditPage<CStringEdit> {
+    get InputType(): string { return 'text' }
 }
 
 export class CDateEdit extends CEditWithPage {
     get Page(): new (c: CEdit) => Page<CEdit> {
-        return VStringPage;
+        return VDatePage;
     }
 }
 
 class VDatePage extends VEditPage<CDateEdit> {
+    get InputType(): string { return 'date' }
 }
 
 export class CDateTimeEdit extends CEditWithPage {
     get Page(): new (c: CEdit) => Page<CEdit> {
-        return VStringPage;
+        return VDateTimePage;
     }
 }
 
 class VDateTimePage extends VEditPage<CDateTimeEdit> {
+    get InputType(): string { return 'datetime' }
 }
 
 export class CTimeEdit extends CEditWithPage {
     get Page(): new (c: CEdit) => Page<CEdit> {
-        return VStringPage;
+        return VTimePage;
     }
 }
 
 class VTimePage extends VEditPage<CTimeEdit> {
+    get InputType(): string { return 'time' }
 }
+

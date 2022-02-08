@@ -1,16 +1,13 @@
 import { Schema, UiSchema } from "tonwa-react";
 import { Uq, ID } from "tonwa-core";
 import { Control } from "../Control";
-import { deepReact, setReact } from "../Reactive";
+import { deepReact, react, setReact } from "../Reactive";
 import { VAdd } from "./VAdd";
 import { VStart } from "./VStart";
 import { VEdit } from "./VEdit";
-import { CSelectMulti, CSelectOne } from "./CSelect";
-import { VRefSelectMulti, VRefSelectOne } from "./VSelect";
 import { IdCache } from "./IdCache";
-import { VValue } from "./VValue";
-import { Nav } from "../Nav";
 import { Page } from "Control";
+import { mutedSmall } from "tool";
 
 export enum EnumSelectType {
     listAll,            // 一次列出所有的项目，供选择
@@ -21,20 +18,16 @@ export enum EnumSelectType {
 export interface SelectOptions {
     listAll?: boolean;              // default: true
     search?: boolean;               // default: true
-    valueRender?: ValueRender;
+    valueRender?: IdValueRender;
     allowNew?: boolean;             // default: allow new
 };
 
 export interface IdValue {
     id: number;
-    no: string;
-    name: string;
-    vice: string;
-    icon: string;
 };
 
 export type Render = () => JSX.Element;
-export type ValueRender = (value: IdValue) => JSX.Element;
+export type IdValueRender = (value: IdValue) => JSX.Element;
 export type ValuesRender = (values: JSX.Element[]) => JSX.Element;
 export type RefRender = (onClick: () => void, content: JSX.Element) => JSX.Element;
 
@@ -43,25 +36,41 @@ interface IDDeep {
     currentItem: any;
 }
 
+const catches: { [id: string]: IdCache } = {}
+
 export abstract class CIdBase extends Control {
+    private catch: IdCache;
+    protected ID: ID;
+
     initNO: string;
     readonly deepData = deepReact<IDDeep>({
         list: null,
         currentItem: null,
     });
-    readonly catch: IdCache;
 
-    constructor(nav: Nav) {
-        super(nav);
-        this.catch = new IdCache(this);
+    protected initID() {
+        this.ID = this.getID();
+        let { name } = this.ID;
+        this.catch = catches[name];
+        if (this.catch === undefined) {
+            this.catch = new IdCache(this);
+            catches[name] = this.catch;
+        }
     }
 
     abstract get uq(): Uq;
-    abstract get ID(): ID;
+    abstract getID(): ID;
     abstract get caption(): string;
     abstract get schema(): Schema;
     abstract get uiSchema(): UiSchema;
+    abstract renderTagInput(): JSX.Element;
     get icon(): string { return null; }
+    get iconClass(): string { return undefined; }
+    get isGlobal(): boolean { return this.ID.isGlobal; }
+
+    getIdValue(id: number): any {
+        return this.catch.getValue(id);
+    }
 
     protected setIDDeepList(list: any[]) {
         this.deepData.list = list;
@@ -71,6 +80,9 @@ export abstract class CIdBase extends Control {
         let ID = this.ID;
         if (ID) {
             this.initNO = await this.uq.IDNO({ ID });
+            setReact(() => {
+                this.deepData.currentItem = null;
+            });
         }
     }
 
@@ -80,11 +92,16 @@ export abstract class CIdBase extends Control {
         this.afterAddCallback = func;
     }
 
+    get VAdd(): new (c: CIdBase) => Page<CIdBase> {
+        return VAdd;
+    }
     onAdd = async (): Promise<void> => {
         this.addedIds = [];
         await this.initAdd();
-        this.open(VAdd);
+        this.open(this.VAdd);
     }
+
+    get ids(): number[] { return this.addedIds; }
 
     async afterAdd() {
         if (this.afterAddCallback) {
@@ -143,7 +160,7 @@ export abstract class CIdBase extends Control {
     protected async loadOnEdit() {
     }
 
-    onItemClick = async (item: any) => {
+    onEditItem = async (item: any) => {
         setReact(async () => {
             this.deepData.currentItem = item;
             await this.loadOnEdit();
@@ -151,36 +168,23 @@ export abstract class CIdBase extends Control {
         });
     }
 
-    renderListItem(item: any): JSX.Element {
-        return null;
+    renderItemInList(item: any): JSX.Element {
+        return this.renderIdValue(item);
     }
 
-    renderSelectItem(item: any): JSX.Element {
-        return this.renderListItem(item);
+    renderItemOnSelect(item: any): JSX.Element {
+        return this.renderItemInList(item);
     }
 
-    protected get CSelectOne(): new (cId: CIdBase) => CSelectOne { return CSelectOne }
-    protected get CSelectMulti(): new (cId: CIdBase) => CSelectMulti { return CSelectMulti }
+    abstract renderIdValue(idValue: IdValue): JSX.Element;
 
-    async selectOne(options?: SelectOptions): Promise<IdValue> {
-        let cSelectOne = new this.CSelectOne(this);
-        return await cSelectOne.select(options);
-    }
-
-    async selectMulti(options?: SelectOptions): Promise<IdValue[]> {
-        let cSelectMulti = new this.CSelectMulti(this);
-        return await cSelectMulti.select(options);
-    }
-
-    refSelectOne(refRender: RefRender, initRender: Render, valueRender: ValueRender, options?: SelectOptions): JSX.Element {
-        return this.render(VRefSelectOne, { options, initRender, refRender, valueRender });
-    }
-
-    refSelectMulti(refRender: RefRender, initRender: Render, valueRender: ValueRender, options?: SelectOptions, valuesRender?: ValuesRender): JSX.Element {
-        return this.render(VRefSelectMulti, { options, initRender, refRender, valuesRender, valueRender });
-    }
-
-    renderId(id: number | IdValue, valueRender: ValueRender): JSX.Element {
-        return this.render(VValue, { id, valueRender });
+    renderId(id: number): JSX.Element {
+        return react(() => {
+            let val = this.getIdValue(id);
+            if (val === null || val === undefined) {
+                return mutedSmall(id);
+            }
+            return this.renderIdValue(val);
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { CSelectOne, Page } from "Control";
 import { FA, List, LMR } from "tonwa-react";
 import { CClientNotes } from "./CClientNotes";
 
@@ -31,13 +31,14 @@ export class VStart extends Page<CClientNotes> {
         let right = <FA name="angle-right" />
         return <LMR className="px-3 py-2 align-items-center" left={vIcon} right={right}>
             <div>
-                {this.control.cClient.renderListItem(item)}
+                {this.control.cClient.renderItemInList(item)}
             </div>
         </LMR>;
     }
 
     private onSearch = async () => {
-        let ret = await this.control.cClient.selectOne();
+        let cSelectOne = new CSelectOne(this.control.cClient);
+        let ret = await cSelectOne.select(); //this.control.cClient.selectOne();
         this.control.showClient(ret as any);
     }
 }

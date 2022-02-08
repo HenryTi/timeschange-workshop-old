@@ -11,20 +11,20 @@ export class VStart extends Page<CIdBase> {
     }
     content() {
         return this.react(() => <List items={this.control.deepData.list}
-            item={{ render: this.renderItem, onClick: this.control.onItemClick }} />
+            item={{ render: this.renderItem, onClick: this.control.onEditItem }} />
         );
     }
 
     private renderItem = (item: any, index: number) => {
-        let { icon } = this.control;
+        let { icon, iconClass } = this.control;
         let vIcon: any;
         if (icon) {
-            vIcon = <FA name="user-o" className="me-3 text-primary " fixWidth={true} />;
+            vIcon = <FA name={icon} className={'me-4 ' + (iconClass ?? 'text-primary')} fixWidth={true} size="lg" />;
         }
         let right = <FA name="angle-right" />
         return <LMR className="px-3 py-2 align-items-center" left={vIcon} right={right}>
             <div>
-                {this.control.renderListItem(item)}
+                {this.control.renderItemInList(item)}
             </div>
         </LMR>;
     }

@@ -1,6 +1,6 @@
 import { CAppControl } from "tool";
 import { CClientNotes } from "./CClientNotes";
-import { CRegisterWorkshop } from "./CRegisterWorkshop";
+import { CWorkshops } from "./CWorkshops";
 import { VStart } from "./VStart";
 
 export class CActs extends CAppControl {
@@ -12,7 +12,7 @@ export class CActs extends CAppControl {
     }
 
     showRegisterWorkshop = async () => {
-        let cRegisterWorkshop = new CRegisterWorkshop(this);
+        let cRegisterWorkshop = new CWorkshops(this);
         cRegisterWorkshop.openMain();
     }
 

@@ -2,18 +2,21 @@ import { Context, Form } from "tonwa-react";
 import { Page } from "../Page";
 import { CIdBase } from "./CIdBase";
 
-export class VAdd extends Page<CIdBase> {
+export class VAdd<C extends CIdBase = any> extends Page<C> {
     header(): string | boolean | JSX.Element {
         return 'New ' + this.control.caption;
     }
-    content(): JSX.Element {
+
+    protected renderForm() {
         let { schema, uiSchema } = this.control;
         schema = [...schema, { name: 'submit', type: 'submit' }];
-        return <div className="p-3">
-            <Form schema={schema} uiSchema={uiSchema} fieldLabelSize={2}
-                onButtonClick={this.onSave}
-            />
-        </div>
+        return <Form schema={schema} uiSchema={uiSchema} fieldLabelSize={2}
+            onButtonClick={this.onSave}
+        />;
+    }
+
+    content(): JSX.Element {
+        return <div className="p-3">{this.renderForm()}</div>;
     }
 
     private onSave = async (name: string, context: Context) => {

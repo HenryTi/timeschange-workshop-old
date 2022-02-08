@@ -1,4 +1,6 @@
 import { AnnotationsMap, makeObservable, observable, runInAction } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 function buildReactiveProps<T extends object>(data: T, ob: any): AnnotationsMap<T, never> {
     let ret: AnnotationsMap<T, never> = {};
@@ -29,4 +31,9 @@ export function shallowReact<T extends object>(data: T): T {
 
 export function setReact<T>(fn: () => T): T {
     return runInAction(fn);
+}
+
+export function react(func: () => JSX.Element): JSX.Element {
+    let V = observer(func);
+    return React.createElement(V);
 }
