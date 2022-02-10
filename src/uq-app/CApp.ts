@@ -43,15 +43,13 @@ export class CApp extends CUqApp {
 		setUI(this.uqs);
 		this.appNav = new AppNav(this.getTonwa().nav);
 
-		await this.loadBaseData();
-
 		this.cTag = new CTag(this);
 		this.cHome = this.newC(CHome);
 		this.cActs = new CActs(this);
 		this.cIds = new CIds(this);
 		this.cMe = this.newC(CMe);
 		this.cHome.load();
-		await this.cIds.load();
+		await this.loadBaseData();
 		this.openVPage(VMain, undefined, this.dispose);
 		// 加上下面一句，可以实现主动页面刷新
 		this.timer = setInterval(this.callTick, 1000);
@@ -78,9 +76,15 @@ export class CApp extends CUqApp {
 		return this.tonwa.nav.renderNavView(onLogined, onNotLogined);
 	}
 
-
 	private async loadBaseData() {
-		// let { BzWorkshop } = this.uqs;
+		let { BzWorkshop } = this.uqs;
+		let ret = await Promise.all([
+			this.cIds.load(),
+			BzWorkshop.IXValues({
+				IX: BzWorkshop.UserObject,
+			})
+		]);
+		let userObjects = ret[1];
 	}
 
 	// 数据服务器提醒客户端刷新，下面代码重新调入的数据

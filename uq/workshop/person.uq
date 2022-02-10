@@ -29,12 +29,12 @@ VALUES
 ('donator'),
 ('board');
 
-IX *IXPerson (
+IX *IXPerson ver 0.3 (
     ix PersonCategory,
     xi Person,
 );
 
-IX *IxPersonLog ver 0.1 (
+IX *IxPersonLog ver 0.3 (
     ix Person,
     xi TYPE Minute,                 -- unique minute id
 );

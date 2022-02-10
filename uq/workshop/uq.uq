@@ -1,6 +1,29 @@
-UQ [BizDev]/[workshop] version='0.1.1' author='henry';
+UQ [BizDev]/[workshop] version='0.1.1' author='henry' {
+    SCHEDULE Test ON 6:31;
+}
 
 IX *UserObject (
     ix User,
     xi Person,
 );
+
+IX *UserLocal (
+    ix User,
+    xi Type Local,
+);
+
+ID Role CONST (
+    id,
+    KEY name CHAR(50),
+    discription CHAR(100),
+)
++ (name, discription)
+values 
+('counselor', null),
+('volunteer', null),
+;
+
+PROC Test() {
+    VAR a INT;
+    SET a=1;
+};

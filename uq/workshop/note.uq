@@ -5,13 +5,6 @@ ID Note MINUTE (
     note TEXT,
 );
 
-/*
-IX *IxPersonNote (
-    ix Person,
-    xi Note,
-);
-*/
-
 IX *IxStaffClient (
     ix Person,
     xi Person,

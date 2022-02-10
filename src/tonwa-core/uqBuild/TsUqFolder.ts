@@ -86,7 +86,7 @@ export function render(item: Tuid${cName}):${this.buildContext.element} {
 			saveTsFileIfNotExists(path, tsUI);
 		}
 
-		for (let i of [...idArr, ...idxArr, ...ixArr]) {
+		for (let i of [...idArr, ...idxArr]) { // , ...ixArr IX does not need UI
 			let { sName } = i;
 			//coll[sName.toLowerCase()] = i;
 			let cName = capitalCase(sName);

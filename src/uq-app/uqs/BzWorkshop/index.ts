@@ -1,12 +1,4 @@
 import { UqExt as Uq, assign } from './BzWorkshop';
-import * as BizPack from './BizPack.ui';
-import * as Op from './Op.ui';
-import * as Biz from './Biz.ui';
-import * as OpiBooking from './OpiBooking.ui';
-import * as Opi from './Opi.ui';
-import * as Item from './Item.ui';
-import * as OpiHistory from './OpiHistory.ui';
-import * as ItemHistory from './ItemHistory.ui';
 import * as Workshop from './Workshop.ui';
 import * as PersonCategory from './PersonCategory.ui';
 import * as Person from './Person.ui';
@@ -16,26 +8,9 @@ import * as SessionPerson from './SessionPerson.ui';
 import * as Tag from './Tag.ui';
 import * as TagGroup from './TagGroup.ui';
 import * as TagItem from './TagItem.ui';
-import * as IXPerson from './IXPerson.ui';
-import * as UserObject from './UserObject.ui';
-import * as IxStaffClient from './IxStaffClient.ui';
-import * as IxSessionClient from './IxSessionClient.ui';
-import * as IxWorkshopSession from './IxWorkshopSession.ui';
-import * as IxSessionStaff from './IxSessionStaff.ui';
-import * as IxPersonLog from './IxPersonLog.ui';
-import * as IxTag from './IxTag.ui';
-import * as IxGlobalIdTag from './IxGlobalIdTag.ui';
-import * as IxLocalIdTag from './IxLocalIdTag.ui';
+import * as Role from './Role.ui';
 	
 export function setUI(uq: Uq) {
-	assign(uq, 'BizPack', BizPack);
-	assign(uq, 'Op', Op);
-	assign(uq, 'Biz', Biz);
-	assign(uq, 'OpiBooking', OpiBooking);
-	assign(uq, 'Opi', Opi);
-	assign(uq, 'Item', Item);
-	assign(uq, 'OpiHistory', OpiHistory);
-	assign(uq, 'ItemHistory', ItemHistory);
 	assign(uq, 'Workshop', Workshop);
 	assign(uq, 'PersonCategory', PersonCategory);
 	assign(uq, 'Person', Person);
@@ -45,15 +20,6 @@ export function setUI(uq: Uq) {
 	assign(uq, 'Tag', Tag);
 	assign(uq, 'TagGroup', TagGroup);
 	assign(uq, 'TagItem', TagItem);
-	assign(uq, 'IXPerson', IXPerson);
-	assign(uq, 'UserObject', UserObject);
-	assign(uq, 'IxStaffClient', IxStaffClient);
-	assign(uq, 'IxSessionClient', IxSessionClient);
-	assign(uq, 'IxWorkshopSession', IxWorkshopSession);
-	assign(uq, 'IxSessionStaff', IxSessionStaff);
-	assign(uq, 'IxPersonLog', IxPersonLog);
-	assign(uq, 'IxTag', IxTag);
-	assign(uq, 'IxGlobalIdTag', IxGlobalIdTag);
-	assign(uq, 'IxLocalIdTag', IxLocalIdTag);
+	assign(uq, 'Role', Role);
 }
 export * from './BzWorkshop';

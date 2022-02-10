@@ -2,46 +2,39 @@
 import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId, FieldItemInt, UI, TFunc } from 'tonwa-react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Res, uqStringify, setRes } from "tonwa-core";
-import { IxSessionStaff } from "./BzWorkshop";
+import { Role } from "./BzWorkshop";
 
 /*--fields--*/
 const fields = {
-	own: {
-		"name": "own",
-		"isKey": false,
-		"label": "Own"
-	} as undefined,
-	substitue: {
-		"name": "substitue",
-		"isKey": false,
-		"label": "Substitue"
-	} as undefined,
-	done: {
-		"name": "done",
-		"isKey": false,
-		"label": "Done"
-	} as undefined,
-	ix: {
-		"name": "ix",
+	id: {
+		"name": "id",
 		"type": "id",
 		"isKey": false,
-		"label": "Ix"
+		"label": "Id"
 	} as FieldItemId,
-	xi: {
-		"name": "xi",
-		"type": "id",
+	name: {
+		"name": "name",
+		"type": "string",
+		"isKey": true,
+		"widget": "string",
+		"label": "Name"
+	} as FieldItemString,
+	discription: {
+		"name": "discription",
+		"type": "string",
 		"isKey": false,
-		"label": "Xi"
-	} as FieldItemId,
+		"widget": "string",
+		"label": "Discription"
+	} as FieldItemString,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.own, fields.substitue, fields.done, fields.xi, 
+	fields.name, fields.discription, 
 ];
 
 export const ui: UI = {
-	label: "IxSessionStaff",
+	label: "Role",
 	fieldArr,
 	fields,
 };
@@ -59,6 +52,6 @@ export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
 	return res[str as string] ?? str;
 }
 
-export function render(item: IxSessionStaff):JSX.Element {
+export function render(item: Role):JSX.Element {
 	return <>{uqStringify(item)}</>;
 };

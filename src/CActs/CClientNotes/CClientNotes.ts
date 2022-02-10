@@ -47,9 +47,14 @@ export class CClientNotes extends CAct {
             order: 'desc'
         });
         */
-        let ret = await BzWorkshop.GetPersonLog.query({ person: client.id });
+        //let ret = await BzWorkshop.GetPersonLog.query({ person: client.id });
+        let ret = await BzWorkshop.IXValues({
+            IX: BzWorkshop.IxPersonLog,
+            ix: client.id,
+            order: 'desc',
+        })
         let notes: any[] = [];
-        for (let row of ret.ret) {
+        for (let row of ret) {
             let { type, value } = row;
             let obj: any = BzWorkshop.IDValue(type, value);
             if (obj !== undefined) {

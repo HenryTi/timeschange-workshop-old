@@ -1,4 +1,4 @@
-//=== UqApp builder created on Mon Feb 07 2022 18:56:19 GMT-0500 (北美东部标准时间) ===//
+//=== UqApp builder created on Thu Feb 10 2022 00:30:39 GMT-0500 (北美东部标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIX } from "tonwa-core";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -173,64 +173,6 @@ export interface ResultGetPersonLog {
 	ret: ReturnGetPersonLogRet[];
 }
 
-export interface BizPack {
-	id?: number;
-	stamp: any;
-}
-
-export interface Op {
-	id?: number;
-	biz: number;
-	type: any;
-	value: number;
-	stamp: any;
-}
-
-export interface Biz {
-	id?: number;
-	value: number;
-	stamp: any;
-}
-
-export interface OpiBooking {
-	id?: number;
-	opType: any;
-	post: number;
-	postItem: number;
-	item: number;
-	ratio: number;
-	start: any;
-	span: number;
-	ratioInit: number;
-	memo: number;
-}
-
-export interface Opi {
-	id?: number;
-	object: number;
-	post: number;
-	item: number;
-}
-
-export interface Item {
-	id?: number;
-}
-
-export interface OpiHistory {
-	id?: number;
-	opi: number;
-	itemHistory: number;
-	value: number;
-	booking: number;
-}
-
-export interface ItemHistory {
-	id?: number;
-	op: number;
-	item: number;
-	value: number;
-}
-
 export interface Workshop {
 	id?: number;
 	no?: string;
@@ -298,6 +240,12 @@ export interface TagItem {
 	name: string;
 }
 
+export interface Role {
+	id?: number;
+	name: string;
+	discription: string;
+}
+
 export interface IXPerson {
 	ix: number;
 	xi: number;
@@ -353,15 +301,12 @@ export interface IxLocalIdTag {
 	xi: number;
 }
 
+export interface UserLocal {
+	ix: number;
+	xi: number;
+}
+
 export interface ParamActs {
-	bizPack?: BizPack[];
-	op?: Op[];
-	biz?: Biz[];
-	opiBooking?: OpiBooking[];
-	opi?: Opi[];
-	item?: Item[];
-	opiHistory?: OpiHistory[];
-	itemHistory?: ItemHistory[];
 	workshop?: Workshop[];
 	personCategory?: PersonCategory[];
 	person?: Person[];
@@ -371,6 +316,7 @@ export interface ParamActs {
 	tag?: Tag[];
 	tagGroup?: TagGroup[];
 	tagItem?: TagItem[];
+	role?: Role[];
 	iXPerson?: IXPerson[];
 	userObject?: UserObject[];
 	ixStaffClient?: IxStaffClient[];
@@ -381,6 +327,7 @@ export interface ParamActs {
 	ixTag?: IxTag[];
 	ixGlobalIdTag?: IxGlobalIdTag[];
 	ixLocalIdTag?: IxLocalIdTag[];
+	userLocal?: UserLocal[];
 }
 
 
@@ -403,14 +350,6 @@ export interface UqExt extends Uq {
 	MyClients: UqQuery<ParamMyClients, ResultMyClients>;
 	MySessions: UqQuery<ParamMySessions, ResultMySessions>;
 	GetPersonLog: UqQuery<ParamGetPersonLog, ResultGetPersonLog>;
-	BizPack: UqID<any> & IDXEntity<any>;
-	Op: UqID<any> & IDXEntity<any>;
-	Biz: UqID<any> & IDXEntity<any>;
-	OpiBooking: UqID<any> & IDXEntity<any>;
-	Opi: UqID<any> & IDXEntity<any>;
-	Item: UqID<any> & IDXEntity<any>;
-	OpiHistory: UqID<any> & IDXEntity<any>;
-	ItemHistory: UqID<any> & IDXEntity<any>;
 	Workshop: UqID<any> & IDXEntity<any>;
 	PersonCategory: UqID<any> & IDXEntity<any>;
 	Person: UqID<any> & IDXEntity<any>;
@@ -420,6 +359,7 @@ export interface UqExt extends Uq {
 	Tag: UqID<any> & IDXEntity<any>;
 	TagGroup: UqID<any> & IDXEntity<any>;
 	TagItem: UqID<any> & IDXEntity<any>;
+	Role: UqID<any> & IDXEntity<any>;
 	IXPerson: UqIX<any>;
 	UserObject: UqIX<any>;
 	IxStaffClient: UqIX<any>;
@@ -430,6 +370,7 @@ export interface UqExt extends Uq {
 	IxTag: UqIX<any>;
 	IxGlobalIdTag: UqIX<any>;
 	IxLocalIdTag: UqIX<any>;
+	UserLocal: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

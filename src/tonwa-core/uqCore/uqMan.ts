@@ -74,7 +74,6 @@ export interface TuidModify {
 
 interface ParamPage {
 	start: number;
-	end?: number;
 	size: number;
 }
 
@@ -178,6 +177,14 @@ export interface ParamIX {
 	ix: number | number[];
 	IDX?: (ID | IDX)[];
 	page?: ParamPage;
+	order?: 'asc' | 'desc';
+}
+
+export interface ParamIXValues {
+	IX: IX;
+	ix?: number;
+	page?: ParamPage;
+	order?: 'asc' | 'desc';
 }
 
 export interface ParamKeyIX {
@@ -258,6 +265,7 @@ export interface Uq {
 	IXr<T>(param: ParamIX): Promise<T[]>; // IX id 反查IX list
 	KeyID<T>(param: ParamKeyID): Promise<T[]>;
 	IX<T>(param: ParamIX): Promise<T[]>;
+	IXValues(param: ParamIXValues): Promise<{ type: string, value: string }[]>;
 	KeyIX<T>(param: ParamKeyIX): Promise<T[]>;
 	IDLog<T>(param: ParamIDLog): Promise<T[]>;
 	IDSum<T>(param: ParamIDSum): Promise<T[]>;
@@ -854,16 +862,6 @@ export class UqMan {
 	}
 
 	protected ActIXSort = async (param: ParamActIXSort): Promise<void> => {
-		/*
-		let {IX, ix, id, after} = param;
-		let apiParam:any = {
-			IX: entityName(IX),
-			ix,
-			id,
-			after,
-		};
-		await this.apiPost('act-ix-sort'), apiParam);
-		*/
 		return await this.apiActIxSort(param, EnumResultType.data);
 	}
 
@@ -1034,7 +1032,6 @@ export class UqMan {
 
 	private async apiKeyID(param: ParamKeyID, resultType: EnumResultType): Promise<any> {
 		let { ID, IDX } = param;
-		//this.checkParam(null, IDX, null, null, key, page);
 		let ret = await this.apiPost('key-id', resultType, {
 			...param,
 			ID: entityName(ID),
@@ -1065,6 +1062,18 @@ export class UqMan {
 	}
 	protected $IX = async (param: ParamIX): Promise<string> => {
 		return await this.apiIX(param, EnumResultType.sql);
+	}
+
+	private async apiIXValues(param: ParamIXValues, resultType: EnumResultType): Promise<any> {
+		let { IX } = param;
+		let ret = await this.apiPost('ix-values', resultType, {
+			...param,
+			IX: entityName(IX),
+		});
+		return ret;
+	}
+	protected IXValues = async (param: ParamIXValues): Promise<any[]> => {
+		return await this.apiIXValues(param, EnumResultType.data);
 	}
 
 	private async apiIXr(param: ParamIX, resultType: EnumResultType): Promise<any> {
