@@ -1,5 +1,5 @@
 import { CHome } from "../home";
-import { CMe } from "../me";
+import { CMe } from "../CMe";
 import { CUqApp } from "./CBase";
 import { res } from "./res";
 import { VMain } from "./VMain";
@@ -47,7 +47,7 @@ export class CApp extends CUqApp {
 		this.cHome = this.newC(CHome);
 		this.cActs = new CActs(this);
 		this.cIds = new CIds(this);
-		this.cMe = this.newC(CMe);
+		this.cMe = new CMe(this);
 		this.cHome.load();
 		await this.loadBaseData();
 		this.openVPage(VMain, undefined, this.dispose);

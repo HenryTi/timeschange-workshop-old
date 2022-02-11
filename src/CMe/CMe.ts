@@ -1,9 +1,10 @@
-import { makeObservable, observable } from "mobx";
 import { User } from "tonwa-core";
 import { QueryPager } from "tonwa";
-import { CUqBase } from "uq-app";
+import { CApp } from "uq-app";
 import { VMe } from "./VMe";
 import { VEditMe } from "./VEditMe";
+import { CAdmin } from "CAdmin";
+import { CAppControl } from "tool";
 
 export interface RootUnitItem {
 	id: number;					// root unit id
@@ -14,35 +15,32 @@ export interface RootUnitItem {
 	x: number;
 }
 
-export class CMe extends CUqBase {
+export class CMe extends CAppControl {
 	role: number;
 	unitOwner: User;
 	rootUnits: QueryPager<any>;
-	roles: string[] = null;
-	//uq: Uq;
+	cAdmin: CAdmin;
 
-	constructor(res: any) {
-		super(res);
-		makeObservable(this, {
-			roles: observable,
-		});
-		//this.uq = this.uqs.BzTimesChange;
+	constructor(cApp: CApp) {
+		super(cApp);
+		this.cAdmin = new CAdmin(cApp);
 	}
 
 	protected async internalStart() {
 	}
 
 	tab = () => {
-		return this.renderView(VMe);
+		return this.render(VMe);
 	}
 
 	showEditMe = async () => {
 		//let result = await this.uqs.Notes.GetSystemRole.query({});
 		//this.role = result.ret[0]?.role;
-		this.openVPage(VEditMe);
+		this.open(VEditMe);
 	}
 
 	load = async () => {
+		await this.cAdmin.load();
 		//this.roles = await this.getUqRoles(this.uq.name);
 	}
 

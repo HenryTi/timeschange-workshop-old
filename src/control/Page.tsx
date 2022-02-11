@@ -5,7 +5,7 @@ import { View } from "./View";
 export abstract class Page<C extends Control, P = any> extends View<C, P> {
     header(): string | boolean | JSX.Element { return null; }
     right(): JSX.Element { return null; }
-    content(): JSX.Element { return null; }
+    content(): JSX.Element { return <div className="p-3">{this.header}</div>; }
     footer(): JSX.Element { return null; }
     logout(): boolean | (() => Promise<void>) { return false; }
     render(): JSX.Element {

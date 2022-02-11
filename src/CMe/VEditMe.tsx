@@ -1,17 +1,13 @@
 import { makeObservable, observable } from 'mobx';
 import {
-    ItemSchema, StringSchema, ImageSchema, UiTextItem, UiImageItem, Page,
-    Edit, UiSchema, VPage, Prop, FA, IconText, PropGrid
+    ItemSchema, StringSchema, ImageSchema, UiTextItem, UiImageItem,
+    Edit, UiSchema, Prop, FA, IconText, PropGrid
 } from "tonwa";
 import { tonwa } from 'tonwa-core';
+import { Page } from 'Control';
 import { CMe } from './CMe';
 
-export class VEditMe extends VPage<CMe>{
-
-    async open(param: any) {
-        this.openPage(this.page);
-    }
-
+export class VEditMe extends Page<CMe>{
     private schema: ItemSchema[] = [
         { name: 'nick', type: 'string' } as StringSchema,
         { name: 'icon', type: 'image' } as ImageSchema,
@@ -38,7 +34,7 @@ export class VEditMe extends VPage<CMe>{
 
     private onItemChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
         let { name } = itemSchema;
-        await this.controller.web.userApi.userSetProp(name, newValue);
+        await tonwa.web.userApi.userSetProp(name, newValue);
         this.data[name] = newValue;
         tonwa.user.name = newValue;
         tonwa.saveLocalUser();
@@ -56,19 +52,23 @@ export class VEditMe extends VPage<CMe>{
         await tonwa.userQuit();
     }
 
-    private page = () => {
+    header(): string | boolean | JSX.Element {
+        return '个人信息';
+    }
+
+    content() {
         let { schema, uiSchema, data, onItemChanged } = this;
         let gridRows: Prop[] = [
             '',
             {
                 type: 'component',
-                component: <IconText iconClass="text-info me-2" icon="key" text={this.t('changePassword')} />,
+                component: <IconText iconClass="text-info me-2" icon="key" text={this.res('changePassword')} />,
                 onClick: this.changePassword
             },
             '',
             {
                 type: 'component',
-                component: <IconText iconClass="text-info me-2" icon="key" text={this.t('quitUser')} />,
+                component: <IconText iconClass="text-info me-2" icon="key" text={this.res('quitUser')} />,
                 onClick: this.userQuit
             },
             '',
@@ -78,7 +78,7 @@ export class VEditMe extends VPage<CMe>{
                 bk: '',
                 component: <div className="w-100 text-center">
                     <button className="btn btn-danger w-100 w-max-20c" onClick={this.onExit}>
-                        <FA name="sign-out" size="lg" /> {this.t('logout')}
+                        <FA name="sign-out" size="lg" /> {this.res('logout')}
                     </button>
                 </div>
             },
@@ -94,12 +94,12 @@ export class VEditMe extends VPage<CMe>{
         }
         {vAdmin}
         */
-        return <Page header="个人信息">
+        return <div>
             <Edit schema={schema} uiSchema={uiSchema}
                 data={data}
                 onItemChanged={onItemChanged} />
             <PropGrid rows={gridRows} values={{}} />
-        </Page>;
+        </div>;
     }
 }
 

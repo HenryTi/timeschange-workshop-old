@@ -246,7 +246,10 @@ function IDPath(path: string): string { return path; }
 enum EnumResultType { data, sql };
 
 export interface Uq {
-	getAdmins(): Promise<{ id: number; role: number }[]>;
+	AdminGetList(): Promise<any[]>;
+	AdminSetMe(): Promise<void>;
+	AdminSet(user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void>;
+
 	IDValue(type: string, value: string): object;
 	$: UqMan;
 	Acts(param: any): Promise<any>;
@@ -808,8 +811,16 @@ export class UqMan {
 		return retActs;
 	}
 
-	protected getAdmins = async (): Promise<{ id: number; role: number }[]> => {
+	protected AdminGetList = async (): Promise<any[]> => {
 		return await this.uqApi.getAdmins();
+	}
+
+	protected AdminSetMe = async (): Promise<void> => {
+		return await this.uqApi.setMeAdmin();
+	}
+
+	protected AdminSet = async (user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void> => {
+		return await this.uqApi.setAdmin(user, role, name, nick, icon, assigned);
 	}
 
 	protected IDValue = (type: string, value: string): object => {

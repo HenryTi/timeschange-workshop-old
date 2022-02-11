@@ -1,8 +1,8 @@
-import { VPage } from "tonwa";
+import { Page } from "Control";
 import { appConfig } from "../uq-app/appConfig";
 import { CMe } from "./CMe";
 
-export class VAbout extends VPage<CMe> {
+export class VAbout extends Page<CMe> {
 	header() { return '关于APP'; }
 	content() {
 		return <div className="py-5 px-3 my-3 w-max-30c mx-auto bg-white">

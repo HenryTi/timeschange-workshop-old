@@ -46,7 +46,7 @@ export class TsUqFolder {
 
 	private saveTuidAndIDTsIndexAndRender(uqFolder: string) {
 		let imports = '', sets = '';
-		let { idArr, idxArr, ixArr, tuidArr } = this.uq;
+		let { idArr, idxArr, tuidArr } = this.uq;  // ixArr, 
 		let coll: { [name: string]: Entity } = {};
 
 		for (let i of tuidArr) {
