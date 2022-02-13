@@ -52,10 +52,11 @@ class VSucceed extends Page<CIdBase> {
 
     onExit = async () => {
         this.control.close();
-        this.afterBack();
+        // this.afterBack();
     }
-
+    /*
     protected afterBack(): void {
         this.control.afterAdd();
     }
+    */
 }

@@ -5,7 +5,7 @@ import { FA, LMR } from "tonwa-react";
 const cnRow = ' px-3 py-2 ';
 const cnBg = ' bg-white ';
 const cnMYLg = ' my-2 ';
-const cnMYSm = ' my-1 ';
+//const cnMYSm = ' my-1 ';
 const cnSmallMuted = ' small text-muted ';
 const info = <FA className="text-primary me-3 mt-1" name="info-circle" size="lg" />;
 
@@ -54,7 +54,7 @@ export class VMeSysAdmin extends Page<CAdminBase> {
             <LMR className={cnRow + cnBg + cnMYLg + ' text-danger cursor-pointer'}
                 onClick={this.control.showMeSysAdmin}>
                 <div className="d-flex justify-content-center p-3">
-                    {info}<b>I am system admim</b>
+                    {info}<b>I am a system admim</b>
                 </div>
             </LMR>
             <div className="pt-3">

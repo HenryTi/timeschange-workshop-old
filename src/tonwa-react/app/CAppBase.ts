@@ -11,6 +11,7 @@ import { t } from "../ui";
 export interface IConstructor<T> {
 	new(...args: any[]): T;
 }
+
 /*
 export interface DevConfig {
 	name: string;
@@ -167,6 +168,10 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 		return await this.web.centerApi.userFromId(userId);
 	}
 
+	async userFromName(userName: string): Promise<any> {
+		return await this.web.centerApi.userFromKey(userName);
+	}
+
 	protected on(routeFunc: RouteFunc, hooks?: Hooks): Navigo;
 	protected on(url: string, routeFunc: RouteFunc, hooks?: Hooks): Navigo;
 	protected on(regex: RegExp, routeFunc: RouteFunc, hooks?: Hooks): Navigo;
@@ -193,7 +198,7 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 		this.tonwa.setUqRoles(uq, roles);
 		return roles;
 	}
-
+	/*
 	isAdmin(roles: string[]): boolean {
 		return this.isRole(roles, '$');
 	}
@@ -203,6 +208,7 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 		role = role.toLowerCase();
 		return roles.indexOf(role) >= 0;
 	}
+	*/
 
 	protected onChangeLogin(user: User): Promise<void> {
 		return;

@@ -7,10 +7,10 @@ export class AppNav implements ControlNav {
         this.nav = nav;
     }
 
-    open(page: JSX.Element, label?: string): void {
-        this.nav.push(page);
+    open(page: JSX.Element, afterClose: () => void): void {
+        this.nav.push(page, afterClose);
     }
-    close(label?: string): void {
-        this.nav.pop(1);
+    close(level: number = 1): void {
+        this.nav.pop(level);
     }
 }

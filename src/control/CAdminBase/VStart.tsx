@@ -1,5 +1,5 @@
-import { FA, List, LMR } from "tonwa-react";
-import { Admin } from ".";
+import { FA, Image, List, LMR } from "tonwa-react";
+import { Admin, EnumAdminRoleInEdit } from ".";
 import { Page } from "../Page";
 import { CAdminBase } from "./CAdminBase";
 
@@ -7,7 +7,7 @@ const cnRow = ' px-3 py-2 ';
 const cnBg = ' bg-white ';
 const cnMYLg = ' my-2 ';
 const cnMYSm = ' my-1 ';
-const cnSmallMuted = ' small text-muted ';
+//const cnSmallMuted = ' small text-muted ';
 const info = <FA className="text-primary me-3" name="info-circle" size="lg" />;
 
 export class VStart extends Page<CAdminBase> {
@@ -21,7 +21,6 @@ export class VStart extends Page<CAdminBase> {
                 {this.renderMe()}
                 {this.renderSysAdmins()}
                 {this.renderAdmins()}
-                {this.renderSettings()}
             </div>
         });
     }
@@ -31,11 +30,11 @@ export class VStart extends Page<CAdminBase> {
         let { meAdmin } = deep;
         switch (meAdmin.role) {
             default: return null;
-            case -1: return this.renderMeSystemAdmin(true);
-            case 1: return this.renderMeSystemAdmin(false);
-            case 2:
+            case EnumAdminRoleInEdit.nSys: return this.renderMeSystemAdmin(true);
+            case EnumAdminRoleInEdit.sys: return this.renderMeSystemAdmin(false);
+            case EnumAdminRoleInEdit.admin:
                 return <div className={cnRow + cnBg + cnMYLg}>
-                    {info} I am admin
+                    {info} I am an admin
                 </div>;
         }
     }
@@ -45,7 +44,7 @@ export class VStart extends Page<CAdminBase> {
         let msg = quiting === true ?
             'I am quiting system admin'
             :
-            'I am system admin';
+            'I am a system admin';
         return <LMR className={cnRow + cnBg + cnMYLg + ' text-danger cursor-pointer'}
             onClick={this.control.showMeSysAdmin}
             right={rightAngle}>
@@ -58,87 +57,63 @@ export class VStart extends Page<CAdminBase> {
         let { deep } = this.control;
         let { meAdmin } = deep;
         switch (meAdmin.role) {
-            case -1: return null;
-            case 2: return null;
+            case EnumAdminRoleInEdit.nSys: return null;
+            case EnumAdminRoleInEdit.admin: return null;
         }
 
         let { sysAdmins } = deep;
         return <div className="mt-3">
             <div className={cnRow + ' small '}>
-                <LMR right={this.renderAdd(1)} className="align-items-end">
-                    System admins:
-                    <span className="small text-muted ms-2">System admin is an admin, and can add or delete admin</span>
+                <LMR right={this.renderAdd(EnumAdminRoleInEdit.sys)} className="align-items-end">
+                    <div>System admins</div>
+                    <div className="small text-muted">System admin is an admin, and can add or delete admin</div>
                 </LMR>
             </div>
-            <List items={sysAdmins} item={{ render: this.renderSysAdmin }} />
+            <List items={sysAdmins} item={{ render: this.renderAdmin, onClick: this.control.onUser }} />
         </div>;
-    }
-
-    private renderSysAdmin = (admin: Admin, index: number) => {
-        let right: any;
-        let { update } = admin;
-        if (Date.now() / 1000 - update < 24 * 3600) {
-            right = <span onClick={() => this.onDelAdmin(admin)}>
-                <FA name="trash" className="cursor-pointer" />
-            </span>;
-        }
-        return <LMR key={admin.id} className={cnRow + cnMYSm + cnBg} right={right}>
-            {JSON.stringify(admin)}
-        </LMR>;
     }
 
     private renderAdmins(): JSX.Element {
         let { deep } = this.control;
         let { meAdmin } = deep;
         switch (meAdmin.role) {
-            case -1: return null;
-            case 2: return null;
+            case EnumAdminRoleInEdit.nSys: return null;
+            case EnumAdminRoleInEdit.admin: return null;
         }
         let { admins } = deep;
         return <div className="mt-3">
             <div className={cnRow + ' small'}>
-                <LMR right={this.renderAdd(2)} className="align-items-end">
-                    Admins:
-                    <span className="small text-muted ms-2">can define user roles</span>
+                <LMR right={this.renderAdd(EnumAdminRoleInEdit.admin)} className="align-items-end">
+                    <div>Admins</div>
+                    <div className="small text-muted">Admin can define user roles</div>
                 </LMR>
             </div>
-            <List items={admins} item={{ render: this.renderAdmin }} />
+            <List items={admins} item={{ render: this.renderAdmin, onClick: this.control.onUser }} />
         </div>;
     }
 
     private renderAdmin = (admin: Admin, index: number) => {
-        let right = <span onClick={() => this.onDelAdmin(admin)}>
-            <FA name="trash" className="cursor-pointer" />
-        </span>;
-        return <LMR key={admin.id}
+        let { id, name, nick, icon, assigned } = admin;
+        let right = <FA name="angle-right" className="cursor-pointer" />;
+        return <LMR key={id}
             className={cnRow + cnMYSm + cnBg}
+            left={<Image src={icon} className="me-4 align-self-start w-2-5c h-2-5c" />}
             right={right}>
-            {JSON.stringify(admin)}
+            {
+                assigned && <div>
+                    <small className="text-muted me-3">Remark:</small>
+                    {assigned}
+                </div>
+            }
+            <div><small className="text-muted me-3">Name:</small>{name}</div>
+            <div><small className="text-muted me-3">Nick:</small>{nick}</div>
         </LMR>;
+        //});
     }
 
-    private onDelAdmin = async (admin: Admin) => {
-        let ret = await this.confirm('do you really want to delete the admin?');
-        if (ret === true) {
-            this.control.onDelAdmin(admin);
-        }
-    }
-
-    renderAdd(role: 1 | 2): JSX.Element {
+    renderAdd(role: EnumAdminRoleInEdit): JSX.Element {
         return <button className="btn btn-sm btn-outline-success" onClick={() => this.control.onAddAdmin(role)}>
             <FA name="plus" />
         </button>;
-    }
-
-    private renderSettings(): JSX.Element {
-        let { deep } = this.control;
-        let { meAdmin } = deep;
-        switch (meAdmin.role) {
-            case -1: return null;
-        }
-        return <div className="mt-3">
-            <div className={cnRow + cnSmallMuted}>Setting</div>
-            <div className={cnRow + cnBg + cnMYSm}>a</div>
-        </div>
     }
 }

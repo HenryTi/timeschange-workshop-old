@@ -249,6 +249,7 @@ export interface Uq {
 	AdminGetList(): Promise<any[]>;
 	AdminSetMe(): Promise<void>;
 	AdminSet(user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void>;
+	AdminIsMe(): Promise<boolean>;
 
 	IDValue(type: string, value: string): object;
 	$: UqMan;
@@ -821,6 +822,10 @@ export class UqMan {
 
 	protected AdminSet = async (user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void> => {
 		return await this.uqApi.setAdmin(user, role, name, nick, icon, assigned);
+	}
+
+	protected AdminIsMe = async (): Promise<boolean> => {
+		return await this.uqApi.isAdmin();
 	}
 
 	protected IDValue = (type: string, value: string): object => {

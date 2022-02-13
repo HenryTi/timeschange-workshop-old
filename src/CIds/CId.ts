@@ -16,6 +16,10 @@ export abstract class CId extends CIdBase {
 
     get tagGroupName(): string { return undefined; }
 
+    isVisible(): boolean {
+        return this.cIds.cApp.isAdminOrRole();
+    }
+
     async loadItemsFromIds(ids: number[]): Promise<any[]> {
         let list = await this.uqs.BzWorkshop.ID({
             IDX: this.ID,

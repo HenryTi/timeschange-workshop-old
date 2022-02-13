@@ -12,6 +12,7 @@ import { CIds } from "CIds";
 import { CActs } from "CActs";
 import { AppNav } from "tool";
 import { CTag } from "CTag";
+import { Role } from "./uqs/BzWorkshop";
 
 const gaps = [10, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 15, 15, 15, 30, 30, 60];
 
@@ -22,6 +23,7 @@ export interface Title {
 	fixed?: number;
 }
 
+type Roles = { [role in Role]: any };
 
 export class CApp extends CUqApp {
 	constructor(tonwa: Tonwa) {
@@ -29,6 +31,8 @@ export class CApp extends CUqApp {
 	}
 
 	appNav: AppNav;
+	meAdmin: boolean;
+	meRoles: Roles;
 	cTag: CTag;
 	cHome: CHome;
 	cActs: CActs;
@@ -80,11 +84,29 @@ export class CApp extends CUqApp {
 		let { BzWorkshop } = this.uqs;
 		let ret = await Promise.all([
 			this.cIds.load(),
+			BzWorkshop.AdminIsMe(),
 			BzWorkshop.IXValues({
-				IX: BzWorkshop.UserObject,
+				IX: BzWorkshop.UserRole,
 			})
 		]);
-		let userObjects = ret[1];
+		this.meRoles = this.buildRoles(ret[2]);
+		this.meAdmin = ret[1];
+	}
+
+	private buildRoles(typeValues: { type: string; value: string }[]): Roles {
+		let { BzWorkshop } = this.uqs;
+		let roles: Roles = {} as Roles;
+		for (let row of typeValues) {
+			let { type, value } = row;
+			let v = BzWorkshop.IDValue(type, value);
+			switch (type) {
+				case 'personrole':
+					let { person, role } = v as any;
+					roles[role as Role] = person;
+					break;
+			}
+		}
+		return roles;
 	}
 
 	// 数据服务器提醒客户端刷新，下面代码重新调入的数据
@@ -121,5 +143,18 @@ export class CApp extends CUqApp {
 		}
 		catch {
 		}
+	}
+
+	isRole(roles: Role[]): boolean {
+		if (roles === undefined) return false;
+		for (let r of roles) {
+			if (this.meRoles[r] !== undefined) return true;
+		}
+		return false;
+	}
+
+	isAdminOrRole(roles?: Role[]): boolean {
+		if (this.meAdmin === true) return true;
+		return this.isRole(roles);
 	}
 }

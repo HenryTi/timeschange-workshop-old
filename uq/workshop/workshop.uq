@@ -112,8 +112,9 @@ RETURNS ret (
     INTO ret SELECT b.id, b.date, b.vice, b.time, b.span
         , c.ix as workshop
         , a.own, a.substitue, a.done
-        FROM UserObject as u
-            JOIN IxSessionStaff as a ON a.xi=u.xi
+        FROM UserRole as u
+            JOIN PersonRole as r ON u.xi=r.id
+            JOIN IxSessionStaff as a ON a.xi=r.person
             JOIN Session as b ON a.ix=b.id
             JOIN IxWorkshopSession as c ON b.id=c.xi
         WHERE u.ix=$user AND (a.own > 0 OR a.substitue > 0 OR a.done > 0)

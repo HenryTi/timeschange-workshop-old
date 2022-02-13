@@ -98,12 +98,12 @@ export abstract class CIdBase extends Control {
     onAdd = async (): Promise<void> => {
         this.addedIds = [];
         await this.initAdd();
-        this.open(this.VAdd);
+        this.open(this.VAdd, this.afterAdded);
     }
 
     get ids(): number[] { return this.addedIds; }
 
-    async afterAdd() {
+    afterAdded = async () => {
         if (this.afterAddCallback) {
             await this.afterAddCallback(this.addedIds);
             this.afterAddCallback = undefined;

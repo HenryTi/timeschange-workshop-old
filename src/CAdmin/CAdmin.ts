@@ -1,5 +1,6 @@
 import { CAdminBase } from "Control";
 import { CApp, UQs } from "uq-app";
+import { VRoleSettings } from "./VRoleSettings";
 
 export class CAdmin extends CAdminBase {
     readonly cApp: CApp;
@@ -27,7 +28,15 @@ export class CAdmin extends CAdminBase {
         return await this.cApp.userFromId(id);
     }
 
-    protected get me(): number {
+    protected async userFromName(userName: string): Promise<any> {
+        return await this.cApp.userFromName(userName);
+    }
+
+    get me(): number {
         return this.cApp.user.id;
+    }
+
+    renderRoleSettings(): JSX.Element {
+        return this.render(VRoleSettings);
     }
 }

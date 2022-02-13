@@ -11,6 +11,7 @@ export class VStart extends Page<CIds> {
         let { cWorkshop, cStaff, cClient, cTag } = this.control;
         return <div>{
             [cWorkshop, cStaff, cClient, cTag].map((v, index) => {
+                if (v.isVisible() === false) return null;
                 let { caption, icon, iconClass } = v;
                 let right = <FA name="angle-right" />;
                 let vIcon = <FA name={icon} className={(iconClass ?? 'text-primary') + ' me-4'} fixWidth={true} size="lg" />;

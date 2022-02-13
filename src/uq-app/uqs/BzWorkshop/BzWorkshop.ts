@@ -1,4 +1,4 @@
-//=== UqApp builder created on Thu Feb 10 2022 00:30:39 GMT-0500 (北美东部标准时间) ===//
+//=== UqApp builder created on Sat Feb 12 2022 16:10:27 GMT-0500 (北美东部标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIX } from "tonwa-core";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -12,6 +12,11 @@ import { Render, IDXEntity } from "tonwa-react";
 export enum Gender {
 	female = 0,
 	male = 1
+}
+
+export enum Role {
+	counselor = 1,
+	volunteer = 20
 }
 
 export interface Tuid$user {
@@ -240,18 +245,13 @@ export interface TagItem {
 	name: string;
 }
 
-export interface Role {
+export interface PersonRole {
 	id?: number;
-	name: string;
-	discription: string;
+	person: number;
+	role: any;
 }
 
 export interface IXPerson {
-	ix: number;
-	xi: number;
-}
-
-export interface UserObject {
 	ix: number;
 	xi: number;
 }
@@ -301,7 +301,7 @@ export interface IxLocalIdTag {
 	xi: number;
 }
 
-export interface UserLocal {
+export interface UserRole {
 	ix: number;
 	xi: number;
 }
@@ -316,9 +316,8 @@ export interface ParamActs {
 	tag?: Tag[];
 	tagGroup?: TagGroup[];
 	tagItem?: TagItem[];
-	role?: Role[];
+	personRole?: PersonRole[];
 	iXPerson?: IXPerson[];
-	userObject?: UserObject[];
 	ixStaffClient?: IxStaffClient[];
 	ixSessionClient?: IxSessionClient[];
 	ixWorkshopSession?: IxWorkshopSession[];
@@ -327,7 +326,7 @@ export interface ParamActs {
 	ixTag?: IxTag[];
 	ixGlobalIdTag?: IxGlobalIdTag[];
 	ixLocalIdTag?: IxLocalIdTag[];
-	userLocal?: UserLocal[];
+	userRole?: UserRole[];
 }
 
 
@@ -359,9 +358,8 @@ export interface UqExt extends Uq {
 	Tag: UqID<any> & IDXEntity<any>;
 	TagGroup: UqID<any> & IDXEntity<any>;
 	TagItem: UqID<any> & IDXEntity<any>;
-	Role: UqID<any> & IDXEntity<any>;
+	PersonRole: UqID<any> & IDXEntity<any>;
 	IXPerson: UqIX<any>;
-	UserObject: UqIX<any>;
 	IxStaffClient: UqIX<any>;
 	IxSessionClient: UqIX<any>;
 	IxWorkshopSession: UqIX<any>;
@@ -370,7 +368,7 @@ export interface UqExt extends Uq {
 	IxTag: UqIX<any>;
 	IxGlobalIdTag: UqIX<any>;
 	IxLocalIdTag: UqIX<any>;
-	UserLocal: UqIX<any>;
+	UserRole: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

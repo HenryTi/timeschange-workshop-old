@@ -2,26 +2,22 @@ UQ [BizDev]/[workshop] version='0.1.1' author='henry' {
     SCHEDULE Test ON 6:31;
 }
 
-IX *UserObject (
-    ix User,
-    xi Person,
+ENUM Role ( 
+    counselor = 1,
+    volunteer = 20,
 );
 
-IX *UserLocal (
+IX *UserRole (
     ix User,
-    xi Type Local,
+    xi TYPE Local,
 );
 
-ID Role CONST (
+ID PersonRole (
     id,
-    KEY name CHAR(50),
-    discription CHAR(100),
-)
-+ (name, discription)
-values 
-('counselor', null),
-('volunteer', null),
-;
+    KEY person ID Person,
+    KEY role ENUM Role,
+    INDEX role_person(role, person) UNIQUE,
+);
 
 PROC Test() {
     VAR a INT;

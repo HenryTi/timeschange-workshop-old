@@ -7,7 +7,7 @@ import { VSelectMulti, VSelectOne } from "./VSelect";
 
 export abstract class CSelect<R extends IdValue | IdValue[]> extends Control {
     cId: CIdBase;
-    resolve: (value: R | PromiseLike<R>) => void;
+    //resolve: (value: R | PromiseLike<R>) => void;
     shallowData: {
         items: any[];
     } = shallowReact({
@@ -19,16 +19,13 @@ export abstract class CSelect<R extends IdValue | IdValue[]> extends Control {
         this.cId = cId;
     }
 
-    protected abstract get VSelect(): new (c: Control) => Page<Control>;
+    protected abstract get VSelect(): new (c: any) => Page<any>;
 
-    select(options?: SelectOptions): Promise<R> {
-        return new Promise<R>(async (resolve, reject) => {
-            this.resolve = resolve;
-            if (options?.listAll !== false) {
-                await this.search(undefined);
-            }
-            this.open(this.VSelect, options);
-        });
+    async select(options?: SelectOptions): Promise<R> {
+        if (options?.listAll !== false) {
+            await this.search(undefined);
+        }
+        return await this.call<R>(this.VSelect, options);
     }
 
     search = async (key: string): Promise<void> => {
@@ -52,13 +49,13 @@ export abstract class CSelect<R extends IdValue | IdValue[]> extends Control {
 }
 
 export class CSelectOne extends CSelect<IdValue> {
-    protected get VSelect(): new (c: Control) => Page<Control> {
+    protected get VSelect(): new (c: CSelectOne) => Page<CSelectOne> {
         return VSelectOne as any;
     }
 }
 
 export class CSelectMulti extends CSelect<IdValue[]> {
-    protected get VSelect(): new (c: Control) => Page<Control> {
+    protected get VSelect(): new (c: this) => Page<this> {
         return VSelectMulti as any;
     }
 }

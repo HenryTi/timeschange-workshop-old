@@ -35,4 +35,8 @@ export class CTag extends CTagBase {
     get caption(): string { return 'Tags admin'; }
     get icon(): string { return 'tag'; }
     get iconClass(): string { return 'text-danger'; }
+
+    isVisible(): boolean {
+        return this.cApp.isAdminOrRole();
+    }
 }

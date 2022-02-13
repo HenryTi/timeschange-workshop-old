@@ -20,18 +20,27 @@ export abstract class Page<C extends Control, P = any> extends View<C, P> {
             back={this.back}
             headerClassName={this.headerClassName}
             className={this.className}
-            afterBack={() => this.afterBack()}
             tabsProps={this.tabsProps}
             logout={logout}
         >
             {this.content()}
         </TonwaReactPage>;
+        //afterBack={() => this.internalAfterBack()}
     }
+    /*
+    protected internalAfterBack() {
+        if (!this.afterBack) return;
+        this.afterBack();
+    }
+    */
+
+    callValue: any;
+    //afterBack: () => void | Promise<void>;
 
     protected onPageScroll(e: any) { }
     protected async onPageScrollTop(scroller: Scroller): Promise<boolean> { return false; }
     protected async onPageScrollBottom(scroller: Scroller): Promise<void> { return; }
-    protected afterBack(): void { }
+    // protected afterBack(): void { }
     protected get back(): 'close' | 'back' | 'none' { return 'back' }
     protected get headerClassName(): string { return null; }
     protected get className(): string { return null; }

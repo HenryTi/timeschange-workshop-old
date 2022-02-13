@@ -1,11 +1,17 @@
-import { deepReact, setReact } from "Control";
+import { CStringEdit, deepReact, setReact } from "Control";
+import { UiTextItem } from "tonwa-react";
 import { Control } from "../Control";
+import { VAddUser } from "./VAddUser";
 import { VMeSysAdmin } from "./VMeSysAdmin";
 import { VStart } from "./VStart";
+import { VUser } from "./VUser";
+
+export enum EnumAdminRoleInEdit { sys = 1, admin = 2, nSys = -1, nAdmin = -2, }
 
 export interface Admin {
     id: number;
-    role: number;
+    role: EnumAdminRoleInEdit;
+    operator: number;
     create: number;
     update: number;
     user: number;
@@ -28,11 +34,12 @@ export abstract class CAdminBase extends Control {
         sysAdmins: [],
     });
 
+    abstract get me(): number;
     protected abstract loadAdmins(): Promise<any[]>;
     protected abstract setMeAdmin(): Promise<void>;
     protected abstract setAdmin(user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void>;
-    protected abstract get me(): number;
     protected abstract userFromId(id: number): Promise<any>;
+    protected abstract userFromName(userName: string): Promise<any>;
 
     async load(): Promise<void> {
         if (this.adminsChanged === false) return;
@@ -52,8 +59,9 @@ export abstract class CAdminBase extends Control {
             }
             let { role } = admin;
             switch (role) {
-                case 1:
                 case -1:
+                    break;
+                case 1:
                     sysAdmins.push(admin);
                     break;
                 case 2:
@@ -66,16 +74,18 @@ export abstract class CAdminBase extends Control {
             this.deep.sysAdmins = sysAdmins;
             this.deep.admins = admins;
         });
-        this.onAdmin = async () => {
-            await this.openMain();
+        if (meAdmin) {
+            this.onAdmin = async () => {
+                await this.openMain();
+            }
         }
     }
 
     private async loadUserNames(admins: Admin[]) {
         let ids: number[] = [];
         for (let admin of admins) {
-            let { user } = admin;
-            if (user) ids.push(user);
+            let { id, user } = admin;
+            if (!user) ids.push(id);
         }
         if (ids.length === 0) return;
         let promises: Promise<any>[] = ids.map(id => this.userFromId(id));
@@ -108,12 +118,15 @@ export abstract class CAdminBase extends Control {
         this.close();
     }
 
-    async onAddAdmin(role: 1 | 2) {
-        let user = 2;
-        let name = 'a';
-        let nick = 'b';
-        let icon: string;
-        let assigned = 'assigned';
+    async searchUser(key: string): Promise<any> {
+        let user = await this.userFromName(key);
+        return user;
+    }
+
+    async onAddAdmin(role: EnumAdminRoleInEdit) {
+        let ret = await this.call<any, CAdminBase>(VAddUser, role);
+        if (!ret) return;
+        let { id: user, name, nick, icon, assigned } = ret;
         await this.setAdmin(user, role, name, nick, icon, assigned);
         setReact(() => {
             let tick = Date.now() / 1000;
@@ -121,6 +134,7 @@ export abstract class CAdminBase extends Control {
                 id: user,
                 user,
                 role,
+                operator: undefined,
                 name,
                 nick,
                 icon,
@@ -150,11 +164,31 @@ export abstract class CAdminBase extends Control {
         setReact(() => {
             let list = role === 1 ? this.deep.sysAdmins : this.deep.admins;
             this.removeAdmin(list, admin);
+            this.adminsChanged = true;
         });
     }
 
     private removeAdmin(list: Admin[], admin: Admin) {
         let p = list.findIndex(v => v.id === admin.id);
-        list.splice(p, 1);
+        if (p >= 0) list.splice(p, 1);
+    }
+
+    onUser = async (admin: Admin) => {
+        this.open(VUser, admin);
+    }
+
+    onEditRemark = async (admin: Admin) => {
+        let cStringEdit = new CStringEdit(this.nav, {
+            itemSchema: { name: 'remark', type: 'string', required: true },
+            uiItem: { widget: 'text', maxLength: 100, label: 'Remark' } as UiTextItem,
+            value: admin.assigned,
+            onChanged: async (fieldName: string, value: any) => {
+                admin.assigned = value;
+                let { id, role, name, nick, icon, assigned } = admin;
+                await this.setAdmin(id, role, name, nick, icon, assigned);
+                this.adminsChanged = true;
+            }
+        });
+        cStringEdit.onEdit();
     }
 }
