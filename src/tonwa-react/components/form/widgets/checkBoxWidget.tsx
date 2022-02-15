@@ -39,6 +39,7 @@ export class CheckBoxWidget extends Widget {
     }
 
     render() {
+        let { align } = this._ui as UiCheckItem;
         let cn = classNames(this.className, 'form-check-inline p-0');
         let input = <input
             ref={(input) => this.input = input}
@@ -47,8 +48,15 @@ export class CheckBoxWidget extends Widget {
             defaultChecked={this.defaultValue}
             onChange={this.onInputChange}
             onClick={this.onClick} />;
-        if (this.context.inNode === true) {
-            return <label className={cn}>
+        if (this.context.inNode === true || align) {
+            let cnAlign: string;
+            if (!align) {
+                cnAlign = '';
+            }
+            else {
+                cnAlign = ` justify-content-${align} mb-3 `;
+            }
+            return <label className={cn + cnAlign}>
                 {input} {(this.ui && this.ui.label) || this.name}
             </label>
         }

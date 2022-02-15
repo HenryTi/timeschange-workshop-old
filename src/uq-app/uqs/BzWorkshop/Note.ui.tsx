@@ -29,11 +29,16 @@ const fields = {
 		"isKey": false,
 		"label": "Note"
 	} as undefined,
+	sensitive: {
+		"name": "sensitive",
+		"isKey": false,
+		"label": "Sensitive"
+	} as undefined,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.staff, fields.client, fields.note, 
+	fields.staff, fields.client, fields.note, fields.sensitive, 
 ];
 
 export const ui: UI = {

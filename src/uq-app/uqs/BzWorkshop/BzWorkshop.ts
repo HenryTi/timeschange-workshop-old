@@ -1,4 +1,4 @@
-//=== UqApp builder created on Mon Feb 14 2022 22:34:01 GMT-0500 (北美东部标准时间) ===//
+//=== UqApp builder created on Tue Feb 15 2022 12:15:55 GMT-0500 (北美东部标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIX } from "tonwa-core";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,6 +59,7 @@ export interface ParamSaveNote {
 	staff: number;
 	client: number;
 	note: string;
+	sensitive: number;
 }
 export interface ReturnSaveNoteRet {
 	id: number;
@@ -247,6 +248,7 @@ export interface Note {
 	staff: number;
 	client: number;
 	note: string;
+	sensitive: number;
 }
 
 export interface Session {

@@ -24,7 +24,7 @@ export interface Title {
 	fixed?: number;
 }
 
-type Roles = { [role in Role]: any };
+type Roles = { [role in Role]: number };
 
 export class CApp extends CUqApp {
 	constructor(tonwa: Tonwa) {
@@ -161,5 +161,12 @@ export class CApp extends CUqApp {
 	isAdminOrRole(roles?: Role[]): boolean {
 		if (this.meAdmin === true) return true;
 		return this.isRole(roles);
+	}
+
+	isPersonMe(person: number): boolean {
+		for (let i in this.meRoles) {
+			if (person === this.meRoles[Number(i) as Role]) return true;
+		}
+		return false;
 	}
 }

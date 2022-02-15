@@ -12,9 +12,9 @@ export abstract class Control {
         return t;
     }
 
-    open<C extends Control, P = any>(Pg: new (c: C, props: P) => Page<C>, props?: P, afterClose?: () => void): Page<C> {
+    open<C extends Control, P = any>(Pg: new (c: C, props: P) => Page<C>, props?: P, afterClose?: (page: Page<C>) => void): Page<C> {
         let p: Page<C> = new Pg(this as unknown as C, props) as any;
-        this.nav.open(p.render(), afterClose);
+        this.nav.open(p.render(), () => afterClose?.(p));
         return p;
     }
 
@@ -31,17 +31,13 @@ export abstract class Control {
     call<R, C extends Control = this, P = any>(Pg: new (c: C, props: P) => Page<C>, props?: P): Promise<R> {
         return new Promise<R>(async (resolve, reject) => {
             //this.callPromises.push(resolve);
-            let page = this.open(Pg, props, () => {
+            this.open(Pg, props, (page: Page<C>) => {
                 resolve(page.callValue);
             });
         });
     }
 
     callReturn(page: Page<any>, ret: any) {
-        //let promise = this.callPromises.pop();
-        //if (!promise) throw new Error('no call made');
-        //promise(ret);
         page.callValue = ret;
-        this.close();
     }
 }

@@ -52,9 +52,8 @@ export class VSelectOne extends VSelect<CSelectOne> {
     }
 
     private onItemClick = (item: any) => {
-        this.control.close();
-        //this.control.resolve(item);
         this.control.callReturn(this, item);
+        this.control.close();
     }
 }
 
@@ -76,5 +75,6 @@ export class VSelectMulti extends VSelect<CSelectMulti> {
             { id: 78905346 } as IdValue,
             { id: 78905347 } as IdValue,
         ]);
+        this.control.close();
     }
 }

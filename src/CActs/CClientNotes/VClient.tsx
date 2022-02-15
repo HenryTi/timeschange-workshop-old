@@ -43,9 +43,16 @@ export class VClient extends Page<CClientNotes> {
     }
 
     private renderNote(note: Note) {
-        let { note: noteContent } = note;
+        let { note: noteContent, staff, sensitive } = note;
+        let vLock: any;
+        if (sensitive === 1) {
+            vLock = <FA name="lock" className="text-danger me-3" />
+            if (this.control.cActs.cApp.isPersonMe(staff) === true) {
+                return <div className="text-muted small">{vLock} #sensitive</div>;
+            }
+        }
         return <>{noteContent.split('\n').map((v, index) =>
-            <div key={index} className="my-1">{v}</div>
+            <div key={index} className="my-1">{vLock} {v}</div>
         )}</>;
     }
 

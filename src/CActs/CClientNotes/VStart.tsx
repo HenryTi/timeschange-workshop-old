@@ -39,6 +39,7 @@ export class VStart extends Page<CClientNotes> {
     private onSearch = async () => {
         let cSelectOne = new CSelectOne(this.control.cClient);
         let ret = await cSelectOne.select(); //this.control.cClient.selectOne();
+        if (!ret) return;
         this.control.showClient(ret as any);
     }
 }

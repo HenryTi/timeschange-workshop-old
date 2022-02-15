@@ -39,6 +39,7 @@ export interface UiItem {
     discriptionClassName?: string;
     defaultValue?: any;
     hiden?: boolean;
+    align?: 'start' | 'center' | 'end';
 }
 
 export interface UiCustom extends UiItem {

@@ -157,13 +157,13 @@ export abstract class CIdBase extends Control {
         return VEditId;
     }
 
-    protected async loadOnEdit() {
+    protected async beforeEdit() {
     }
 
     onEditItem = async (item: any) => {
         setReact(async () => {
             this.deepData.currentItem = item;
-            await this.loadOnEdit();
+            await this.beforeEdit();
             this.open(this.VEdit);
         });
     }

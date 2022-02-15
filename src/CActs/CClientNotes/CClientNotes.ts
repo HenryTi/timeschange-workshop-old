@@ -78,6 +78,7 @@ export class CClientNotes extends CAct {
             staff: 10,
             client: client.id,
             note: data.note,
+            sensitive: data.sensitive === true ? 1 : 0,
         };
         let { BzWorkshop } = this.uqs;
         let ret = await BzWorkshop.SaveNote.submitReturns(note as any);

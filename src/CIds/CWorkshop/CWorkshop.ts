@@ -68,8 +68,8 @@ export class CWorkshop extends CId {
         };
     }
 
-    protected async loadOnEdit() {
-        await this.cTagInput.loadOnEdit(this.tagGroupName, this.deepData.currentItem.id);
+    protected async beforeEdit() {
+        await this.cTagInput.beforeEdit(this.tagGroupName, this.deepData.currentItem.id);
         await this.cSession.loadToList()
     }
 

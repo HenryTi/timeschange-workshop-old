@@ -23,7 +23,7 @@ export class CTagInput extends Control {
         this.IxID = IxID;
     }
 
-    async loadOnEdit(tagGroupName: string, id: number): Promise<void> {
+    async beforeEdit(tagGroupName: string, id: number): Promise<void> {
         this.tagGroup = await this.cTag.loadGroup(tagGroupName);
         this.id = id;
         let ret = await this.cId.uq.IX<{ ix: number, xi: number }>({

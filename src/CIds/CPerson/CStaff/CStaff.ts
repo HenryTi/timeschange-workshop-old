@@ -20,9 +20,9 @@ export class CStaff extends CPerson {
     get icon() { return 'user' }
     isInRole(role: Role): boolean { return staffRoleCaptions[role] !== undefined; }
 
-    protected async loadOnEdit() {
+    protected async beforeEdit() {
         this.cRoleSingle = new CRoleSingle(this);
-        await super.loadOnEdit();
+        await super.beforeEdit();
     }
 
     get VEdit(): new (c: CIdBase) => Page<CPerson> {

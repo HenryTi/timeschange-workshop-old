@@ -1,6 +1,7 @@
 import { Page, setReact, shallowReact } from "Control";
 import { FA, Image, SearchBox } from "tonwa-react";
 import { mutedSmall } from "tool";
+import { User } from ".";
 import { CUser } from "./CUser";
 
 export class VSelectUser extends Page<CUser> {
@@ -43,7 +44,7 @@ export class VSelectUser extends Page<CUser> {
                             </div>
                         </div>
                         <div className="text-center mt-5">
-                            <button className="btn btn-primary" onClick={() => this.control.callReturn(this, user)}>
+                            <button className="btn btn-primary" onClick={() => this.onSelected(user)}>
                                 {this.header()}
                             </button>
                         </div>
@@ -54,6 +55,11 @@ export class VSelectUser extends Page<CUser> {
                 </div>;
             })}
         </div>;
+    }
+
+    private onSelected = (user: User) => {
+        this.control.callReturn(this, user);
+        this.control.close();
     }
 
     private onSearch = async (key: string) => {

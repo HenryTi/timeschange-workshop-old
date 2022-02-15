@@ -32,10 +32,10 @@ export abstract class CId extends CIdBase {
         await this.uqs.BzWorkshop.ActIDProp(this.ID, id, name, value);
     }
 
-    protected async loadOnEdit() {
+    protected async beforeEdit() {
         let tagGroupName = this.tagGroupName;
         if (tagGroupName !== undefined) {
-            await this.cTagInput.loadOnEdit(tagGroupName, this.deepData.currentItem.id);
+            await this.cTagInput.beforeEdit(tagGroupName, this.deepData.currentItem.id);
         }
     }
 

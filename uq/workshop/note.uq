@@ -3,6 +3,7 @@ ID Note MINUTE (
     staff ID Person,
     client ID Person,
     note TEXT,
+    sensitive TINYINT DEFAULT 0,
 );
 
 IX *IxStaffClient (
@@ -26,7 +27,7 @@ RETURNS ret (
     IF staff IS NULL {
         RETURN;
     }
-    WITH Note as a ID=id SET a.staff=staff, a.client=client, a.note=note;
+    WITH Note as a ID=id SET a.staff=staff, a.client=client, a.note=note, a.sensitive=sensitive;
     -- WITH IxPersonNote IX=client XI=id;
     WITH IxPersonLog IX=client XI=id;
     WITH IxPersonLog IX=staff XI=id;

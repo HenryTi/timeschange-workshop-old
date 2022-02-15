@@ -1,5 +1,5 @@
 import { Page } from "Control";
-import { ButtonSchema, Context, Form, Schema, StringSchema, UiButton, UiSchema, UiTextAreaItem } from "tonwa-react";
+import { BoolSchema, ButtonSchema, Context, Form, Schema, StringSchema, UiButton, UiCheckItem, UiSchema, UiTextAreaItem } from "tonwa-react";
 import { CClientNotes } from ".";
 
 export class VAddNote extends Page<CClientNotes> {
@@ -11,11 +11,13 @@ export class VAddNote extends Page<CClientNotes> {
     content(): JSX.Element {
         let schema: Schema = [
             { name: 'note', type: 'string' } as StringSchema,
-            { name: 'submit', type: 'submit' } as ButtonSchema
+            { name: 'sensitive', type: 'boolean' } as BoolSchema,
+            { name: 'submit', type: 'submit' } as ButtonSchema,
         ];
         let uiSchema: UiSchema = {
             items: {
-                note: { widget: 'textarea', placeholder: 'input note here', rows: 10 } as UiTextAreaItem,
+                note: { widget: 'textarea', placeholder: 'input note here', label: 'Note', rows: 10 } as UiTextAreaItem,
+                sensitive: { widget: 'checkbox', label: 'Sensitive', align: 'start' } as UiCheckItem,
                 submit: { widget: 'button', className: 'btn btn-primary', label: 'Submit' } as UiButton,
             }
         };

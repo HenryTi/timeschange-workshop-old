@@ -47,8 +47,6 @@ export abstract class CEnumSingle<E extends number> extends CEnumBase<E> {
         });
         if (this.OnEnumChanged) this.OnEnumChanged(e);
     }
-
-
 }
 
 export abstract class CEnumMulti<E extends number> extends CEnumBase<E> {

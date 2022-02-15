@@ -83,8 +83,8 @@ RETURNS ret (
         b.gender, b.year, b.month, b.day, 
         b.email, b.mobile, b.mobileCountry
         FROM IXPersonRole as a
-            JOIN Person as b ON a.xi=b.id
-        WHERE a.ix=role
+            JOIN Person as b ON a.ix=b.id
+        WHERE a.xi=role
             AND (b.no LIKE key
                 OR b.name LIKE key
                 OR b.vice LIKE key
