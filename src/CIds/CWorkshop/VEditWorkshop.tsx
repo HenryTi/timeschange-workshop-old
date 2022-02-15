@@ -1,7 +1,7 @@
-import { VEdit } from "Control";
+import { VEditId } from "Control";
 import { CWorkshop } from "./CWorkshop";
 
-export class VEditWorkshop extends VEdit<CWorkshop> {
+export class VEditWorkshop extends VEditId<CWorkshop> {
     content() {
         return <div className="">
             <div className="my-3 border rounded-3 pt-1">

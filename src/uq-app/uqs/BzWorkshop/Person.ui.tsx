@@ -76,11 +76,32 @@ const fields = {
 		"isKey": false,
 		"label": "Day"
 	} as undefined,
+	email: {
+		"name": "email",
+		"type": "string",
+		"isKey": false,
+		"widget": "string",
+		"label": "Email"
+	} as FieldItemString,
+	mobile: {
+		"name": "mobile",
+		"type": "string",
+		"isKey": false,
+		"widget": "string",
+		"label": "Mobile"
+	} as FieldItemString,
+	mobileCountry: {
+		"name": "mobileCountry",
+		"type": "string",
+		"isKey": false,
+		"widget": "string",
+		"label": "MobileCountry"
+	} as FieldItemString,
 };
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.no, fields.name, fields.vice, fields.firstName, fields.lastName, fields.middleName, fields.gender, fields.year, fields.month, fields.day, 
+	fields.no, fields.name, fields.vice, fields.firstName, fields.lastName, fields.middleName, fields.gender, fields.year, fields.month, fields.day, fields.email, fields.mobile, fields.mobileCountry, 
 ];
 
 export const ui: UI = {

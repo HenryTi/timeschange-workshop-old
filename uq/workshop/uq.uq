@@ -1,12 +1,26 @@
 UQ [BizDev]/[workshop] version='0.1.1' author='henry' {
-    SCHEDULE Test ON 6:31;
+    -- SCHEDULE Test ON 6:31;
 }
 
 ENUM Role ( 
-    counselor = 1,
-    volunteer = 20,
+    staff = 10,
+    counselor = 11,
+    volunteer = 12,
+    board = 13,
+    client = 20,
+    donator = 30,
 );
 
+IX *IxUserPerson (
+    ix User,
+    xi Person INDEX,
+);
+
+IX *IxPersonRole (
+    ix Person,
+    xi ENUM Role INDEX,
+);
+/*
 IX *UserRole (
     ix User,
     xi TYPE Local,
@@ -23,3 +37,4 @@ PROC Test() {
     VAR a INT;
     SET a=1;
 };
+*/

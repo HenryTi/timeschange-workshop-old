@@ -248,11 +248,11 @@ enum EnumResultType { data, sql };
 export interface Uq {
 	AdminGetList(): Promise<any[]>;
 	AdminSetMe(): Promise<void>;
-	AdminSet(user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void>;
+	AdminSet(user: number, role: number, assigned: string): Promise<void>;
 	AdminIsMe(): Promise<boolean>;
 
 	IDValue(type: string, value: string): object;
-	$: UqMan;
+	$: Uq;
 	Acts(param: any): Promise<any>;
 	ActIX<T>(param: ParamActIX<T>): Promise<number[]>;
 	ActIXSort(param: ParamActIXSort): Promise<void>;
@@ -299,6 +299,7 @@ export class UqMan {
 	//private readonly tvs:{[entity:string]:(values:any)=>JSX.Element};
 	idCache: IDCache;
 	proxy: any;
+	$proxy: any;
 	readonly localMap: LocalMap;
 	readonly localModifyMax: LocalCache;
 	readonly tuids: { [name: string]: Tuid } = {};
@@ -719,7 +720,7 @@ export class UqMan {
 			get: (target, key, receiver) => {
 				let lk = (key as string).toLowerCase();
 				if (lk === '$') {
-					return this;
+					return this.$proxy;
 				}
 				let ret = target[lk];
 				if (ret !== undefined) return ret;
@@ -732,6 +733,19 @@ export class UqMan {
 			}
 		});
 		this.proxy = ret;
+		this.$proxy = new Proxy(this.entities, {
+			get: (target, key, receiver) => {
+				let lk = (key as string).toLowerCase();
+				let ret = target[lk];
+				if (ret !== undefined) return ret;
+				let func = (this as any)['$' + (key as string)];
+				if (func !== undefined) return func;
+				let err = `entity ${this.name}.${String(key)} not defined`;
+				console.error('UQ错误：' + err);
+				this.showReload('服务器正在更新');
+				return undefined;
+			}
+		});
 		this.idCache = new IDCache(this);
 		return ret;
 	}

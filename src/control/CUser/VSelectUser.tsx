@@ -1,16 +1,16 @@
 import { Page, setReact, shallowReact } from "Control";
 import { FA, Image, SearchBox } from "tonwa-react";
-import { EnumAdminRoleInEdit } from ".";
-import { CAdminBase } from "./CAdminBase";
+import { mutedSmall } from "tool";
+import { CUser } from "./CUser";
 
-export class VAddUser extends Page<CAdminBase, EnumAdminRoleInEdit> {
+export class VSelectUser extends Page<CUser> {
     shallow: {
         user: any;
     } = shallowReact({
         user: null,
     });
     header(): string | boolean | JSX.Element {
-        return 'Add ' + (this.props === EnumAdminRoleInEdit.sys ? 'system admin' : 'admin');
+        return this.control.caption;
     }
 
     protected get back(): "close" | "back" | "none" {
@@ -36,10 +36,10 @@ export class VAddUser extends Page<CAdminBase, EnumAdminRoleInEdit> {
                     let { name, nick, icon } = user;
                     vContent = <>
                         <div className="d-flex">
-                            <Image src={icon} className="me-4" />
+                            <Image src={icon} className="me-4 w-2-5c h-2-5c" />
                             <div>
-                                <div>Name: {name}</div>
-                                <div>Nick: {nick}</div>
+                                <div>{mutedSmall('Name:')} &nbsp; {name}</div>
+                                <div>{mutedSmall('Nick:')} &nbsp; {nick}</div>
                             </div>
                         </div>
                         <div className="text-center mt-5">

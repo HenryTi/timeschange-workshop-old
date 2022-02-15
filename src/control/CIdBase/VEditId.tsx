@@ -5,7 +5,7 @@ import { CIdBase } from "./CIdBase";
 
 //const cnRow = 'px-3 py-2 bg-white border-bottom cursor-pointer';
 
-export class VEdit<C extends CIdBase = any> extends Page<C> {
+export class VEditId<C extends CIdBase = any> extends Page<C> {
     header(): string | boolean | JSX.Element {
         return this.control.caption + ' ' + this.control.deepData.currentItem.no;
     }

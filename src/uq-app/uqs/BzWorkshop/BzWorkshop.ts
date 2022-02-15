@@ -1,4 +1,4 @@
-//=== UqApp builder created on Sat Feb 12 2022 16:10:27 GMT-0500 (北美东部标准时间) ===//
+//=== UqApp builder created on Mon Feb 14 2022 22:34:01 GMT-0500 (北美东部标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIX } from "tonwa-core";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,8 +15,12 @@ export enum Gender {
 }
 
 export enum Role {
-	counselor = 1,
-	volunteer = 20
+	staff = 10,
+	counselor = 11,
+	volunteer = 12,
+	board = 13,
+	client = 20,
+	donator = 30
 }
 
 export interface Tuid$user {
@@ -110,7 +114,7 @@ export interface Result$getUnitTime {
 }
 
 export interface ParamPersonSearch {
-	category: number;
+	role: any;
 	key: string;
 }
 export interface ReturnPersonSearchRet {
@@ -125,6 +129,9 @@ export interface ReturnPersonSearchRet {
 	year: number;
 	month: number;
 	day: number;
+	email: string;
+	mobile: string;
+	mobileCountry: string;
 }
 export interface ResultPersonSearch {
 	ret: ReturnPersonSearchRet[];
@@ -144,6 +151,9 @@ export interface ReturnMyClientsRet {
 	year: number;
 	month: number;
 	day: number;
+	email: string;
+	mobile: string;
+	mobileCountry: string;
 }
 export interface ResultMyClients {
 	ret: ReturnMyClientsRet[];
@@ -178,17 +188,41 @@ export interface ResultGetPersonLog {
 	ret: ReturnGetPersonLogRet[];
 }
 
+export interface ParamGetPersonList {
+	role: any;
+}
+export interface ReturnGetPersonListRet {
+	id: number;
+	no: string;
+	name: string;
+	vice: string;
+	firstName: string;
+	lastName: string;
+	middleName: string;
+	gender: any;
+	year: number;
+	month: number;
+	day: number;
+	email: string;
+	mobile: string;
+	mobileCountry: string;
+	user: number;
+}
+export interface ReturnGetPersonListRoles {
+	person: number;
+	role: any;
+}
+export interface ResultGetPersonList {
+	ret: ReturnGetPersonListRet[];
+	roles: ReturnGetPersonListRoles[];
+}
+
 export interface Workshop {
 	id?: number;
 	no?: string;
 	name: string;
 	vice: string;
 	staff: number;
-}
-
-export interface PersonCategory {
-	id?: number;
-	name: string;
 }
 
 export interface Person {
@@ -203,6 +237,9 @@ export interface Person {
 	year: number;
 	month: number;
 	day: number;
+	email: string;
+	mobile: string;
+	mobileCountry: string;
 }
 
 export interface Note {
@@ -243,17 +280,6 @@ export interface TagGroup {
 export interface TagItem {
 	id?: number;
 	name: string;
-}
-
-export interface PersonRole {
-	id?: number;
-	person: number;
-	role: any;
-}
-
-export interface IXPerson {
-	ix: number;
-	xi: number;
 }
 
 export interface IxStaffClient {
@@ -301,14 +327,18 @@ export interface IxLocalIdTag {
 	xi: number;
 }
 
-export interface UserRole {
+export interface IxPersonRole {
+	ix: number;
+	xi: number;
+}
+
+export interface IxUserPerson {
 	ix: number;
 	xi: number;
 }
 
 export interface ParamActs {
 	workshop?: Workshop[];
-	personCategory?: PersonCategory[];
 	person?: Person[];
 	note?: Note[];
 	session?: Session[];
@@ -316,8 +346,6 @@ export interface ParamActs {
 	tag?: Tag[];
 	tagGroup?: TagGroup[];
 	tagItem?: TagItem[];
-	personRole?: PersonRole[];
-	iXPerson?: IXPerson[];
 	ixStaffClient?: IxStaffClient[];
 	ixSessionClient?: IxSessionClient[];
 	ixWorkshopSession?: IxWorkshopSession[];
@@ -326,7 +354,8 @@ export interface ParamActs {
 	ixTag?: IxTag[];
 	ixGlobalIdTag?: IxGlobalIdTag[];
 	ixLocalIdTag?: IxLocalIdTag[];
-	userRole?: UserRole[];
+	ixPersonRole?: IxPersonRole[];
+	ixUserPerson?: IxUserPerson[];
 }
 
 
@@ -349,8 +378,8 @@ export interface UqExt extends Uq {
 	MyClients: UqQuery<ParamMyClients, ResultMyClients>;
 	MySessions: UqQuery<ParamMySessions, ResultMySessions>;
 	GetPersonLog: UqQuery<ParamGetPersonLog, ResultGetPersonLog>;
+	GetPersonList: UqQuery<ParamGetPersonList, ResultGetPersonList>;
 	Workshop: UqID<any> & IDXEntity<any>;
-	PersonCategory: UqID<any> & IDXEntity<any>;
 	Person: UqID<any> & IDXEntity<any>;
 	Note: UqID<any> & IDXEntity<any>;
 	Session: UqID<any> & IDXEntity<any>;
@@ -358,8 +387,6 @@ export interface UqExt extends Uq {
 	Tag: UqID<any> & IDXEntity<any>;
 	TagGroup: UqID<any> & IDXEntity<any>;
 	TagItem: UqID<any> & IDXEntity<any>;
-	PersonRole: UqID<any> & IDXEntity<any>;
-	IXPerson: UqIX<any>;
 	IxStaffClient: UqIX<any>;
 	IxSessionClient: UqIX<any>;
 	IxWorkshopSession: UqIX<any>;
@@ -368,7 +395,8 @@ export interface UqExt extends Uq {
 	IxTag: UqIX<any>;
 	IxGlobalIdTag: UqIX<any>;
 	IxLocalIdTag: UqIX<any>;
-	UserRole: UqIX<any>;
+	IxPersonRole: UqIX<any>;
+	IxUserPerson: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

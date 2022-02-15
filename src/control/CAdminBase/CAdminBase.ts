@@ -1,7 +1,7 @@
-import { CStringEdit, deepReact, setReact } from "Control";
+import { CUser, CStringEdit, deepReact, setReact, Nav } from "Control";
 import { UiTextItem } from "tonwa-react";
 import { Control } from "../Control";
-import { VAddUser } from "./VAddUser";
+// import { VAddUser } from "./VAddUser";
 import { VMeSysAdmin } from "./VMeSysAdmin";
 import { VStart } from "./VStart";
 import { VUser } from "./VUser";
@@ -15,14 +15,15 @@ export interface Admin {
     create: number;
     update: number;
     user: number;
-    name: string;
-    nick: string;
-    icon: string;
     assigned: string;
+    // name?: string;
+    // nick?: string;
+    // icon?: string;
 }
 
 export abstract class CAdminBase extends Control {
     private adminsChanged = true;
+    readonly cUser: CUser;
     onAdmin: () => Promise<void>;
     deep: {
         meAdmin: Admin;
@@ -34,19 +35,24 @@ export abstract class CAdminBase extends Control {
         sysAdmins: [],
     });
 
+    constructor(nav: Nav, cUser: CUser) {
+        super(nav);
+        this.cUser = cUser;
+    }
+
     abstract get me(): number;
+    //abstract userFromName(userName: string): Promise<any>;
+    //abstract userFromId(id: number): Promise<any>;
     protected abstract loadAdmins(): Promise<any[]>;
     protected abstract setMeAdmin(): Promise<void>;
-    protected abstract setAdmin(user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void>;
-    protected abstract userFromId(id: number): Promise<any>;
-    protected abstract userFromName(userName: string): Promise<any>;
+    protected abstract setAdmin(user: number, role: number, assigned: string): Promise<void>;
 
     async load(): Promise<void> {
         if (this.adminsChanged === false) return;
         this.adminsChanged = false;
         let retAdmins = await this.loadAdmins();
         if (!retAdmins) return;
-        await this.loadUserNames(retAdmins);
+        //await this.loadUserNames(retAdmins);
         let sysAdmins: Admin[] = [];
         let admins: Admin[] = [];
         let meAdmin: Admin;
@@ -80,7 +86,7 @@ export abstract class CAdminBase extends Control {
             }
         }
     }
-
+    /*
     private async loadUserNames(admins: Admin[]) {
         let ids: number[] = [];
         for (let admin of admins) {
@@ -96,7 +102,7 @@ export abstract class CAdminBase extends Control {
             if (admin) Object.assign(admin, user);
         }
     }
-
+    */
     async openMain() {
         await this.load();
         this.open(VStart);
@@ -117,17 +123,20 @@ export abstract class CAdminBase extends Control {
         })
         this.close();
     }
-
+    /*
     async searchUser(key: string): Promise<any> {
         let user = await this.userFromName(key);
         return user;
     }
-
+    */
     async onAddAdmin(role: EnumAdminRoleInEdit) {
-        let ret = await this.call<any, CAdminBase>(VAddUser, role);
+        let captionSelectUser = 'Add ' + (role === EnumAdminRoleInEdit.sys ? 'system admin' : 'admin');
+        //let cSelectUser = new CUser(this.nav, captionSelectUser, this)
+        let ret = await this.cUser.select<Admin>(captionSelectUser);
+        // let ret = await this.call<any, CAdminBase>(VAddUser, role);
         if (!ret) return;
-        let { id: user, name, nick, icon, assigned } = ret;
-        await this.setAdmin(user, role, name, nick, icon, assigned);
+        let { id: user, assigned } = ret;
+        await this.setAdmin(user, role, assigned);
         setReact(() => {
             let tick = Date.now() / 1000;
             let admin: Admin = {
@@ -135,9 +144,6 @@ export abstract class CAdminBase extends Control {
                 user,
                 role,
                 operator: undefined,
-                name,
-                nick,
-                icon,
                 assigned,
                 create: tick,
                 update: tick,
@@ -160,7 +166,7 @@ export abstract class CAdminBase extends Control {
 
     onDelAdmin = async (admin: Admin) => {
         let { role } = admin;
-        await this.setAdmin(admin.id, -role, null, null, null, null);
+        await this.setAdmin(admin.id, -role, null);
         setReact(() => {
             let list = role === 1 ? this.deep.sysAdmins : this.deep.admins;
             this.removeAdmin(list, admin);
@@ -184,8 +190,8 @@ export abstract class CAdminBase extends Control {
             value: admin.assigned,
             onChanged: async (fieldName: string, value: any) => {
                 admin.assigned = value;
-                let { id, role, name, nick, icon, assigned } = admin;
-                await this.setAdmin(id, role, name, nick, icon, assigned);
+                let { id, role, assigned } = admin;
+                await this.setAdmin(id, role, assigned);
                 this.adminsChanged = true;
             }
         });

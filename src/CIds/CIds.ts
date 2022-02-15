@@ -1,7 +1,7 @@
 import { CTag } from "CTag";
 import { CAppControl } from "tool";
 import { CApp } from "uq-app";
-import { PersonCategory } from "uq-app/uqs/BzWorkshop";
+//import { PersonCategory } from "uq-app/uqs/BzWorkshop";
 import { CClient } from "./CPerson/CClient";
 import { CStaff } from "./CPerson/CStaff";
 import { CWorkshop } from "./CWorkshop";
@@ -13,9 +13,9 @@ export class CIds extends CAppControl {
     readonly cStaff: CStaff;
     readonly cTag: CTag;
 
-    personCategories: PersonCategory[];
-    personCatClient: PersonCategory;
-    personCatStaff: PersonCategory;
+    // personCategories: PersonCategory[];
+    //personCatClient: PersonCategory;
+    //personCatStaff: PersonCategory;
 
     constructor(cApp: CApp) {
         super(cApp);
@@ -26,11 +26,13 @@ export class CIds extends CAppControl {
     }
 
     load = async () => {
+        /*
         if (this.personCategories) return;
         let { BzWorkshop } = this.uqs;
         this.personCategories = await BzWorkshop.QueryID({ ID: BzWorkshop.PersonCategory });
         this.personCatStaff = this.personCategories.find(v => v.name === 'staff');
         this.personCatClient = this.personCategories.find(v => v.name === 'client');
+        */
     }
 
     onWorkshop = (): void => {

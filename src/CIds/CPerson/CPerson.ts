@@ -2,10 +2,17 @@ import { Schema, UiSchema, UiTextItem } from "tonwa-react";
 import { Uq } from "tonwa-core";
 import { CId } from "../CId";
 import { renderPerson, renderSelectPerson } from "./renderPerson";
-import { IdValue } from "Control";
+import { CIdBase, IdValue, Page, react, setReact, User } from "Control";
+import { Role, Person } from "uq-app/uqs/BzWorkshop";
+import { VBound, VEditPerson } from "./VEditPerson";
+
+export interface MPerson extends Person {
+    user: number;
+    role: Role;
+}
 
 export abstract class CPerson extends CId {
-    abstract get catId(): number;
+    abstract get personRole(): Role;
     get uq(): Uq { return this.uqs.BzWorkshop; };
     getID() { return this.uqs.BzWorkshop.Person; }
     get caption() { return 'Staff' }
@@ -59,26 +66,52 @@ export abstract class CPerson extends CId {
             }
         }
     }
-
+    abstract isInRole(role: Role): boolean;
     protected async loadList(): Promise<any[]> {
         let { BzWorkshop } = this.uqs;
+        /*
         let list = await BzWorkshop.QueryID({
-            IX: [BzWorkshop.IXPerson],
-            ix: this.catId,
+            IX: [BzWorkshop.IxPersonRole],
+            ix: this.personRole,
             IDX: [this.ID],
             page: { start: 0, size: 10000 },
             order: 'desc',
         });
-        return list;
+        */
+        /*
+        let list = await BzWorkshop.IXr({
+            IX: BzWorkshop.IxPersonRole,
+            IDX: [BzWorkshop.Person],
+            ix: this.personRole,
+            page: { start: 0, size: 10000 },
+            order: 'desc',
+        });
+        */
+        let result = await BzWorkshop.GetPersonList.query({ role: this.personRole });
+        let { ret, roles: retRoles } = result;
+        let mPerson: MPerson;
+        for (let row of ret) {
+            let { id } = row;
+            mPerson = row as any;
+            for (let r of retRoles) {
+                let { person, role } = r;
+                if (person !== id) continue;
+                if (this.isInRole(role as Role) === true) {
+                    mPerson.role = role as Role;
+                    break;
+                }
+            }
+        }
+        return ret;
     }
 
     async saveId(data: any) {
         let { BzWorkshop } = this.uqs;
         let ret = await BzWorkshop.ActIX({
-            IX: BzWorkshop.IXPerson,
+            IX: BzWorkshop.IxPersonRole,
             ID: BzWorkshop.Person,
             values: [{
-                ix: this.catId,
+                ix: this.personRole,
                 xi: data,
             }],
         });
@@ -87,14 +120,14 @@ export abstract class CPerson extends CId {
 
     async search(key: string): Promise<any[]> {
         let ret = await this.uqs.BzWorkshop.PersonSearch.query({
-            category: this.catId,
+            role: this.personRole,
             key,
         });
         return ret.ret;
     }
 
     renderItemInList(item: any): JSX.Element {
-        return renderPerson(item);
+        return renderPerson(item, this.cIds.cApp.cUser);
     }
 
     renderItemOnSelect(item: any): JSX.Element {
@@ -103,5 +136,58 @@ export abstract class CPerson extends CId {
 
     renderIdValue(item: IdValue): JSX.Element {
         return renderPerson(item);
+    }
+
+    get VEdit(): new (c: CIdBase) => Page<CPerson> {
+        return VEditPerson as any;
+    }
+
+    renderCurrentUser(render: (user: User) => JSX.Element) {
+        return react(() => {
+            let { currentItem } = this.deepData;
+            if (!currentItem) return null;
+            let { user } = currentItem;
+            return this.cIds.cApp.cUser.renderUser(user, render);
+        });
+    }
+
+    onBindUser = async () => {
+        if (this.deepData.currentItem.user) {
+            this.open(VBound);
+            return;
+        }
+        await this.onChangeUser();
+    }
+
+    onChangeUser = async () => {
+        let ret = await this.cIds.cApp.cUser.select<User>('Bind user');
+        if (!ret) return;
+        let { currentItem } = this.deepData;
+        let userId = ret.id;
+        let { BzWorkshop } = this.uqs;
+        await BzWorkshop.ActIX({
+            IX: BzWorkshop.IxUserPerson,
+            values: [
+                { ix: userId, xi: currentItem.id }
+            ]
+        })
+        setReact(() => {
+            currentItem.user = userId;
+        });
+    }
+
+    onRemoveBound = async () => {
+        let { currentItem } = this.deepData;
+        let { BzWorkshop } = this.uqs;
+        await BzWorkshop.ActIX({
+            IX: BzWorkshop.IxUserPerson,
+            values: [
+                { ix: currentItem.user, xi: -currentItem.id }
+            ]
+        })
+        this.close();
+        setReact(() => {
+            currentItem.user = undefined;
+        });
     }
 }

@@ -7,7 +7,7 @@ export class CAdmin extends CAdminBase {
     readonly uqs: UQs;
 
     constructor(cApp: CApp) {
-        super(cApp.appNav);
+        super(cApp.appNav, cApp.cUser);
         this.cApp = cApp;
         this.uqs = cApp.uqs;
     }
@@ -20,18 +20,18 @@ export class CAdmin extends CAdminBase {
         await this.uqs.BzWorkshop.AdminSetMe();
     }
 
-    protected async setAdmin(user: number, role: number, name: string, nick: string, icon: string, assigned: string): Promise<void> {
-        await this.uqs.BzWorkshop.AdminSet(user, role, name, nick, icon, assigned);
+    protected async setAdmin(user: number, role: number, assigned: string): Promise<void> {
+        await this.uqs.BzWorkshop.AdminSet(user, role, assigned);
     }
-
-    protected async userFromId(id: number): Promise<any> {
-        return await this.cApp.userFromId(id);
-    }
-
-    protected async userFromName(userName: string): Promise<any> {
-        return await this.cApp.userFromName(userName);
-    }
-
+    /*
+        async userFromId(id: number): Promise<any> {
+            return await this.cApp.userFromId(id);
+        }
+    
+        async userFromName(userName: string): Promise<any> {
+            return await this.cApp.userFromName(userName);
+        }
+    */
     get me(): number {
         return this.cApp.user.id;
     }

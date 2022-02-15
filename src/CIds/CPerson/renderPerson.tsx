@@ -1,10 +1,22 @@
+import { CUser, User } from "Control";
 import { LMR } from "tonwa-react";
 
-export function renderPerson(item: any) {
-    let { no, name, firstName, lastName, middleName } = item;
+export function renderPerson(item: any, cUser?: CUser) {
+    let { no, name, firstName, lastName, middleName, user } = item;
+    let vUser: any;
+    if (cUser && user) {
+        vUser = cUser.renderUser(user, (user: User) => {
+            let { name } = user;
+            return <span className="ms-4">
+                user:  {name}
+            </span>;
+        });
+    }
     return <>
-        <div className="small text-muted me-3">{no}</div>
-        <div>{name ?? <>{lastName} {middleName} {firstName}</>}</div>
+        <div className="small text-muted me-3">{no} {vUser}</div>
+        <div>
+            {name ?? <>{lastName} {middleName} {firstName}</>}
+        </div>
     </>;
 }
 

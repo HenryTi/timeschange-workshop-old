@@ -7,3 +7,4 @@ export * from './CIdBase';
 export * from './CEdit';
 export * from './CTagBase';
 export * from './CAdminBase';
+export * from './CUser';

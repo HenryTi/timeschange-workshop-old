@@ -15,8 +15,13 @@ ID Person ver 0.2 GLOBAL (
     year SMALLINT,
     month TINYINT,
     day TINYINT,
+    email CHAR(100),
+    mobile CHAR(30),
+    mobileCountry CHAR(10),
+    INDEX email(email),
+    INDEX mobile(mobile),
 );
-
+/*
 ID PersonCategory ver 0.1 CONST (
     id,
     KEY name CHAR(50),
@@ -33,14 +38,39 @@ IX *IXPerson ver 0.3 (
     ix PersonCategory,
     xi Person,
 );
-
+*/
 IX *IxPersonLog ver 0.3 (
     ix Person,
     xi TYPE Minute,                 -- unique minute id
 );
 
+QUERY GetPersonList(
+    role ENUM Role,
+)
+RETURNS ret (
+    #Person,
+    user ID
+)
+RETURNS roles (
+    person ID,
+    role ENUM Role,
+) {
+    INTO ret SELECT b.id, b.no, b.name, b.vice
+        , b.firstName, b.lastName, b.middleName
+        , b.gender, b.year, b.month, b.day
+        , b.email, b.mobile, b.mobileCountry
+        , c.ix as user
+        FROM IXPersonRole as a
+            JOIN Person as b ON a.ix=b.id
+            LEFT JOIN IxUserPerson as c ON a.ix=c.xi
+        WHERE a.xi=role
+        ORDER BY b.id ASC;
+    INTO roles SELECT a.id as person, b.xi as role
+        FROM ret as a JOIN IxPersonRole as b ON a.id=b.ix;
+};
+
 QUERY PersonSearch(
-    category ID,
+    role ENUM Role,
     key CHAR(30),
 ) 
 RETURNS ret (
@@ -50,16 +80,19 @@ RETURNS ret (
     SET key=CONCAT('%', key, '%');
     INTO ret SELECT b.id, b.no, b.name, b.vice,
         b.firstName, b.lastName, b.middleName,
-        b.gender, b.year, b.month, b.day
-        FROM IXPerson as a
+        b.gender, b.year, b.month, b.day, 
+        b.email, b.mobile, b.mobileCountry
+        FROM IXPersonRole as a
             JOIN Person as b ON a.xi=b.id
-        WHERE a.ix=category
+        WHERE a.ix=role
             AND (b.no LIKE key
                 OR b.name LIKE key
                 OR b.vice LIKE key
                 OR b.firstName LIKE key
                 OR b.lastName LIKE key
                 OR b.middleName LIKE key
+                OR b.email LIKE key
+                OR b.mobile LIKE key
             )
         ORDER BY b.id ASC;
 };

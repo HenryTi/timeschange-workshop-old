@@ -13,6 +13,7 @@ import { CActs } from "CActs";
 import { AppNav } from "tool";
 import { CTag } from "CTag";
 import { Role } from "./uqs/BzWorkshop";
+import { CUser } from "Control";
 
 const gaps = [10, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 15, 15, 15, 30, 30, 60];
 
@@ -38,6 +39,7 @@ export class CApp extends CUqApp {
 	cActs: CActs;
 	cIds: CIds;
 	cMe: CMe;
+	cUser: CUser;
 
 	protected async internalStart(isUserLogin: boolean) {
 		makeObservable(this, {
@@ -46,6 +48,7 @@ export class CApp extends CUqApp {
 		this.setRes(res);
 		setUI(this.uqs);
 		this.appNav = new AppNav(this.getTonwa().nav);
+		this.cUser = new CUser(this.appNav, this.web.centerApi);
 
 		this.cTag = new CTag(this);
 		this.cHome = this.newC(CHome);
@@ -85,11 +88,13 @@ export class CApp extends CUqApp {
 		let ret = await Promise.all([
 			this.cIds.load(),
 			BzWorkshop.AdminIsMe(),
-			BzWorkshop.IXValues({
-				IX: BzWorkshop.UserRole,
+			BzWorkshop.IX<{ ix: number; a: number; b: number; }>({
+				IX: BzWorkshop.IxUserPerson,
+				IX1: BzWorkshop.IxPersonRole,
+				ix: undefined,
 			})
 		]);
-		this.meRoles = this.buildRoles(ret[2]);
+		this.meRoles = this.buildRoles(ret[2] as any);
 		this.meAdmin = ret[1];
 	}
 

@@ -1,3 +1,4 @@
+import { User } from "Control";
 import { FA, Image, List, LMR } from "tonwa-react";
 import { Admin, EnumAdminRoleInEdit } from ".";
 import { Page } from "../Page";
@@ -93,22 +94,24 @@ export class VStart extends Page<CAdminBase> {
     }
 
     private renderAdmin = (admin: Admin, index: number) => {
-        let { id, name, nick, icon, assigned } = admin;
-        let right = <FA name="angle-right" className="cursor-pointer" />;
-        return <LMR key={id}
-            className={cnRow + cnMYSm + cnBg}
-            left={<Image src={icon} className="me-4 align-self-start w-2-5c h-2-5c" />}
-            right={right}>
-            {
-                assigned && <div>
-                    <small className="text-muted me-3">Remark:</small>
-                    {assigned}
-                </div>
-            }
-            <div><small className="text-muted me-3">Name:</small>{name}</div>
-            <div><small className="text-muted me-3">Nick:</small>{nick}</div>
-        </LMR>;
-        //});
+        let { id, assigned } = admin;
+        return this.control.cUser.renderUser(id, (user: User) => {
+            let { name, nick, icon } = user;
+            let right = <FA name="angle-right" className="cursor-pointer" />;
+            return <LMR key={id}
+                className={cnRow + cnMYSm + cnBg}
+                left={<Image src={icon} className="me-4 align-self-start w-2-5c h-2-5c" />}
+                right={right}>
+                {
+                    assigned && <div>
+                        <small className="text-muted me-3">Remark:</small>
+                        {assigned}
+                    </div>
+                }
+                <div><small className="text-muted me-3">Name:</small>{name}</div>
+                <div><small className="text-muted me-3">Nick:</small>{nick}</div>
+            </LMR>;
+        });
     }
 
     renderAdd(role: EnumAdminRoleInEdit): JSX.Element {

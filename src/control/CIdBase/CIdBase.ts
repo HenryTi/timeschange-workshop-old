@@ -4,7 +4,7 @@ import { Control } from "../Control";
 import { deepReact, react, setReact } from "../Reactive";
 import { VAdd } from "./VAdd";
 import { VStart } from "./VStart";
-import { VEdit } from "./VEdit";
+import { VEditId } from "./VEditId";
 import { IdCache } from "./IdCache";
 import { Page } from "Control";
 import { mutedSmall } from "tool";
@@ -36,10 +36,10 @@ interface IDDeep {
     currentItem: any;
 }
 
-const catches: { [id: string]: IdCache } = {}
+const caches: { [id: string]: IdCache } = {}
 
 export abstract class CIdBase extends Control {
-    private catch: IdCache;
+    private cache: IdCache;
     protected ID: ID;
 
     initNO: string;
@@ -51,10 +51,10 @@ export abstract class CIdBase extends Control {
     protected initID() {
         this.ID = this.getID();
         let { name } = this.ID;
-        this.catch = catches[name];
-        if (this.catch === undefined) {
-            this.catch = new IdCache(this);
-            catches[name] = this.catch;
+        this.cache = caches[name];
+        if (this.cache === undefined) {
+            this.cache = new IdCache(this);
+            caches[name] = this.cache;
         }
     }
 
@@ -69,7 +69,7 @@ export abstract class CIdBase extends Control {
     get isGlobal(): boolean { return this.ID.isGlobal; }
 
     getIdValue(id: number): any {
-        return this.catch.getValue(id);
+        return this.cache.getValue(id);
     }
 
     protected setIDDeepList(list: any[]) {
@@ -154,7 +154,7 @@ export abstract class CIdBase extends Control {
     }
 
     get VEdit(): new (c: CIdBase) => Page<CIdBase> {
-        return VEdit;
+        return VEditId;
     }
 
     protected async loadOnEdit() {
