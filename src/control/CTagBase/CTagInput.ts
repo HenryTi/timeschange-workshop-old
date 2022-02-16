@@ -17,7 +17,7 @@ export class CTagInput extends Control {
     });
 
     constructor(cTag: CTagBase, cId: CIdBase, IxID: IX) {
-        super(cTag.nav);
+        super(cTag.app);
         this.cTag = cTag;
         this.cId = cId;
         this.IxID = IxID;

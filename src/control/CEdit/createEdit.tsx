@@ -1,11 +1,11 @@
 import { CDateEdit, CDateTimeEdit, CStringEdit, CTimeEdit } from "./CInputEdit";
 import { CEdit, EditProps } from "./CEdit";
-import { Nav } from "../Nav";
+import { AppBase } from "../AppBase";
 import { CIdEdit } from "./CIdEdit";
 import { CPickEdit } from "./CPickEdit";
 import { CCheckEdit } from ".";
 
-export function createEdit(nav: Nav, props: EditProps): CEdit {
+export function createEdit(nav: AppBase, props: EditProps): CEdit {
     let { itemSchema, uiItem } = props;
     if (uiItem === undefined) {
         switch (itemSchema.type) {

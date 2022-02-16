@@ -1,8 +1,7 @@
 import { Page, setReact, shallowReact } from "Control";
 import { FA, Image, SearchBox } from "tonwa-react";
 import { mutedSmall } from "tool";
-import { User } from ".";
-import { CUser } from "./CUser";
+import { CUser, User } from "./CUser";
 
 export class VSelectUser extends Page<CUser> {
     shallow: {

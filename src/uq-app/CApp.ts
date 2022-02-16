@@ -1,19 +1,14 @@
-import { CHome } from "../home";
-import { CMe } from "../CMe";
+import { makeObservable, observable, runInAction } from "mobx";
+import { Tonwa } from "tonwa-core";
+import { start } from "tonwa";
+import { App } from "../App";
+import { AppNav } from "../tool";
 import { CUqApp } from "./CBase";
 import { res } from "./res";
-import { VMain } from "./VMain";
-import { setUI } from "./uqs";
-import { makeObservable, observable, runInAction } from "mobx";
-import { start } from "tonwa";
+//import { VMain } from "./VMain";
+import { setUI } from "uq-app/uqs";
 import { appConfig } from "./appConfig";
-import { Tonwa } from "tonwa-core";
-import { CIds } from "CIds";
-import { CActs } from "CActs";
-import { AppNav } from "tool";
-import { CTag } from "CTag";
-import { Role } from "./uqs/BzWorkshop";
-import { CUser } from "Control";
+//import { Role } from "./uqs/BzWorkshop";
 
 const gaps = [10, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 10, 10, 10, 10, 15, 15, 15, 30, 30, 60];
 
@@ -24,13 +19,13 @@ export interface Title {
 	fixed?: number;
 }
 
-type Roles = { [role in Role]: number };
+//type Roles = { [role in Role]: number };
 
 export class CApp extends CUqApp {
 	constructor(tonwa: Tonwa) {
 		super(tonwa, appConfig);
 	}
-
+	/*
 	appNav: AppNav;
 	meAdmin: boolean;
 	meRoles: Roles;
@@ -40,6 +35,8 @@ export class CApp extends CUqApp {
 	cIds: CIds;
 	cMe: CMe;
 	cUser: CUser;
+	*/
+	app: App;
 
 	protected async internalStart(isUserLogin: boolean) {
 		makeObservable(this, {
@@ -47,8 +44,8 @@ export class CApp extends CUqApp {
 		});
 		this.setRes(res);
 		setUI(this.uqs);
-		this.appNav = new AppNav(this.getTonwa().nav);
-		this.cUser = new CUser(this.appNav, this.web.centerApi);
+		/*
+		this.cUser = new CUser(this, this.web.centerApi);
 
 		this.cTag = new CTag(this);
 		this.cHome = this.newC(CHome);
@@ -56,8 +53,18 @@ export class CApp extends CUqApp {
 		this.cIds = new CIds(this);
 		this.cMe = new CMe(this);
 		this.cHome.load();
-		await this.loadBaseData();
-		this.openVPage(VMain, undefined, this.dispose);
+		*/
+
+		let appNav = new AppNav(this.getTonwa().nav);
+		let app = new App(this.uqs);
+		this.app = app;
+		app.appNav = appNav;
+		app.user = this.user;
+		app.userApi = this.web.centerApi;
+		await app.loadBaseData();
+
+		app.openMain();
+		//this.openVPage(VMain, undefined, this.dispose);
 		// 加上下面一句，可以实现主动页面刷新
 		this.timer = setInterval(this.callTick, 1000);
 		// uq 里面加入这一句，会让相应的$Poked查询返回poke=1：
@@ -83,43 +90,12 @@ export class CApp extends CUqApp {
 		return this.tonwa.nav.renderNavView(onLogined, onNotLogined);
 	}
 
-	private async loadBaseData() {
-		let { BzWorkshop } = this.uqs;
-		let ret = await Promise.all([
-			this.cIds.load(),
-			BzWorkshop.AdminIsMe(),
-			BzWorkshop.IX<{ ix: number; a: number; b: number; }>({
-				IX: BzWorkshop.IxUserPerson,
-				IX1: BzWorkshop.IxPersonRole,
-				ix: undefined,
-			})
-		]);
-		this.meRoles = this.buildRoles(ret[2] as any);
-		this.meAdmin = ret[1];
-	}
-
-	private buildRoles(typeValues: { type: string; value: string }[]): Roles {
-		let { BzWorkshop } = this.uqs;
-		let roles: Roles = {} as Roles;
-		for (let row of typeValues) {
-			let { type, value } = row;
-			let v = BzWorkshop.IDValue(type, value);
-			switch (type) {
-				case 'personrole':
-					let { person, role } = v as any;
-					roles[role as Role] = person;
-					break;
-			}
-		}
-		return roles;
-	}
-
 	// 数据服务器提醒客户端刷新，下面代码重新调入的数据
 	refresh = async () => {
 		let d = Date.now() / 1000;
 		if (d - this.refreshTime < 30) return;
 		await Promise.all([
-			this.cHome.load(),
+			//this.cHome.load(),
 		]);
 		runInAction(() => {
 			this.refreshTime = d;
@@ -148,25 +124,5 @@ export class CApp extends CUqApp {
 		}
 		catch {
 		}
-	}
-
-	isRole(roles: Role[]): boolean {
-		if (roles === undefined) return false;
-		for (let r of roles) {
-			if (this.meRoles[r] !== undefined) return true;
-		}
-		return false;
-	}
-
-	isAdminOrRole(roles?: Role[]): boolean {
-		if (this.meAdmin === true) return true;
-		return this.isRole(roles);
-	}
-
-	isPersonMe(person: number): boolean {
-		for (let i in this.meRoles) {
-			if (person === this.meRoles[Number(i) as Role]) return true;
-		}
-		return false;
 	}
 }

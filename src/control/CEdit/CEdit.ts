@@ -1,4 +1,4 @@
-import { Nav, Page, shallowReact } from "Control";
+import { AppBase, Page, shallowReact } from "Control";
 import { FieldRule, ItemSchema, Pick, UiItem } from "tonwa-react";
 import { Control } from "../Control";
 import { VEditIcon, VRef } from "./VRef";
@@ -17,7 +17,7 @@ export abstract class CEdit extends Control {
     readonly shallowValue: {
         value: any;
     };
-    constructor(nav: Nav, props: EditProps) {
+    constructor(nav: AppBase, props: EditProps) {
         super(nav);
         this.props = props;
         this.shallowValue = shallowReact({ value: props.value })

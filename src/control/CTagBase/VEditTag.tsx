@@ -93,7 +93,7 @@ export class VEditTag extends Page<CTagBase> {
                     readOnly = false;
                 }
                 let value = (currentTag as any)[name];
-                let cEdit = createEdit(this.control.nav, {
+                let cEdit = createEdit(this.control.app, {
                     itemSchema: v,
                     uiItem,
                     value,

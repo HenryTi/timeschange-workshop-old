@@ -1,11 +1,11 @@
 import { ChangeEvent } from 'react';
 import { CEdit } from './CEdit';
 import { setReact } from '../Reactive';
-import { Nav } from 'Control';
+import { AppBase } from 'Control';
 import { EditProps } from '.';
 
 export class CCheckEdit extends CEdit {
-    constructor(nav: Nav, props: EditProps) {
+    constructor(nav: AppBase, props: EditProps) {
         super(nav, props);
         this.onEdit = undefined;
     }

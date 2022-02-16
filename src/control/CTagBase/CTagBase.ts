@@ -1,4 +1,4 @@
-import { CStringEdit, deepReact, Page, setReact } from "Control";
+import { AppBase, CStringEdit, deepReact, Page, setReact } from "Control";
 import { Uq, ID, IX } from "tonwa-core";
 import { StringSchema, UiTextItem } from "tonwa-react";
 import { Control } from "../Control";
@@ -25,7 +25,7 @@ export interface TagGroup extends Tag {
     tags: TagWithItems[];
 }
 
-export abstract class CTagBase extends Control {
+export abstract class CTagBase<A extends AppBase = AppBase> extends Control<A> {
     currentGroup: Tag;
     tagGroups: { [group: string]: TagGroup } = {};
     deep: {
@@ -194,7 +194,7 @@ export abstract class CTagBase extends Control {
                 if (p >= 0) items.splice(p, 1);
             });
         }
-        let cStringEdit = new CStringEdit(this.nav, {
+        let cStringEdit = new CStringEdit(this.app, {
             itemSchema: { name: 'name', type: 'string', maxLength: 50, required: true } as StringSchema,
             uiItem: { widget: 'text', label: 'Edit tag item' } as UiTextItem,
             onChanged: onTagItemChanged,

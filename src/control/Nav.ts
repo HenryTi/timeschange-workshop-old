@@ -1,5 +1,4 @@
-export abstract class Nav {
-    // label: used when close
-    abstract open(page: JSX.Element, afterClose?: () => void): void;
-    abstract close(level: number): void;
+export interface Nav {
+    open(page: JSX.Element, afterClose?: () => void): void;
+    close(level: number): void;
 }

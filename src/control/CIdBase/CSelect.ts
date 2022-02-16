@@ -15,7 +15,7 @@ export abstract class CSelect<R extends IdValue | IdValue[]> extends Control {
     });
 
     constructor(cId: CIdBase) {
-        super(cId.nav);
+        super(cId.app);
         this.cId = cId;
     }
 

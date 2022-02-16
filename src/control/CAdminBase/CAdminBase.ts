@@ -1,4 +1,4 @@
-import { CUser, CStringEdit, deepReact, setReact, Nav } from "Control";
+import { AppBase, CStringEdit, deepReact, setReact } from "Control";
 import { UiTextItem } from "tonwa-react";
 import { Control } from "../Control";
 // import { VAddUser } from "./VAddUser";
@@ -21,9 +21,8 @@ export interface Admin {
     // icon?: string;
 }
 
-export abstract class CAdminBase extends Control {
+export abstract class CAdminBase<A extends AppBase = AppBase> extends Control<A> {
     private adminsChanged = true;
-    readonly cUser: CUser;
     onAdmin: () => Promise<void>;
     deep: {
         meAdmin: Admin;
@@ -35,10 +34,12 @@ export abstract class CAdminBase extends Control {
         sysAdmins: [],
     });
 
-    constructor(nav: Nav, cUser: CUser) {
-        super(nav);
+    /*
+    constructor(app: AppBase) {
+        super(app);
         this.cUser = cUser;
     }
+    */
 
     abstract get me(): number;
     //abstract userFromName(userName: string): Promise<any>;
@@ -132,7 +133,7 @@ export abstract class CAdminBase extends Control {
     async onAddAdmin(role: EnumAdminRoleInEdit) {
         let captionSelectUser = 'Add ' + (role === EnumAdminRoleInEdit.sys ? 'system admin' : 'admin');
         //let cSelectUser = new CUser(this.nav, captionSelectUser, this)
-        let ret = await this.cUser.select<Admin>(captionSelectUser);
+        let ret = await this.app.cUser.select<Admin>(captionSelectUser);
         // let ret = await this.call<any, CAdminBase>(VAddUser, role);
         if (!ret) return;
         let { id: user, assigned } = ret;
@@ -184,7 +185,7 @@ export abstract class CAdminBase extends Control {
     }
 
     onEditRemark = async (admin: Admin) => {
-        let cStringEdit = new CStringEdit(this.nav, {
+        let cStringEdit = new CStringEdit(this.app, {
             itemSchema: { name: 'remark', type: 'string', required: true },
             uiItem: { widget: 'text', maxLength: 100, label: 'Remark' } as UiTextItem,
             value: admin.assigned,

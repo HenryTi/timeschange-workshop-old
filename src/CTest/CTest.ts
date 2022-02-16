@@ -1,8 +1,8 @@
-import { CAppControl } from "tool/CAppControl";
+import { CControl } from "../App";
 import { VTest } from "./VTest";
 import { VTest1 } from "./VTest1";
 
-export class CTest extends CAppControl {
+export class CTest extends CControl {
     main(): JSX.Element {
         return this.render(VTest);
     }

@@ -1,4 +1,4 @@
-import { Control, Nav, View } from "Control";
+import { Control, AppBase, View } from "Control";
 import { Uq, IX } from "tonwa-core";
 import { VEnumMulti, VEnumSingle } from ".";
 
@@ -21,7 +21,7 @@ export abstract class CEnumBase<E extends number> extends Control {
 export abstract class CEnumSingle<E extends number> extends CEnumBase<E> {
     readonly id: number;
     value: E;
-    constructor(nav: Nav, id: number, value: E) {
+    constructor(nav: AppBase, id: number, value: E) {
         super(nav);
         this.id = id;
         this.value = value;
@@ -52,7 +52,7 @@ export abstract class CEnumSingle<E extends number> extends CEnumBase<E> {
 export abstract class CEnumMulti<E extends number> extends CEnumBase<E> {
     readonly id: number;
     values: E[];
-    constructor(nav: Nav, id: number, values: E[]) {
+    constructor(nav: AppBase, id: number, values: E[]) {
         super(nav);
         this.id = id;
         this.values = values;

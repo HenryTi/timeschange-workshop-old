@@ -33,7 +33,7 @@ export class VEditId<C extends CIdBase = any> extends Page<C> {
                     readOnly = false;
                 }
                 let value = currentItem[name];
-                let cEdit = createEdit(this.control.nav, {
+                let cEdit = createEdit(this.control.app, {
                     pick,
                     itemSchema: v,
                     uiItem,

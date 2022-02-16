@@ -1,11 +1,6 @@
-import { Control, Nav, react, setReact, shallowReact } from "Control";
+import { Control, react, setReact, shallowReact } from "Control";
 import { mutedSmall } from "tool";
 import { VSelectUser } from "./VSelectUser";
-
-interface UserApi {
-    userFromId(id: number): Promise<any>;
-    userFromName(userName: string): Promise<any>;
-}
 
 interface ShallowData {
     cache: Map<number, User>;
@@ -22,13 +17,14 @@ export class CUser extends Control {
     private readonly shallow: ShallowData = shallowReact<ShallowData>({
         cache: new Map<number, User>(),
     });
-    private readonly userApi: UserApi;
+    //private readonly userApi: UserApi;
     caption: string;
-
-    constructor(nav: Nav, userApi: UserApi) {
-        super(nav);
+    /*
+    constructor(app: AppBase, userApi: UserApi) {
+        super(app);
         this.userApi = userApi;
     }
+    */
 
     async select<T>(caption: string): Promise<T> {
         this.caption = caption;
@@ -37,7 +33,7 @@ export class CUser extends Control {
     }
 
     async searchUser(key: string): Promise<any> {
-        let user = await this.userApi.userFromName(key);
+        let user = await this.app.userApi.userFromName(key);
         this.setCache(user.id, user);
         return user;
     }
@@ -62,7 +58,7 @@ export class CUser extends Control {
 
     private async loadUser(id: number) {
         try {
-            let ret = await this.userApi.userFromId(id);
+            let ret = await this.app.userApi.userFromId(id);
             this.setCache(id, ret);
         }
         catch {

@@ -1,4 +1,5 @@
-import { Page, User } from "Control";
+import { Page } from "Control";
+import { User } from "../CUser";
 import { FA, Image } from "tonwa-react";
 import { Admin, CAdminBase, EnumAdminRoleInEdit } from ".";
 
@@ -9,7 +10,7 @@ export class VUser extends Page<CAdminBase, Admin> {
     content() {
         let vDel: any;
         let { id, role, operator, update } = this.props;
-        return this.control.cUser.renderUser(id, (user: User) => {
+        return this.control.app.cUser.renderUser(id, (user: User) => {
             let { name, nick, icon } = user;
             if ((role === EnumAdminRoleInEdit.sys && Date.now() / 1000 - update < 24 * 3600)
                 || operator === this.control.me

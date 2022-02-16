@@ -104,7 +104,8 @@ export class UqApi extends ApiBase {
         await this.post('set-admin', { user, role, name, nick, icon, assigned });
     }
     async isAdmin(): Promise<boolean> {
-        return await this.get('is-admin');
+        let ret = await this.get('is-admin');
+        return ret;
     }
     async getRoles(): Promise<string[]> {
         let ret = await this.get('get-roles',);

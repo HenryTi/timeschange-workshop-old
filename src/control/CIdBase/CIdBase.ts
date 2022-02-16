@@ -6,7 +6,7 @@ import { VAdd } from "./VAdd";
 import { VStart } from "./VStart";
 import { VEditId } from "./VEditId";
 import { IdCache } from "./IdCache";
-import { Page } from "Control";
+import { AppBase, Page } from "Control";
 import { mutedSmall } from "tool";
 
 export enum EnumSelectType {
@@ -38,7 +38,7 @@ interface IDDeep {
 
 const caches: { [id: string]: IdCache } = {}
 
-export abstract class CIdBase extends Control {
+export abstract class CIdBase<A extends AppBase = AppBase> extends Control<A> {
     private cache: IdCache;
     protected ID: ID;
 

@@ -1,11 +1,11 @@
-import { Nav } from './Nav';
+import { AppBase } from './AppBase';
 import { Page } from './Page';
 import { View } from './View';
 
-export abstract class Control {
-    readonly nav: Nav;
-    constructor(nav: Nav) {
-        this.nav = nav;
+export abstract class Control<A extends AppBase = AppBase> {
+    readonly app: A;
+    constructor(app: A) {
+        this.app = app;
     }
 
     res(t: string): string | JSX.Element {
@@ -14,12 +14,12 @@ export abstract class Control {
 
     open<C extends Control, P = any>(Pg: new (c: C, props: P) => Page<C>, props?: P, afterClose?: (page: Page<C>) => void): Page<C> {
         let p: Page<C> = new Pg(this as unknown as C, props) as any;
-        this.nav.open(p.render(), () => afterClose?.(p));
+        this.app.open(p.render(), () => afterClose?.(p));
         return p;
     }
 
     close(level: number = 1) {
-        this.nav.close(level);
+        this.app.close(level);
     }
 
     render<C extends Control, P = any>(V: new (c: this, props: P) => View<C>, props?: P): JSX.Element {

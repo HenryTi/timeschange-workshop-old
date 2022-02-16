@@ -95,7 +95,7 @@ export class VStart extends Page<CAdminBase> {
 
     private renderAdmin = (admin: Admin, index: number) => {
         let { id, assigned } = admin;
-        return this.control.cUser.renderUser(id, (user: User) => {
+        return this.control.app.cUser.renderUser(id, (user: User) => {
             let { name, nick, icon } = user;
             let right = <FA name="angle-right" className="cursor-pointer" />;
             return <LMR key={id}
