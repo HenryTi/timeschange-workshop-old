@@ -136,13 +136,16 @@ article>header>nav,
 article>section>header>nav {
 	display: block;
 }
+
+article>section>header {
+background-color: #555;
+color: white;
+}
 div.tv-page-webnav>article>header>nav,
 article>header>nav,
 article>section>header>nav {
 	display: flex;
 	flex-direction: row;
-	background-color: #555;
-	color: white;
 	align-items: center;
 	padding: 0px;
 	min-height: 3rem;

@@ -10,7 +10,7 @@ export class VEnumSingle<E extends number, C extends CEnumSingle<E>> extends Vie
                 <label className="col-sm-2 col-form-label">{caption}</label>
                 <div className="col-sm-10">
                     {enums.map(v => {
-                        return <label className="me-4 form-check-inline">
+                        return <label key={v} className="me-4 form-check-inline">
                             <input type="radio" name="staff-role"
                                 onChange={this.onChange}
                                 defaultChecked={v === value}

@@ -1,5 +1,8 @@
 import { AppBase } from './AppBase';
 import { Page } from './Page';
+import { PError } from './PError';
+import { PWaiting } from './PWaiting';
+import { setReact } from './Reactive';
 import { View } from './View';
 
 export abstract class Control<A extends AppBase = AppBase> {
@@ -8,14 +11,45 @@ export abstract class Control<A extends AppBase = AppBase> {
         this.app = app;
     }
 
+    get waiting(): new (c: Control) => Page { return undefined; }
+
     res(t: string): string | JSX.Element {
         return t;
     }
 
-    open<C extends Control, P = any>(Pg: new (c: C, props: P) => Page<C>, props?: P, afterClose?: (page: Page<C>) => void): Page<C> {
+    open<C extends Control, P = any>(Pg: new (c: C, props: P) => Page<C>, props?: P, afterClose?: (page: Page<C>) => void): void;
+    open<C extends Control, P = any>(promise: Promise<void>, Pg: new (c: C, props: P) => Page<C>, props?: P, afterClose?: (page: Page<C>) => void): void;
+    open<C extends Control>(...params: any[]): void {
+        let p0 = params[0];
+        if (typeof p0 === 'object') {
+            if (typeof (p0.then) === 'function') {
+                let isWaiting = false;
+                setTimeout(() => {
+                    if (isWaiting === undefined) return;
+                    this.open(this.waiting ?? this.app.waiting ?? PWaiting);
+                    isWaiting = true;
+                }, 100);
+                (p0 as Promise<void>).then(() => {
+                    if (isWaiting === true) {
+                        this.close();
+                    }
+                    isWaiting = undefined;
+                    let Pg = params[1];
+                    let props = params[2];
+                    let afterClose = params[3];
+                    let p: Page<C> = new Pg(this as unknown as C, props) as any;
+                    this.app.open(p.render(), () => afterClose?.(p));
+                    return;
+                });
+                return;
+            }
+        }
+
+        let Pg = p0;
+        let props = params[1];
+        let afterClose = params[2];
         let p: Page<C> = new Pg(this as unknown as C, props) as any;
         this.app.open(p.render(), () => afterClose?.(p));
-        return p;
     }
 
     close(level: number = 1) {
@@ -39,5 +73,22 @@ export abstract class Control<A extends AppBase = AppBase> {
 
     callReturn(page: Page<any>, ret: any) {
         page.callValue = ret;
+    }
+
+    async waitFor(ms: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, ms);
+        });
+    }
+
+    openError = () => {
+        let { error } = this.app.shallow;
+        if (!error) return;
+        setReact(() => {
+            this.app.shallow.error = null;
+            this.open(PError, error);
+        });
     }
 }

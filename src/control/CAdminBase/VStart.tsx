@@ -70,7 +70,7 @@ export class VStart extends Page<CAdminBase> {
                     <div className="small text-muted">System admin is an admin, and can add or delete admin</div>
                 </LMR>
             </div>
-            <List items={sysAdmins} item={{ render: this.renderAdmin, onClick: this.control.onUser }} />
+            <List items={sysAdmins} item={{ render: this.renderAdminItem, onClick: this.control.onUser }} />
         </div>;
     }
 
@@ -89,11 +89,11 @@ export class VStart extends Page<CAdminBase> {
                     <div className="small text-muted">Admin can define user roles</div>
                 </LMR>
             </div>
-            <List items={admins} item={{ render: this.renderAdmin, onClick: this.control.onUser }} />
+            <List items={admins} item={{ render: this.renderAdminItem, onClick: this.control.onUser }} />
         </div>;
     }
 
-    private renderAdmin = (admin: Admin, index: number) => {
+    private renderAdminItem = (admin: Admin, index: number) => {
         let { id, assigned } = admin;
         return this.control.app.cUser.renderUser(id, (user: User) => {
             let { name, nick, icon } = user;

@@ -9,6 +9,6 @@ export class CClient extends CPerson {
     get iconClass(): string { return 'text-info'; }
     isInRole(role: Role): boolean { return undefined; }
     isVisible(): boolean {
-        return this.app.isAdminOrRole([Role.counselor]);
+        return this.app.isAdminOrRole(Role.counselor);
     }
 }

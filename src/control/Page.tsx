@@ -1,8 +1,8 @@
-import { Page as TonwaReactPage, Scroller, TabsProps } from "tonwa-react";
+import { FA, LMR, Page as TonwaReactPage, Scroller, TabsProps } from "tonwa-react";
 import { Control } from "./Control";
 import { View } from "./View";
 
-export abstract class Page<C extends Control, P = any> extends View<C, P> {
+export abstract class Page<C extends Control = Control, P = any> extends View<C, P> {
     header(): string | boolean | JSX.Element { return null; }
     right(): JSX.Element { return null; }
     content(): JSX.Element { return <div className="p-3">{this.header}</div>; }
@@ -23,9 +23,29 @@ export abstract class Page<C extends Control, P = any> extends View<C, P> {
             tabsProps={this.tabsProps}
             logout={logout}
         >
+            {this.renderError()}
             {this.content()}
         </TonwaReactPage>;
         //afterBack={() => this.internalAfterBack()}
+    }
+
+    private renderError() {
+        return this.react(() => {
+            let { app } = this.control;
+            let { error } = app.shallow;
+            if (!error) return null;
+            let { name, message } = error;
+            return <LMR className="border-bottom bg-light align-items-center text-muted mb-3"
+                left={
+                    <div className="cursor-pointer px-3 py-2" onClick={() => app.setError(null)}>
+                        <FA name="times-circle" className="text-danger" size="lg" />
+                    </div>
+                }
+                right={<div className="cursor-pointer px-3 py-2" onClick={this.control.openError}><FA name="angle-right" /></div>}
+            >
+                {name} {message}
+            </LMR>;
+        });
     }
     /*
     protected internalAfterBack() {

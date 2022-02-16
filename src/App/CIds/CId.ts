@@ -18,7 +18,7 @@ export abstract class CId extends CIdBase<App> {
     get tagGroupName(): string { return undefined; }
 
     isVisible(): boolean {
-        return this.cIds.app.isAdminOrRole();
+        return this.app.meAdmin;
     }
 
     async loadItemsFromIds(ids: number[]): Promise<any[]> {
@@ -34,6 +34,7 @@ export abstract class CId extends CIdBase<App> {
     }
 
     protected async beforeEdit() {
+        await super.beforeEdit();
         let tagGroupName = this.tagGroupName;
         if (tagGroupName !== undefined) {
             await this.cTagInput.beforeEdit(tagGroupName, this.deepData.currentItem.id);

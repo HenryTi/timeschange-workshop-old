@@ -11,7 +11,7 @@ export class VEnumMulti<E extends number, C extends CEnumMulti<E>> extends View<
                 <div className="col-sm-10">
                     {enums.map(v => {
                         let isChecked = (values.findIndex(e => e === v) >= 0);
-                        return <label className="me-4 form-check-inline">
+                        return <label key={v} className="me-4 form-check-inline">
                             <input type="checkbox" name="staff-role"
                                 onChange={this.onChange}
                                 defaultChecked={isChecked}

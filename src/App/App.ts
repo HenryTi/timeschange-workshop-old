@@ -43,7 +43,7 @@ export class App extends AppBase {
         cMain.openMain();
     }
 
-    isRole(roles: Role[]): boolean {
+    isRole(...roles: Role[]): boolean {
         if (roles === undefined) return false;
         for (let r of roles) {
             if (this.meRoles[r] !== undefined) return true;
@@ -51,9 +51,9 @@ export class App extends AppBase {
         return false;
     }
 
-    isAdminOrRole(roles?: Role[]): boolean {
+    isAdminOrRole(...roles: Role[]): boolean {
         if (this.meAdmin === true) return true;
-        return this.isRole(roles);
+        return this.isRole(...roles);
     }
 
     isPersonMe(person: number): boolean {
@@ -92,5 +92,18 @@ export class App extends AppBase {
             }
         }
         return roles;
+    }
+
+    renderAdmin(el: JSX.Element): JSX.Element {
+        if (this.meAdmin === true) return el;
+        return null;
+    }
+    renderRole(el: JSX.Element, ...roles: number[]): JSX.Element {
+        if (this.isRole(...roles) === true) return el;
+        return null;
+    }
+    renderAdminOrRole(el: JSX.Element, ...roles: number[]): JSX.Element {
+        if (this.isAdminOrRole(...roles) === true) return el;
+        return null;
     }
 }

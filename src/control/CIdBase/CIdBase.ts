@@ -158,13 +158,13 @@ export abstract class CIdBase<A extends AppBase = AppBase> extends Control<A> {
     }
 
     protected async beforeEdit() {
+        // await this.waitFor(10);
     }
 
     onEditItem = async (item: any) => {
         setReact(async () => {
             this.deepData.currentItem = item;
-            await this.beforeEdit();
-            this.open(this.VEdit);
+            this.open(this.beforeEdit(), this.VEdit);
         });
     }
 

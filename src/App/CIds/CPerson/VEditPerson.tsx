@@ -12,22 +12,23 @@ export class VEditPerson<C extends CPerson = CPerson> extends VEditId<C> {
     }
 
     protected renderBindUser(): JSX.Element {
-        if (this.control.app.isAdminOrRole() !== true) return null;
-        let rightIcon = this.control.deepData.currentItem.user ? 'angle-right' : 'pencil-square-o';
-        return <div className="container">
-            <div onClick={this.control.onBindUser}
-                className="mb-3 row bg-white align-items-center cursor-pointer">
-                <label className="col-sm-2 col-form-label">Bind user</label>
-                <div className="col-sm-10">
-                    <LMR right={<FA name={rightIcon} className="text-primary" />}>
-                        {this.control.renderCurrentUser((user => {
-                            let { name } = user;
-                            return <>{name}</>;
-                        }))}
-                    </LMR>
+        return this.renderAdmin(() => {
+            let rightIcon = this.control.deepData.currentItem.user ? 'angle-right' : 'pencil-square-o';
+            return <div className="container">
+                <div onClick={this.control.onBindUser}
+                    className="mb-3 row bg-white align-items-center cursor-pointer">
+                    <label className="col-sm-2 col-form-label">Bind user</label>
+                    <div className="col-sm-10">
+                        <LMR right={<FA name={rightIcon} className="text-primary" />}>
+                            {this.control.renderCurrentUser((user => {
+                                let { name } = user;
+                                return <>{name}</>;
+                            }))}
+                        </LMR>
+                    </div>
                 </div>
-            </div>
-        </div>;
+            </div>;
+        });
     }
 }
 

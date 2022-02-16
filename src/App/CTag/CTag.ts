@@ -36,6 +36,6 @@ export class CTag extends CTagBase<App> {
     get iconClass(): string { return 'text-danger'; }
 
     isVisible(): boolean {
-        return this.app.isAdminOrRole();
+        return this.app.meAdmin;
     }
 }

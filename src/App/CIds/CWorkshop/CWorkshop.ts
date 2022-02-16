@@ -69,6 +69,7 @@ export class CWorkshop extends CId {
     }
 
     protected async beforeEdit() {
+        await super.beforeEdit();
         await this.cTagInput.beforeEdit(this.tagGroupName, this.deepData.currentItem.id);
         await this.cSession.loadToList()
     }

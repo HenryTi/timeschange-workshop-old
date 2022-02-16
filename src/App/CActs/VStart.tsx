@@ -1,6 +1,5 @@
 import { Page } from "Control";
 import { FA, LMR } from "tonwa-react";
-import { Role } from "uq-app/uqs/BzWorkshop";
 import { CActs } from "./CActs";
 
 interface DirItem {
@@ -22,8 +21,7 @@ export class VStart extends Page<CActs> {
         ];
         return <div className="">
             {
-                arr.map((v, index) => {
-                    if (this.control.app.isAdminOrRole([Role.counselor]) === false) return null;
+                arr.map((v, index) => this.renderAdminOrRole(() => {
                     let { onClick, caption, icon } = v;
                     let right = <FA name="angle-right" />;
                     let vIcon = <FA name={icon} className="text-primary me-3" fixWidth={true} />;
@@ -32,7 +30,7 @@ export class VStart extends Page<CActs> {
                         left={vIcon}
                         right={right}
                         onClick={onClick}>{caption}</LMR>
-                })
+                }))
             }
         </div>;
     }
