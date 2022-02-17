@@ -55,7 +55,8 @@ export class CApp extends CUqApp {
 		this.cHome.load();
 		*/
 
-		let appNav = new AppNav(this.getTonwa().nav);
+		let tonwa = this.getTonwa();
+		let appNav = new AppNav(tonwa);
 		let app = new App(this.uqs);
 		this.app = app;
 		app.appNav = appNav;

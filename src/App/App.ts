@@ -8,6 +8,7 @@ import { CMe } from "./CMe";
 import { CTag } from "./CTag";
 import { AppNav } from "../tool";
 import { CMain } from "./CMain";
+import { pathControls } from "./pathControls";
 
 type Roles = { [role in Role]: number };
 
@@ -39,6 +40,12 @@ export class App extends AppBase {
     }
 
     openMain() {
+        let ret = pathControls(this);
+        if (ret === true) return;
+        if (!this.user) {
+            this.nav.openLogin();
+            return;
+        }
         let cMain = new CMain(this);
         cMain.openMain();
     }

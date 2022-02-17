@@ -25,7 +25,7 @@ export class CAdmin extends CAdminBase<App> {
     }
 
     get me(): number {
-        return this.app.user.id;
+        return this.app.user?.id;
     }
 
     renderRoleSettings(): JSX.Element {

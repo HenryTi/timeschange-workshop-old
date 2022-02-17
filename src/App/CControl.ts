@@ -8,4 +8,8 @@ export abstract class CControl extends Control<App> {
         super(app);
         this.uqs = app.uqs;
     }
+
+    openMain() {
+        alert('openMain not defined');
+    }
 }

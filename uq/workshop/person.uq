@@ -21,27 +21,15 @@ ID Person ver 0.2 GLOBAL (
     INDEX email(email),
     INDEX mobile(mobile),
 );
-/*
-ID PersonCategory ver 0.1 CONST (
-    id,
-    KEY name CHAR(50),
-)
-+ (name)
-VALUES
-('staff'),
-('volunteer'),
-('client'),
-('donator'),
-('board');
 
-IX *IXPerson ver 0.3 (
-    ix PersonCategory,
-    xi Person,
-);
-*/
 IX *IxPersonLog ver 0.3 (
     ix Person,
     xi TYPE Minute,                 -- unique minute id
+);
+
+ID ClientSurvey Minute (
+    id,
+    client ID,
 );
 
 QUERY GetPersonList(

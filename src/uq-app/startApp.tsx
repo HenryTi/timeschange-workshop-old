@@ -12,9 +12,9 @@ export async function startApp() {
     const onLogined = async (isUserLogin?: boolean) => {
         await start(CApp, tonwa, appConfig, isUserLogin);
     }
-    const notLogined: () => Promise<void> = undefined;
+    const notLogined: () => Promise<void> = onLogined;
     const userPassword: () => Promise<{ user: string; password: string }> = undefined;
-    tonwa.appStart();
+    tonwa.appStart(onLogined);
     ReactDOM.render(
         <React.StrictMode>
             <NavView ref={navView => tonwa.set(navView)}
