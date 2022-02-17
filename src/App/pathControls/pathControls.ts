@@ -9,8 +9,8 @@ const coll: {
 };
 
 export function pathControls(app: App): boolean {
-    let { pathname } = document.location;
-    let path = pathname.toLowerCase();
+    let { href } = document.location;
+    let path = href.toLowerCase();
     for (let i in coll) {
         let p = path.indexOf(i.toLowerCase());
         if (p >= 0) {

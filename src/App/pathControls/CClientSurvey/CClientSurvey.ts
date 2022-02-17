@@ -11,14 +11,14 @@ export class CClientSurvey extends CPathControl {
 
     onStart = async () => {
         let { BzWorkshop } = this.uqs;
-        let id = Number(this.pathParam);
+        let id = Number.parseInt(this.pathParam);
         if (isNaN(id) === true) {
             this.open(PInvalid);
             return
         }
         let ret = await BzWorkshop.ID<Person>({
             IDX: BzWorkshop.Person,
-            id: Number(this.pathParam),
+            id,
         });
         if (ret.length === 0) {
             this.open(PInvalid);
