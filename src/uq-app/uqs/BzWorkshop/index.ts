@@ -7,6 +7,8 @@ import * as SessionPerson from './SessionPerson.ui';
 import * as Tag from './Tag.ui';
 import * as TagGroup from './TagGroup.ui';
 import * as TagItem from './TagItem.ui';
+import * as ClientSurvey from './ClientSurvey.ui';
+import * as Draft from './Draft.ui';
 	
 export function setUI(uq: Uq) {
 	assign(uq, 'Workshop', Workshop);
@@ -17,5 +19,7 @@ export function setUI(uq: Uq) {
 	assign(uq, 'Tag', Tag);
 	assign(uq, 'TagGroup', TagGroup);
 	assign(uq, 'TagItem', TagItem);
+	assign(uq, 'ClientSurvey', ClientSurvey);
+	assign(uq, 'Draft', Draft);
 }
 export * from './BzWorkshop';

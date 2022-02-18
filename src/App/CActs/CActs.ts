@@ -1,5 +1,6 @@
 import { CControl } from "../CControl";
 import { CClientNotes } from "./CClientNotes";
+import { CTest } from "./CTest";
 import { CWorkshops } from "./CWorkshops";
 import { VStart } from "./VStart";
 
@@ -19,5 +20,10 @@ export class CActs extends CControl {
     showClientNotes = async () => {
         let cClientNotes = new CClientNotes(this);
         cClientNotes.openMain();
+    }
+
+    showTest = async () => {
+        let cTest = new CTest(this.app);
+        cTest.openMain();
     }
 }

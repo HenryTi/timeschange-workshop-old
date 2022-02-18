@@ -1,4 +1,4 @@
-//=== UqApp builder created on Tue Feb 15 2022 12:15:55 GMT-0500 (北美东部标准时间) ===//
+//=== UqApp builder created on Thu Feb 17 2022 17:21:26 GMT-0500 (北美东部标准时间) ===//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IDXValue, Uq, UqTuid, UqAction, UqQuery, UqID, UqIX } from "tonwa-core";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -284,6 +284,17 @@ export interface TagItem {
 	name: string;
 }
 
+export interface ClientSurvey {
+	id?: number;
+	client: number;
+}
+
+export interface Draft {
+	id?: number;
+	entity: number;
+	content: string;
+}
+
 export interface IxStaffClient {
 	tick: number;
 	ix: number;
@@ -339,6 +350,11 @@ export interface IxUserPerson {
 	xi: number;
 }
 
+export interface IxDraft {
+	ix: number;
+	xi: number;
+}
+
 export interface ParamActs {
 	workshop?: Workshop[];
 	person?: Person[];
@@ -348,6 +364,8 @@ export interface ParamActs {
 	tag?: Tag[];
 	tagGroup?: TagGroup[];
 	tagItem?: TagItem[];
+	clientSurvey?: ClientSurvey[];
+	draft?: Draft[];
 	ixStaffClient?: IxStaffClient[];
 	ixSessionClient?: IxSessionClient[];
 	ixWorkshopSession?: IxWorkshopSession[];
@@ -358,6 +376,7 @@ export interface ParamActs {
 	ixLocalIdTag?: IxLocalIdTag[];
 	ixPersonRole?: IxPersonRole[];
 	ixUserPerson?: IxUserPerson[];
+	ixDraft?: IxDraft[];
 }
 
 
@@ -389,6 +408,8 @@ export interface UqExt extends Uq {
 	Tag: UqID<any> & IDXEntity<any>;
 	TagGroup: UqID<any> & IDXEntity<any>;
 	TagItem: UqID<any> & IDXEntity<any>;
+	ClientSurvey: UqID<any> & IDXEntity<any>;
+	Draft: UqID<any> & IDXEntity<any>;
 	IxStaffClient: UqIX<any>;
 	IxSessionClient: UqIX<any>;
 	IxWorkshopSession: UqIX<any>;
@@ -399,6 +420,7 @@ export interface UqExt extends Uq {
 	IxLocalIdTag: UqIX<any>;
 	IxPersonRole: UqIX<any>;
 	IxUserPerson: UqIX<any>;
+	IxDraft: UqIX<any>;
 }
 
 export function assign(uq: any, to:string, from:any): void {

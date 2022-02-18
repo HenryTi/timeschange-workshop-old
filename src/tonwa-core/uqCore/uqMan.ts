@@ -262,13 +262,14 @@ export interface Uq {
 	ActDetail<M, D, D2, D3>(param: ParamActDetail3<M, D, D2, D3>): Promise<RetActDetail3>;
 	QueryID<T>(param: ParamQueryID): Promise<T[]>;
 	IDNO(param: ParamIDNO): Promise<string>;
+	IDEntity(typeId: number): ID;
 	IDDetailGet<M, D>(param: ParamIDDetailGet): Promise<[M[], D[]]>;
 	IDDetailGet<M, D, D2>(param: ParamIDDetailGet): Promise<[M[], D[], D2[]]>;
 	IDDetailGet<M, D, D2, D3>(param: ParamIDDetailGet): Promise<[M[], D[], D2[], D3[]]>;
-	ID<T>(param: ParamID): Promise<T[]>;
+	ID<T = any>(param: ParamID): Promise<T[]>;
 	IXr<T>(param: ParamIX): Promise<T[]>; // IX id 反查IX list
 	KeyID<T>(param: ParamKeyID): Promise<T[]>;
-	IX<T>(param: ParamIX): Promise<T[]>;
+	IX<T = any>(param: ParamIX): Promise<T[]>;
 	IXValues(param: ParamIXValues): Promise<{ type: string, value: string }[]>;
 	KeyIX<T>(param: ParamKeyIX): Promise<T[]>;
 	IDLog<T>(param: ParamIDLog): Promise<T[]>;
@@ -282,6 +283,7 @@ export interface Uq {
 
 export class UqMan {
 	readonly entities: { [name: string]: Entity } = {};
+	readonly entityTypes: { [id: number]: Entity } = {};
 	private readonly enums: { [name: string]: UqEnum } = {};
 	private readonly actions: { [name: string]: Action } = {};
 	private readonly queries: { [name: string]: Query } = {};
@@ -510,6 +512,7 @@ export class UqMan {
 	private setEntity(name: string, entity: Entity) {
 		this.entities[name] = entity;
 		this.entities[name.toLowerCase()] = entity;
+		this.entityTypes[entity.typeId] = entity;
 	}
 
 	newEnum(name: string, id: number): UqEnum {
@@ -1015,6 +1018,10 @@ export class UqMan {
 	protected IDNO = async (param: ParamIDNO): Promise<string> => {
 		return await this.apiIDNO(param, EnumResultType.data);
 	}
+
+	protected IDEntity = (typeId: number): ID => {
+		return this.entityTypes[typeId] as ID;
+	};
 
 	protected $IDNO = async (param: ParamIDNO): Promise<string> => {
 		return await this.apiIDNO(param, EnumResultType.sql);
