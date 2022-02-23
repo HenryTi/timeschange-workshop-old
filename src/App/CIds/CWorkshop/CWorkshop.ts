@@ -1,5 +1,5 @@
 import { Schema, UiSchema, UiTextAreaItem, UiTextItem, UiPick } from "tonwa-react";
-import { Uq } from "tonwa-core";
+import { Uq } from "tonwa-uq";
 import { CId } from "../CId";
 import { renderWorkshopItem } from "./renderItem";
 import { CIds } from "App/CIds";

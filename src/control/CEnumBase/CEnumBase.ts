@@ -1,5 +1,5 @@
 import { Control, AppBase, View } from "Control";
-import { Uq, IX } from "tonwa-core";
+import { Uq, IX } from "tonwa-uq";
 import { VEnumMulti, VEnumSingle } from ".";
 
 export abstract class CEnumBase<E extends number> extends Control {

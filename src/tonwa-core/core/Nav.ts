@@ -18,8 +18,6 @@ export interface PageWebNav<T = any> {
 
 export interface Nav<T = any> {
     level: number;
-    startWait(): void;
-    endWait(): void;
     show(view: T, disposer?: () => void): number;
     push(view: T, disposer?: () => void): number;
     replace(view: T, disposer?: () => void): number;
@@ -33,7 +31,6 @@ export interface Nav<T = any> {
     navBack: () => void;
     back: (confirm: boolean) => Promise<void>;
     confirmBox(message?: string): boolean;
-    clearError: () => void;
     backIcon: T;
     closeIcon: T;
     setIsWebNav(): void;

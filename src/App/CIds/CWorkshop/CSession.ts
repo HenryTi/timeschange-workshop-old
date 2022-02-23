@@ -1,6 +1,6 @@
 import { CWorkshop } from "App/CIds";
 import { IdValue, setReact } from "Control";
-import { Uq, ID } from "tonwa-core";
+import { Uq, ID } from "tonwa-uq";
 import { Schema, UiDate, UiNumberItem, UiSchema, UiTextItem, UiTime } from "tonwa-react";
 import { Session } from "uq-app/uqs/BzWorkshop";
 import { CId } from "../CId";

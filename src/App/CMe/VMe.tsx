@@ -3,7 +3,7 @@ import { Image, PropGrid, LMR, FA, Prop } from "tonwa";
 import { CMe } from './CMe';
 import { appConfig } from '../../uq-app/appConfig';
 import { VAbout } from './VAbout';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 import { View } from 'Control';
 
 export class VMe extends View<CMe> {

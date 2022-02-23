@@ -1,15 +1,13 @@
 import { observer } from "mobx-react";
 import React from "react";
 import {
-	UqMan, Uq as UqCore, Web
-} from "tonwa-core";
+	UqMan, Uq as UqCore, UqError
+} from "tonwa-uq";
 
 export class Uq {
-	private web: Web;
 	private $_uqMan: UqMan;
 	private $_uqSql: UqCore;
-	constructor(web: Web, uqMan: UqMan) {
-		this.web = web;
+	constructor(uqMan: UqMan) {
 		this.$_uqMan = uqMan;
 		this.$_uqSql = this.$_createUqSqlProxy();
 	}
@@ -30,10 +28,7 @@ export class Uq {
 				if (func !== undefined) return func;
 				func = (this as any)[key];
 				if (func !== undefined) return func;
-				let err = `entity ${this.$_uqMan.name}.${String(key)} not defined`;
-				console.error('UQ错误：' + err);
-				this.showReload('服务器正在更新');
-				return undefined;
+				this.errUndefinedEntity(String(key));
 			}
 		});
 		return ret;
@@ -44,37 +39,18 @@ export class Uq {
 			get: (target, key, receiver) => {
 				let ret = (target as any)['$' + (key as string)];
 				if (ret !== undefined) return ret;
-				let err = `entity ${this.$_uqMan.name}.${String(key)} not defined`;
-				console.error('UQ错误：' + err);
-				this.$_uqMan.showReload('服务器正在更新');
-				return undefined;
+				this.errUndefinedEntity(String(key));
 			}
 		});
 		return ret as unknown as UqCore;
 	}
 
-	private showReload(msg: string) {
-		//console.error('uq proxy error name', msg);
-		let cache = this.$_uqMan.localMap.child('$reload-tick');
-		let reloadTick = cache.get();
-		if (!reloadTick) reloadTick = 0;
-		console.error(msg);
-		this.$_uqMan.localMap.removeAll();
-		let tick = Date.now();
-		cache.set(tick);
-		if (tick - reloadTick < 10 * 1000) {
-			this.web.showReloadPage(msg);
-		}
-		else {
-			this.web.reload();
-		}
+	private errUndefinedEntity(entity: string) {
+		let message = `entity ${this.$_uqMan.name}.${entity} not defined`;
+		let err = new Error(message);
+		err.name = UqError.undefined_entity;
+		throw err;
 	}
-
-	/*
-	IDTv(ids: number[]): Promise<any[]> {
-		return this.$_uqMan.IDTv(ids);
-	}
-	*/
 
 	protected IDRender = (id: number, render?: (value: any) => JSX.Element): JSX.Element => {
 		if (id === undefined || id === null) return null;
@@ -99,11 +75,7 @@ export class Uq {
 	private renderIDUnknownType(id: number) {
 		return React.createElement('span', { props: { className: 'text-muted' }, children: [`id=${id} type undefined`] });
 	}
-	/*
-	IDLocalTv(ids: number[]): Promise<any[]> {
-		return this.IDTv(ids.map(v => -v));
-	}
-	*/
+
 	protected IDLocalV = <T extends object>(id: number): T => {
 		return this.IDV(-id);
 	}

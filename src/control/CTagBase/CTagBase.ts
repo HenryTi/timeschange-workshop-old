@@ -1,5 +1,5 @@
 import { AppBase, CStringEdit, deepReact, Page, setReact } from "Control";
-import { Uq, ID, IX } from "tonwa-core";
+import { Uq, ID, IX } from "tonwa-uq";
 import { StringSchema, UiTextItem } from "tonwa-react";
 import { Control } from "../Control";
 import { VAddTag } from "./VAddTag";

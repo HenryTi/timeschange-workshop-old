@@ -1,4 +1,4 @@
-import { Uq } from "tonwa-core";
+import { Uq } from "tonwa-uq";
 
 export abstract class Model {
     protected readonly uq: Uq;

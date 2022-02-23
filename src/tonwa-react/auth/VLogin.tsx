@@ -2,7 +2,7 @@ import { Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, 
 import { defaultLoginTop, getSender } from './tools';
 import { CLogin } from './CLogin';
 import { VPage } from '../vm';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 
 const schema: Schema = [
 	{ name: 'username', type: 'string', required: true, maxLength: 100 } as StringSchema,

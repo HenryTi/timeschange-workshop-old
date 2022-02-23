@@ -1,6 +1,6 @@
 import { makeObservable, observable } from "mobx";
-import { FetchError, Nav, Tonwa, Web } from "tonwa-core";
-import { WebReact } from "./app";
+import { Web } from "tonwa-uq";
+import { Nav, Tonwa } from "tonwa-core";
 
 import { Page } from './components';
 
@@ -10,7 +10,6 @@ import './css/va.css';
 import './css/animation.css';
 import { ReloadPage, ConfirmReloadPage } from './components/reloadPage';
 import { createLogin, showForget, showRegister } from './components/login';
-import { SystemNotifyPage } from './nav/FetchErrorView';
 import { NavView } from './nav';
 
 export class TonwaReact extends Tonwa {
@@ -24,7 +23,7 @@ export class TonwaReact extends Tonwa {
         this.setCreateLogin(createLogin);
     }
 
-    createWeb(): Web { return new WebReact(this); }
+    createWeb(): Web { return new Web(); }
 
     createObservableMap<K, V>(): Map<K, V> {
         return observable.map({}, { deep: false });
@@ -37,10 +36,6 @@ export class TonwaReact extends Tonwa {
 
     get nav(): Nav<JSX.Element> { return this.navView };
 
-    setFetchError(fetchError: FetchError) {
-        this.navView.setFetchError(fetchError);
-    }
-
     renderNavView(onLogined: (isUserLogin?: boolean) => Promise<void>,
         notLogined?: () => Promise<void>,
         userPassword?: () => Promise<{ user: string; password: string }>,
@@ -49,6 +44,23 @@ export class TonwaReact extends Tonwa {
             onLogined={onLogined}
             notLogined={notLogined}
             userPassword={userPassword} />;
+    }
+
+    protected beforeStart(): void {
+        window.onerror = this.windowOnError;
+        window.onunhandledrejection = this.windowOnUnhandledRejection;
+        window.onfocus = this.reloadUser;
+    }
+
+    private windowOnError = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
+        debugger;
+        console.error('windowOnError');
+        console.error(error);
+    }
+    private windowOnUnhandledRejection = (ev: PromiseRejectionEvent) => {
+        debugger;
+        console.error('windowOnUnhandledRejection');
+        console.error(ev.reason);
     }
 
     /*
@@ -131,29 +143,6 @@ export class TonwaReact extends Tonwa {
     showReloadPage(msg: string) {
         let seconds = -1;
         this.navView.push(<ReloadPage message={msg} seconds={seconds} />);
-    }
-
-    async onError(fetchError: FetchError) {
-        let err = fetchError.error;
-        if (err !== undefined) {
-            if (err.unauthorized === true) {
-                await this.showLogin(undefined);
-                //nav.navigateToLogin();
-                return;
-            }
-            switch (err.type) {
-                case 'unauthorized':
-                    await this.showLogin(undefined);
-                    //nav.navigateToLogin();
-                    return;
-                case 'sheet-processing':
-                    this.navView.push(<SystemNotifyPage message="单据正在处理中。请重新操作！" />);
-                    return;
-            }
-        }
-        this.navView.setState({
-            fetchError,
-        });
     }
 
     private upgradeUq = () => {

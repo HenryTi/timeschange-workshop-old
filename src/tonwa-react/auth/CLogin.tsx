@@ -1,4 +1,5 @@
-import { User, CenterAppApi, Login } from 'tonwa-core';
+import { User, CenterAppApi } from 'tonwa-uq';
+import { Login } from 'tonwa-core';
 import { ControllerWithWeb, VPage } from "../vm";
 import { VLogout } from './VLogout';
 import { VLogin } from './VLogin';

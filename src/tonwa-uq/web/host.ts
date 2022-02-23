@@ -81,9 +81,17 @@ export class Host {
     url: string;
     ws: string;
     resHost: string;
+    hash: string;
 
     async start(testing: boolean) {
         if (!centerHost) debugger;
+        let doc = (global as any).document;
+        if (doc) {
+            this.hash = doc.location.hash;
+        }
+        else {
+            this.hash = '';
+        }
         this.testing = testing;
         if (env.isDevelopment === true) {
             await this.tryLocal();
@@ -124,8 +132,7 @@ export class Host {
 
     private getCenterHost(): string {
         let { value, local } = hosts.centerhost;
-        let hash = document.location.hash;
-        if (hash.includes('sheet_debug') === true) {
+        if (this.hash.includes('sheet_debug') === true) {
             return value;
         }
         if (env.isDevelopment === true) {
@@ -136,8 +143,7 @@ export class Host {
 
     private getResHost(): string {
         let { value, local } = hosts.reshost;
-        let hash = document.location.hash;
-        if (hash.includes('sheet_debug') === true) {
+        if (this.hash.includes('sheet_debug') === true) {
             return value;
         }
         if (env.isDevelopment === true) {

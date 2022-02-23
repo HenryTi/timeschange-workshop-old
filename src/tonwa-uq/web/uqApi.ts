@@ -1,8 +1,5 @@
 import { HttpChannel, UqHttpChannel } from './httpChannel';
-import { HttpChannelNavUI } from './httpChannelUI';
-//import {getUqToken, logoutUqTokens, buildAppUq} from './appBridge';
 import { ApiBase } from './apiBase';
-//import { host } from './host';
 import { LocalMap, env, decodeUserToken } from '../tool';
 import { Web, PromiseValue } from './Web';
 
@@ -30,19 +27,12 @@ export class UqApi extends ApiBase {
     }
 
     async init() {
-        await this.web.appBridge.buildAppUq(this.uq, this.uqOwner, this.uqName);
+        //await this.web.appBridge.buildAppUq(this.uq, this.uqOwner, this.uqName);
     }
 
     protected async getHttpChannel(): Promise<HttpChannel> {
         let channels: { [name: string]: HttpChannel | (PromiseValue<any>[]) };
-        let channelUI: HttpChannelNavUI;
-        if (this.showWaiting === true || this.showWaiting === undefined) {
-            channels = this.web.channelUIs;
-            channelUI = new HttpChannelNavUI(this.web);
-        }
-        else {
-            channels = this.web.channelNoUIs;
-        }
+        channels = this.web.channelUIs;
         let channel = channels[this.uq];
         if (channel !== undefined) {
             if (Array.isArray(channel) === false) return channel as HttpChannel;
@@ -54,15 +44,15 @@ export class UqApi extends ApiBase {
         return new Promise(async (resolve, reject) => {
             arr.push({ resolve, reject });
             if (arr.length !== 1) return;
-            let uqToken = this.web.appBridge.getUqToken(this.uq); //, this.uqOwner, this.uqName);
+            let uqToken = this.web.uqTokens.getUqToken(this.uq); //, this.uqOwner, this.uqName);
             if (!uqToken) {
                 //debugger;
                 await this.init();
-                uqToken = this.web.appBridge.getUqToken(this.uq);
+                uqToken = this.web.uqTokens.getUqToken(this.uq);
             }
             let { url, token } = uqToken;
             this.token = token;
-            channel = new UqHttpChannel(this.web, url, token, channelUI);
+            channel = new UqHttpChannel(this.web, url, token);
             channels[this.uq] = channel;
             for (let pv of arr) {
                 pv.resolve(channel);
@@ -166,25 +156,18 @@ export class UnitxApi extends UqApi {
     }
 
     private async buildChannel(): Promise<HttpChannel> {
-        let channelUI = new HttpChannelNavUI(this.web);
         let centerAppApi = new CenterAppApi(this.web, 'tv/', undefined);
         let ret = await centerAppApi.unitxUq(this.unitId);
         let { token, db, url, urlTest } = ret;
         let realUrl = this.web.host.getUrlOrTest(db, url, urlTest);
         this.token = token;
-        return new UqHttpChannel(this.web, realUrl, token, channelUI);
+        return new UqHttpChannel(this.web, realUrl, token);
     }
 }
+
 export abstract class CenterApiBase extends ApiBase {
     protected async getHttpChannel(): Promise<HttpChannel> {
-        let ret: HttpChannel;
-        if (this.showWaiting === true || this.showWaiting === undefined) {
-            ret = this.web.getCenterChannelUI();
-        }
-        else {
-            ret = this.web.getCenterChannel();
-        }
-        return ret;
+        return this.web.getCenterChannel();
     }
 }
 

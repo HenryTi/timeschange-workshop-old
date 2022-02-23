@@ -1,7 +1,7 @@
 import { Web } from "./Web";
 
-let subAppWindow:Window;
-function postWsToSubApp(msg:any) {
+let subAppWindow: any; // Window;
+function postWsToSubApp(msg: any) {
     if (subAppWindow === undefined) return;
     subAppWindow.postMessage({
         type: 'ws',
@@ -9,11 +9,11 @@ function postWsToSubApp(msg:any) {
     }, '*');
 }
 
-export function setSubAppWindow(win:Window) {
+export function setSubAppWindow(win: any) {  // Window
     subAppWindow = win;
 }
 
-export function postWsToTop(msg:any) {
+export function postWsToTop(msg: any) {
     window.top.postMessage({
         type: 'ws',
         msg: msg
@@ -22,18 +22,18 @@ export function postWsToTop(msg:any) {
 
 export abstract class WsBase {
     protected web: Web;
-	//private messageHub = messageHub;
+    //private messageHub = messageHub;
     constructor(web: Web) {
         this.web = web;
     }
 
-	/*
+    /*
     wsBaseId:string;
     private handlerSeed = 1;
     private anyHandlers:{[id:number]:(msg:any)=>Promise<void>} = {};
-	private msgHandlers:{[id:number]:{type:string, handler:(msg:any)=>Promise<void>}} = {};
-	*/
-	/*
+    private msgHandlers:{[id:number]:{type:string, handler:(msg:any)=>Promise<void>}} = {};
+    */
+    /*
     onWsReceiveAny(handler:(msg:any)=>Promise<void>):number {
         let seed = this.handlerSeed++;
         this.anyHandlers[seed] = handler;
@@ -47,11 +47,11 @@ export abstract class WsBase {
     endWsReceive(handlerId:number) {
         delete this.anyHandlers[handlerId];
         delete this.msgHandlers[handlerId];
-	}
-	*/
-    async receive(msg:any) {
-		this.web.messageHub.dispatch(msg);
-		/*
+    }
+    */
+    async receive(msg: any) {
+        this.web.messageHub.dispatch(msg);
+        /*
         let {$type} = msg;
         for (let i in this.anyHandlers) {
             await this.anyHandlers[i](msg);
@@ -60,19 +60,19 @@ export abstract class WsBase {
             let {type, handler} = this.msgHandlers[i];
             if (type !== $type) continue;
             await handler(msg);
-		}
-		*/
+        }
+        */
     }
 }
 
 let wsBaseSeed = 1;
 export class WsBridge extends WsBase {
-    wsBaseId:string = 'WsBridge seed ' + wsBaseSeed++;
+    wsBaseId: string = 'WsBridge seed ' + wsBaseSeed++;
 }
 
 export class WSChannel extends WsBase {
-    wsBaseId:string = 'WSChannel seed ' + wsBaseSeed++;
-    static centerToken:string;
+    wsBaseId: string = 'WSChannel seed ' + wsBaseSeed++;
+    static centerToken: string;
     private wsHost: string;
     private token: string;
     private ws: WebSocket;
@@ -86,8 +86,8 @@ export class WSChannel extends WsBase {
     static setCenterToken(token?: string) {
         WSChannel.centerToken = token;
     }
-    
-    connect():Promise<void> {
+
+    connect(): Promise<void> {
         //this.wsHost = wsHost;
         //this.token = token || WSChannel.centerToken;
         if (this.ws !== undefined) return;
@@ -116,7 +116,7 @@ export class WSChannel extends WsBase {
             this.ws = undefined;
         }
     }
-    private async wsMessage(event:any):Promise<void> {
+    private async wsMessage(event: any): Promise<void> {
         try {
             console.log('websocket message: %s', event.data);
             let msg = JSON.parse(event.data);
@@ -127,7 +127,7 @@ export class WSChannel extends WsBase {
             console.log('ws msg error: ', err);
         }
     }
-    sendWs(msg:any) {
+    sendWs(msg: any) {
         let netThis = this;
         this.connect().then(() => {
             netThis.ws.send(msg);

@@ -1,4 +1,4 @@
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 import { AppConfig, CAppBase } from './CAppBase';
 //import { nav } from '../components';
 

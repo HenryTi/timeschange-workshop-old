@@ -1,7 +1,5 @@
 /* eslint-disable */
-//import { UqApi, UqData, UnitxApi } from '../net';
 import { UqApi, UqData, UnitxApi } from '../web';
-import { Tonwa, UqConfig } from '../core';
 import { Tuid, TuidDiv, TuidImport, TuidInner, TuidBox, TuidsCache } from './tuid';
 import { Action } from './action';
 import { Sheet } from './sheet';
@@ -10,14 +8,15 @@ import { Book } from './book';
 import { History } from './history';
 import { Map } from './map';
 import { Pending } from './pending';
-//import { CreateBoxId, BoxId } from './tuid';
-import { LocalMap, LocalCache, env, capitalCase } from '../tool';
-//import { ReactBoxId } from './tuid/reactBoxId';
+import { capitalCase, UqConfig, UqError } from '../tool';
 import { UqEnum } from './enum';
 import { Entity } from './entity';
 import { ID, IX, IDX } from './ID';
 import { IDCache } from './IDCache';
 import { Web } from '../web';
+
+// import { LocalMap, LocalCache, env } from '../tool';
+// import { Tonwa, TonwaBase, UqConfig } from '../../tonwa-core/core';
 
 export type FieldType = 'id' | 'tinyint' | 'smallint' | 'int' | 'bigint' | 'dec' | 'float' | 'double' | 'char' | 'text'
 	| 'datetime' | 'date' | 'time' | 'timestamp' | 'enum';
@@ -312,23 +311,14 @@ export class UqMan {
 	readonly name: string;
 	readonly uqApi: UqApi;
 	readonly id: number;
-	readonly tonwa: Tonwa;
 	readonly web: Web;
 
 	uqVersion: number;
 	config: UqConfig;
 
-	constructor(tonwa: Tonwa, uqData: UqData/*, createBoxId:CreateBoxId, tvs:{[entity:string]:(values:any)=>JSX.Element}*/) {
-		this.tonwa = tonwa;
-		this.web = tonwa.web;
-		//this.createBoxId = createBoxId;
-		/*
-		if (createBoxId === undefined) {
-			this.createBoxId = this.createBoxIdFromTVs;
-			this.tvs = tvs || {};
-		}
-		*/
-		let { id, uqOwner, uqName, /*access, */newVersion } = uqData;
+	constructor(web: Web, uqData: UqData) {
+		this.web = web;
+		let { id, uqOwner, uqName, newVersion } = uqData;
 		this.newVersion = newVersion;
 		this.uqOwner = uqOwner;
 		this.uqName = uqName;
@@ -729,10 +719,7 @@ export class UqMan {
 				if (ret !== undefined) return ret;
 				let func = (this as any)[key];
 				if (func !== undefined) return func;
-				let err = `entity ${this.name}.${String(key)} not defined`;
-				console.error('UQ错误：' + err);
-				this.showReload('服务器正在更新');
-				return undefined;
+				this.errUndefinedEntity(String(key));
 			}
 		});
 		this.proxy = ret;
@@ -743,30 +730,17 @@ export class UqMan {
 				if (ret !== undefined) return ret;
 				let func = (this as any)['$' + (key as string)];
 				if (func !== undefined) return func;
-				let err = `entity ${this.name}.${String(key)} not defined`;
-				console.error('UQ错误：' + err);
-				this.showReload('服务器正在更新');
-				return undefined;
+				this.errUndefinedEntity(String(key));
 			}
 		});
 		this.idCache = new IDCache(this);
 		return ret;
 	}
 
-	showReload(msg: string) {
-		let cache = this.localMap.child('$reload-tick');
-		let reloadTick = cache.get();
-		if (!reloadTick) reloadTick = 0;
-		console.error(msg);
-		this.localMap.removeAll();
-		let tick = Date.now();
-		cache.set(tick);
-		if (tick - reloadTick < 10 * 1000) {
-			this.web.showReloadPage(msg);
-		}
-		else {
-			this.web.reload();
-		}
+	private errUndefinedEntity(entity: string) {
+		let err = new Error(`entity ${this.name}.${entity} not defined`);
+		err.name = UqError.undefined_entity;
+		throw err;
 	}
 
 	private async apiPost(api: string, resultType: EnumResultType, apiParam: any): Promise<any> {

@@ -10,6 +10,7 @@ ID Workshop GLOBAL (
 -- one class of workshop
 ID Session GLOBAL (
     id,
+    workshop ID Workshop,       -- 加上workshop，session是自洽的。id就包含所有信息
     date DATE,
     vice CHAR(200),
     time TIME,
@@ -24,10 +25,13 @@ ID SessionPerson MINUTE (
     deleted TINYINT DEFAULT 0,
 );
 
+/*
+IX 就可以表达。反向的xi index不再需要。session中已经包含workshop
 IX *IxWorkshopSession (
     ix Workshop,
     xi Session INDEX,
 );
+*/
 
 IX *IxSessionStaff (
     ix Session,

@@ -1,7 +1,7 @@
 import { Controller, ControllerWithWeb, VPage } from "../../vm";
 //import { nav } from '../../components';
 import { VRegisterStart, VForgetStart } from './VStart';
-import { RegisterParameter } from 'tonwa-core';
+import { RegisterParameter } from 'tonwa-uq';
 import { VVerify } from './VVerify';
 import { VRegisterPassword, VForgetPassword } from './VPassword';
 import { VForgetSuccess, VRegisterSuccess } from "./VSuccess";

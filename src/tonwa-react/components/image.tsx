@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 //import { nav } from '../nav';
 
 export interface ImageProps {

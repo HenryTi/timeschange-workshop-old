@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observable, IObservableArray, isObservableArray, observe, makeObservable } from 'mobx';
 import classNames from 'classnames';
-import { uid } from 'tonwa-core';
+import { uid } from 'tonwa-uq';
 import { ListBase } from './base';
 import { List } from './index';
 import { IPageItems } from '../../tool';

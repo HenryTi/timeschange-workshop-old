@@ -1,28 +1,19 @@
-import { env } from '../tool';
 import { UqMan } from './uqMan';
 import { TuidImport, TuidInner } from './tuid';
 import { Web, UqData } from '../web';
-import { Tonwa, UqConfig } from '../core';
-
-/*
-export interface TVs {
-	[uqName:string]: {
-		[tuidName: string]: (values: any) => JSX.Element;
-	}
-}
-*/
+import { UqConfig, UqError } from '../tool';
 
 export class UQsMan {
-	private readonly tonwa: Tonwa;
+	//private readonly tonwa: TonwaBase;
 	private readonly web: Web;
 	private collection: { [uqLower: string]: UqMan };
 	//private readonly tvs: TVs;
 	proxy: any;
 	uqMans: UqMan[] = [];
 
-	constructor(tonwa: Tonwa/*, tvs:TVs*/) {
-		this.tonwa = tonwa;
-		this.web = tonwa.web;
+	constructor(web: Web) {
+		//this.tonwa = tonwa;
+		this.web = web;
 		//this.tvs = tvs || {};
 		//this.buildTVs();
 		this.uqMans = [];
@@ -71,26 +62,6 @@ export class UQsMan {
 		return roles;
 	}
 
-	/*
-	private buildTVs() {
-		if (!this.tvs) return;
-		for (let i in this.tvs) {
-			let uqTVs = this.tvs[i];
-			if (uqTVs === undefined) continue;
-			let l = i.toLowerCase();
-			if (l === i) continue;
-			this.tvs[l] = uqTVs;
-			for (let j in uqTVs) {
-				let en = uqTVs[j];
-				if (en === undefined) continue;
-				let lj = j.toLowerCase();
-				if (lj === j) continue;
-				uqTVs[lj] = en;
-			}
-		}
-	}
-	*/
-
 	async init(uqsData: UqData[]): Promise<void> {
 		let promiseInits: PromiseLike<void>[] = [];
 		for (let uqData of uqsData) {
@@ -104,7 +75,7 @@ export class UQsMan {
 				uq = uqFull;
 			}
 			else {
-				uq = new UqMan(this.tonwa, uqData/*, undefined, this.tvs[uqFullName] || this.tvs[uqName]*/);
+				uq = new UqMan(this.web, uqData/*, undefined, this.tvs[uqFullName] || this.tvs[uqName]*/);
 				this.collection[uqFullName] = uq;
 				promiseInits.push(uq.init());
 			}
@@ -157,39 +128,26 @@ export class UQsMan {
 			let proxy = uqMan.createProxy();
 			setUq(uqMan.getUqKey(), proxy);
 			setUq(uqMan.getUqKeyWithConfig(), proxy);
-			/*
-			let uqKey = uqMan.getUqKey();
-			let lower = uqKey.toLowerCase();
-			uqs[uqKey] = proxy;
-			if (lower !== uqKey) uqs[lower] = proxy;
-			let uqKeyWithConfig = uqMan.getUqKeyWithConfig();
-			let lowerWithConfig = uqKeyWithConfig.toLowerCase();
-			uqs[uqKeyWithConfig] = proxy;
-			if (lowerWithConfig !== uqKeyWithConfig) uqs[lowerWithConfig] = proxy;
-			*/
 		}
 		return new Proxy(uqs, {
 			get: (target, key, receiver) => {
 				let lk = (key as string).toLowerCase();
 				let ret = target[lk];
 				if (ret !== undefined) return ret;
-				debugger;
-				console.error(`controller.uqs.${String(key)} undefined`);
-				this.showReload(`新增 uq ${String(key)}`);
-				return undefined;
+				this.errUndefinedUq(String(key));
 			},
 		});
 	}
 
-	getUqMans() {
-		return this.uqMans;
+	private errUndefinedUq(uq: string) {
+		let message = `UQ ${uq} not defined`;
+		let err = new Error(message);
+		err.name = UqError.undefined_uq;
+		throw err;
 	}
 
-	private showReload(msg: string) {
-		for (let uqMan of this.uqMans) {
-			uqMan.localMap.removeAll();
-		}
-		this.web.showReloadPage(msg);
+	getUqMans() {
+		return this.uqMans;
 	}
 
 	setTuidImportsLocal(): string[] {

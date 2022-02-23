@@ -1,6 +1,6 @@
 import { CLogin } from "./CLogin";
 import { VPage } from "../vm";
-import { CenterAppApi } from "tonwa-core";
+import { CenterAppApi } from "tonwa-uq";
 
 const waitingTime = '一小时';
 

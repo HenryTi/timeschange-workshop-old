@@ -1,4 +1,4 @@
-import { UqBuildContext } from "tonwa-core";
+import { UqBuildContext } from "tonwa-uq";
 
 export class UqBuildContextUI extends UqBuildContext {
 	get uiPlatform(): string { return 'react' };

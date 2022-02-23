@@ -3,7 +3,7 @@ import {
     ItemSchema, StringSchema, ImageSchema, UiTextItem, UiImageItem,
     Edit, UiSchema, Prop, FA, IconText, PropGrid
 } from "tonwa";
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 import { Page } from 'Control';
 import { CMe } from './CMe';
 

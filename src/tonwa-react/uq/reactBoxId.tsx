@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { Tuid, BoxId, uqStringify } from 'tonwa-core';
+import { Tuid, BoxId, uqStringify } from 'tonwa-uq';
 
 const TuidContent = (tuidName: string, values: any, x?: any) => {
     return <>{tuidName}: {uqStringify(values)}</>;

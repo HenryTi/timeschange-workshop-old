@@ -1,5 +1,6 @@
 import { makeObservable, observable } from 'mobx';
-import { Navigo, RouteFunc, Hooks, NamedRoute, Web, resOptions, Tonwa, Login } from 'tonwa-core';
+import { Navigo, RouteFunc, Hooks, NamedRoute, resOptions, Tonwa, Login } from 'tonwa-core';
+import { Web, User, Guest } from 'tonwa-uq';
 import { Page } from '../components';
 
 import 'font-awesome/css/font-awesome.min.css';
@@ -7,17 +8,8 @@ import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
 import { ReloadPage, ConfirmReloadPage } from '../components/reloadPage';
-//import { PageWebNav } from '../components/page';
 import { createLogin, showForget, showRegister } from '../components/login';
-//import { env, FetchError, LocalData, User } from 'tonwa-core';
-import { SystemNotifyPage } from './FetchErrorView';
-
-import { User, Guest } from 'tonwa-core';
-//import { netToken } from 'tonwa-core';
-import { FetchError } from 'tonwa-core';
 import { LocalData, env } from 'tonwa-core';
-//import {guestApi, logoutApis, setCenterUrl, setCenterToken, host, resUrlFromHost, messageHub} from 'tonwa-core';
-//import { userApi } from 'tonwa-core';
 import { NavView } from './NavView';
 
 export type NavPage = (params: any) => Promise<void>;
@@ -273,7 +265,6 @@ export class Nav {
                 document.oncontextmenu = function () { return false; }
             }
             this.clear();
-            this.startWait();
 
             let user: User = this.local.user.get();
             if (user === undefined) {
@@ -310,7 +301,6 @@ export class Nav {
             debugger;
         }
         finally {
-            this.endWait();
         }
     }
 
@@ -596,34 +586,6 @@ export class Nav {
 
     get level(): number {
         return this.navView.level;
-    }
-    startWait() {
-        this.navView?.startWait();
-    }
-    endWait() {
-        this.navView?.endWait();
-    }
-    async onError(fetchError: FetchError) {
-        let err = fetchError.error;
-        if (err !== undefined) {
-            if (err.unauthorized === true) {
-                await this.showLogin(undefined);
-                //nav.navigateToLogin();
-                return;
-            }
-            switch (err.type) {
-                case 'unauthorized':
-                    await this.showLogin(undefined);
-                    //nav.navigateToLogin();
-                    return;
-                case 'sheet-processing':
-                    this.push(<SystemNotifyPage message="单据正在处理中。请重新操作！" />);
-                    return;
-            }
-        }
-        this.navView.setState({
-            fetchError,
-        });
     }
 
     private upgradeUq = () => {

@@ -1,11 +1,10 @@
-import {HttpChannel} from './httpChannel';
+import { HttpChannel } from './httpChannel';
 import { Caller } from './caller';
 import { Web } from './Web';
 
-export async function refetchApi(channel:HttpChannel, url:string, options:any, 
-    resolve:(values:any)=>any, reject:(reason:any)=>void)
-{
-    await channel.fetch(url, options, false, resolve, reject);
+export async function refetchApi(channel: HttpChannel, url: string, options: any,
+    resolve: (values: any) => any, reject: (reason: any) => void) {
+    await channel.fetch(url, options, resolve, reject);
 }
 
 export abstract class ApiBase {
@@ -22,32 +21,32 @@ export abstract class ApiBase {
 
     protected abstract getHttpChannel(): Promise<HttpChannel>;
 
-    async xcall(caller:Caller<any>):Promise<any> {
+    async xcall(caller: Caller<any>): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.xcall(this.path, caller);
     }
 
-    public async call(url:string, method:string, body:any):Promise<any> {
+    public async call(url: string, method: string, body: any): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.callFetch(url, method, body);
     }
 
-    public async get(path:string, params:any=undefined): Promise<any> {
+    public async get(path: string, params: any = undefined): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.get(this.path + path, params);
     }
 
-    public async post(path:string, params:any): Promise<any> {
+    public async post(path: string, params: any): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.post(this.path + path, params);
     }
 
-    public async put(path:string, params:any): Promise<any> {
+    public async put(path: string, params: any): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.put(this.path + path, params);
     }
 
-    public async delete(path:string, params:any): Promise<any> {
+    public async delete(path: string, params: any): Promise<any> {
         let channel = await this.getHttpChannel();
         return await channel.delete(this.path + path, params);
     }

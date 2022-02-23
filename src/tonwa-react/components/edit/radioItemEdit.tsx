@@ -4,7 +4,7 @@ import { UiRadio } from '../schema';
 import { Page } from '../page/page';
 import { observer } from 'mobx-react';
 import { ItemEdit } from './itemEdit';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 
 export class RadioItemEdit extends ItemEdit {
     get uiItem(): UiRadio { return this._uiItem as UiRadio }

@@ -3,7 +3,7 @@ import { FA, Page } from '../../components';
 import { Controller } from "../Controller";
 import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 
 export interface CStringEditProps {
 	label?: string;

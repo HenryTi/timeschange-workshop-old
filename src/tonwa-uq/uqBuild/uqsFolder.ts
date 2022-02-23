@@ -6,7 +6,7 @@ import { getNameFromUq, overrideTsFile } from './tools';
 import { TsUqFolder } from './TsUqFolder';
 
 export async function buildUqsFolder(buildContext: UqBuildContext) {
-	let {uqsLoader, uqTsSrcPath, tsTemplate} = buildContext;
+	let { uqsLoader, uqTsSrcPath, tsTemplate } = buildContext;
 	//uqsLoader, uqTsSrcPath + '/uqs'
 	let uqsFolder = uqTsSrcPath + '/uqs';
 	//let uqErrors = await uqsStart(appConfig);
@@ -20,10 +20,10 @@ export async function buildUqsFolder(buildContext: UqBuildContext) {
 	if (uqErrors) {
 		throw new Error('error in uqsLoader.build()');
 	}
-	let {uqsMan} = uqsLoader;
+	let { uqsMan } = uqsLoader;
 	let uqMans = uqsMan.getUqMans();
 
-	let promiseArr:Promise<void>[] = [];
+	let promiseArr: Promise<void>[] = [];
 	if (uqErrors) {
 		console.error(uqErrors.join('\n'));
 	}
@@ -55,14 +55,14 @@ export async function buildUqsFolder(buildContext: UqBuildContext) {
 	let tsUqsIndexReExport = '\n';
 	let tsUqsUI = `\n\nexport function setUI(uqs:UQs) {`;
 	for (let uq of uqMans) {
-		let {devName:o1, uqName:n1} = getNameFromUq(uq);
+		let { devName: o1, uqName: n1 } = getNameFromUq(uq);
 		let uqAlias = o1 + n1;
 		let tsUqFolder = new TsUqFolder(buildContext, uq, uqsFolder, uqAlias);
 		// buildTsUqFolder(uq, uqsFolder, uqAlias);
 		tsUqFolder.build();
 
 		tsUqsIndexHeader += `\nimport * as ${uqAlias} from './${uqAlias}';`;
-		tsUqsIndexContent += `\n\t${uqAlias}: ${uqAlias}.UqExt;`; 
+		tsUqsIndexContent += `\n\t${uqAlias}: ${uqAlias}.UqExt;`;
 		tsUqsIndexReExport += `\nexport * as ${uqAlias} from './${uqAlias}';`;
 		tsUqsUI += `\n\t${uqAlias}.setUI(uqs.${uqAlias});`;
 	}
@@ -78,17 +78,17 @@ export async function buildUqsFolder(buildContext: UqBuildContext) {
 				if (fs.lstatSync(fullPath).isFile() === true) {
 					fs.unlinkSync(fullPath);
 				}
-			}	
+			}
 		}
 		catch (err) {
 			throw err;
 		}
 	}
 
-	overrideTsFile(uqsIndexFile, 
+	overrideTsFile(uqsIndexFile,
 		tsUqsIndexHeader + tsUqsIndexContent + '\n}' + tsUqsIndexReExport + tsUqsUI + '\n}\n');
 }
 
-async function loadUqEntities(uq:UqMan):Promise<void> {
+async function loadUqEntities(uq: UqMan): Promise<void> {
 	await uq.loadAllSchemas();
 }

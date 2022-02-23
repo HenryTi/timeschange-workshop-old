@@ -4,7 +4,7 @@ import { UiTag } from '../schema';
 import { Page } from '../page/page';
 import { observer } from 'mobx-react';
 import { ItemEdit } from './itemEdit';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 
 abstract class TagItemEdit extends ItemEdit {
 	protected inputs: { [index: number]: HTMLInputElement } = {};

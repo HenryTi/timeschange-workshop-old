@@ -1,7 +1,7 @@
-import { /*centerApi, logoutApis, */AppConfig as AppConfigCore, Tonwa, UqQuery, Web } from "tonwa-core";
-import { User, UqsConfig as UqsConfigCore } from 'tonwa-core';
+import { /*centerApi, logoutApis, */AppConfig as AppConfigCore, Tonwa } from "tonwa-core";
+import { UqsConfig as UqsConfigCore } from 'tonwa-core';
 import { RouteFunc, Hooks, Navigo, NamedRoute } from "tonwa-core";
-import { UQsLoader, UQsMan } from "tonwa-core";
+import { User, UQsLoader, UQsMan, UqQuery, Web } from "tonwa-uq";
 import { setGlobalRes } from 'tonwa-core';
 import { ControllerWithWeb } from '../vm';
 import { VErrorsPage, VStartError } from "./vMain";
@@ -135,7 +135,8 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 		if (user === this.uqsUser) return;
 		this.uqsUser = user;
 		this.web.logoutApis();
-		let uqsLoader = new UQsLoader(this.tonwa, this.appConfig);
+		let { version, uqs } = this.appConfig;
+		let uqsLoader = new UQsLoader(this.tonwa.web, version, uqs);
 		let retErrors = await uqsLoader.build();
 		this.uqsMan = uqsLoader.uqsMan;
 		this._uqs = createUQsProxy(this.web, uqsLoader.uqsMan) as any; //  this.uqsMan.proxy;

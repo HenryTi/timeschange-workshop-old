@@ -2,11 +2,11 @@ import { from62 } from './62';
 import { LocalMap } from './localDb';
 
 export const env = (function () {
-	let { unit, testing, buildingUq, params, lang, district, timeZone, isMobile } = initEnv();
+	let { unit, testing, params, lang, district, timeZone, isMobile } = initEnv();
 	return {
 		unit,
 		testing,
-		buildingUq,
+		buildingUq: false,
 		params,
 		lang,
 		district,
@@ -33,19 +33,24 @@ export const env = (function () {
 function initEnv(): {
 	unit: number;
 	testing: boolean;
-	buildingUq: boolean;
 	params: { [key: string]: string };
 	lang: string;
 	district: string;
 	timeZone: number;
 	isMobile: boolean;
 } {
+	if (!(global as any).window) return {} as any;
 	let pl = /\+/g,  // Regex for replacing addition symbol with a space
 		search = /([^&=]+)=?([^&]*)/g,
-		decode = function (s: any) { return decodeURIComponent(s.replace(pl, " ")); },
-		query = window.location.search.substring(1);
+		decode = function (s: any) { return decodeURIComponent(s.replace(pl, " ")); };
+	let query: string = undefined;
+	if ((global as any).window) {
+		let win = (global as any).window;
+		query = win.location.search.substring(1);
+	}
 	let params: { [key: string]: string } = {};
 	for (; ;) {
+		if (!query) break;
 		let match = search.exec(query);
 		if (!match) break;
 		params[decode(match[1])] = decode(match[2]);
@@ -126,19 +131,21 @@ function initEnv(): {
 		'Opera Mini|IEMobile|Mobile',
 		'i');
 	const isMobile = regEx.test(navigator.userAgent);
-	return { unit, testing, buildingUq: false, params, lang, district, timeZone, isMobile };
+	return { unit, testing, params, lang, district, timeZone, isMobile };
 }
 
 function detectBrowser() {
-	if ((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) >= 0)
+	let nav = (global as any).navigator;
+	if (!nav) return;
+	if ((nav.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) >= 0)
 		return 'Opera';
-	if (navigator.userAgent.indexOf("Chrome") >= 0)
+	if (nav.userAgent.indexOf("Chrome") >= 0)
 		return 'Chrome';
-	if (navigator.userAgent.indexOf("Safari") >= 0)
+	if (nav.userAgent.indexOf("Safari") >= 0)
 		return 'Safari';
-	if (navigator.userAgent.indexOf("Firefox") >= 0)
+	if (nav.userAgent.indexOf("Firefox") >= 0)
 		return 'Firefox';
-	if ((navigator.userAgent.indexOf("MSIE") >= 0) || (!!(document as any).documentMode === true))
+	if ((nav.userAgent.indexOf("MSIE") >= 0) || (!!(document as any).documentMode === true))
 		return 'IE'; //crap
 	return 'Unknown';
 }

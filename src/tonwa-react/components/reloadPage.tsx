@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 // import { nav } from '../nav';
 import { Page } from './page/page';
 

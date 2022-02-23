@@ -1,5 +1,5 @@
 import { Schema, UiSchema } from "tonwa-react";
-import { Uq, ID } from "tonwa-core";
+import { Uq, ID } from "tonwa-uq";
 import { Control } from "../Control";
 import { deepReact, react, setReact } from "../Reactive";
 import { VAdd } from "./VAdd";

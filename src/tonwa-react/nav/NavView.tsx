@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { env, FetchError, PageWebNav } from 'tonwa-core';
+import { env, PageWebNav } from 'tonwa-core';
 import { Loading } from '../components';
-import FetchErrorView from './FetchErrorView';
 import { FA } from '../components';
 
 export interface Props {
@@ -21,7 +20,6 @@ export interface NavViewState {
     notSupportedBrowser: boolean;
     stack: StackItem[];
     wait: 0 | 1 | 2;
-    fetchError: FetchError;
 }
 
 const notSupportedBrowsers = ['IE'];
@@ -41,7 +39,6 @@ export class NavView extends React.Component<Props, NavViewState> {
             notSupportedBrowser,
             stack: this.stack,
             wait: 0,
-            fetchError: undefined
         };
         //nav.set(this);
     }
@@ -53,43 +50,36 @@ export class NavView extends React.Component<Props, NavViewState> {
     get level(): number {
         return this.stack.length;
     }
-
-    startWait() {
-        if (this.waitCount === 0) {
-            this.setState({ wait: 1 });
-            this.waitTimeHandler = env.setTimeout(
-                'NavView.startWait',
-                () => {
-                    this.waitTimeHandler = undefined;
-                    this.setState({ wait: 2 });
-                },
-                1000) as NodeJS.Timer;
-        }
-        ++this.waitCount;
-        this.setState({
-            fetchError: undefined,
-        });
-    }
-
-    endWait() {
-        env.setTimeout(
-            undefined, //'NavView.endWait',
-            () => {
-                /*
-                this.setState({
-                    fetchError: undefined,
-                });*/
-                --this.waitCount;
-                if (this.waitCount === 0) {
-                    if (this.waitTimeHandler !== undefined) {
-                        env.clearTimeout(this.waitTimeHandler);
+    /*
+        startWait() {
+            if (this.waitCount === 0) {
+                this.setState({ wait: 1 });
+                this.waitTimeHandler = env.setTimeout(
+                    'NavView.startWait',
+                    () => {
                         this.waitTimeHandler = undefined;
+                        this.setState({ wait: 2 });
+                    },
+                    1000) as NodeJS.Timer;
+            }
+            ++this.waitCount;
+        }
+    
+        endWait() {
+            env.setTimeout(
+                undefined, //'NavView.endWait',
+                () => {
+                    --this.waitCount;
+                    if (this.waitCount === 0) {
+                        if (this.waitTimeHandler !== undefined) {
+                            env.clearTimeout(this.waitTimeHandler);
+                            this.waitTimeHandler = undefined;
+                        }
+                        this.setState({ wait: 0 });
                     }
-                    this.setState({ wait: 0 });
-                }
-            }, 100);
-    }
-
+                }, 100);
+        }
+    */
     show(view: JSX.Element, disposer?: () => void): number {
         this.clear();
         return this.push(view, disposer);
@@ -264,16 +254,9 @@ export class NavView extends React.Component<Props, NavViewState> {
     confirmBox(message?: string): boolean {
         return window.confirm(message);
     }
-    clearError = () => {
-        this.setState({ fetchError: undefined });
-    }
-
-    setFetchError(fetchError: FetchError) {
-        this.setState({ fetchError });
-    }
 
     render() {
-        const { notSupportedBrowser, wait, fetchError } = this.state;
+        const { notSupportedBrowser, wait } = this.state;
         if (notSupportedBrowser === true) {
             return <div className="p-3 text-danger">
                 {env.browser} not supported !
@@ -292,10 +275,6 @@ export class NavView extends React.Component<Props, NavViewState> {
                     <Loading />
                 </div>;
                 break;
-        }
-        if (fetchError) {
-            elError = <FetchErrorView clearError={this.clearError} {...fetchError} />;
-            ++top;
         }
         let test = env.testing === true &&
             <span className="cursor-pointer position-fixed" style={{ top: 0, left: '0.2rem', zIndex: 90001 }}>

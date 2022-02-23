@@ -1,4 +1,5 @@
-import { User, Web } from 'tonwa-core';
+import { User } from 'tonwa-uq';
+import { Web } from 'tonwa-uq';
 import { ControllerWithWeb, WebNav } from "../vm";
 import { CAppBase, IConstructor } from "./CAppBase";
 

@@ -1,4 +1,4 @@
-import { ID, IX, Uq } from "tonwa-core";
+import { ID, IX, Uq } from "tonwa-uq";
 import { Model } from "./Model";
 
 export class MDraft extends Model {
@@ -51,8 +51,8 @@ export class MDraft extends Model {
         return ret[draftName][0];
     }
 
-    async saveDetail(ix: number, details: object[], IdDetail: ID): Promise<number[]> {
-        let entity = IdDetail.typeId
+    async saveDetail(ix: number, details: object[], IdDetail?: ID): Promise<number[]> {
+        let entity = IdDetail !== undefined ? 0 : IdDetail.typeId;
         let values = details.map(v => ({
             ix,
             xi: {

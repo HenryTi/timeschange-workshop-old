@@ -91,4 +91,15 @@ export abstract class Control<A extends AppBase = AppBase> {
             this.open(PError, error);
         });
     }
+
+    fetch<T>(promise: Promise<T>): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            promise
+                .then(resolve)
+                .catch((reason: any) => {
+                    this.app.setError(reason);
+                    reject(reason);
+                });
+        })
+    }
 }

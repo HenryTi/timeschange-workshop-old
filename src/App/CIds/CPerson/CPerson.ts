@@ -1,5 +1,5 @@
 import { Schema, UiSchema, UiTextItem } from "tonwa-react";
-import { Uq } from "tonwa-core";
+import { Uq } from "tonwa-uq";
 import { CId } from "../CId";
 import { renderPerson, renderSelectPerson } from "./renderPerson";
 import { CIdBase, IdValue, Page, react, setReact, User } from "Control";

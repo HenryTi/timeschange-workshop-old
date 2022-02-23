@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { uid } from 'tonwa-core';
+import { uid } from 'tonwa-uq';
 import { ListBase } from './base';
 
 export class Static extends ListBase {

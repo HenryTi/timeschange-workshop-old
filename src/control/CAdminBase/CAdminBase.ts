@@ -133,11 +133,12 @@ export abstract class CAdminBase<A extends AppBase = AppBase> extends Control<A>
     async onAddAdmin(role: EnumAdminRoleInEdit) {
         let captionSelectUser = 'Add ' + (role === EnumAdminRoleInEdit.sys ? 'system admin' : 'admin');
         //let cSelectUser = new CUser(this.nav, captionSelectUser, this)
-        let ret = await this.app.cUser.select<Admin>(captionSelectUser);
+        //let ret = await this.app.cUser.select<Admin>(captionSelectUser);
+        let ret = await this.fetch(this.app.cUser.select<Admin>(captionSelectUser));
         // let ret = await this.call<any, CAdminBase>(VAddUser, role);
         if (!ret) return;
         let { id: user, assigned } = ret;
-        await this.setAdmin(user, role, assigned);
+        await this.fetch(this.setAdmin(user, role, assigned));
         setReact(() => {
             let tick = Date.now() / 1000;
             let admin: Admin = {

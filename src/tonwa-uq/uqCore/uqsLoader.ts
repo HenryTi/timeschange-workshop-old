@@ -1,54 +1,33 @@
-import { Tonwa, AppConfig as AppConfigCore, UqConfig } from '../core';
 import { UQsMan } from "./uqsMan";
-import { LocalMap, LocalCache, env } from '../tool';
-import { UqData, UqAppData, CenterAppApi } from '../web';
+import { UqData, UqAppData, CenterAppApi, Web } from '../web';
+import { UqConfig } from "tonwa-uq";
+// import { Tonwa, AppConfig as AppConfigCore, UqConfig, TonwaBase } from '../../tonwa-core/core';
+// import { LocalMap, LocalCache, env } from '../tool';
 
 export class UQsLoader {
-	readonly tonwa: Tonwa;
-	protected readonly appConfig: AppConfigCore;
+	protected readonly web: Web;
+	protected readonly uqConfigVersion: string;
+	protected readonly uqConfigs: UqConfig[];
 	protected isBuildingUQ: boolean = false;
 	uqsMan: UQsMan;         // value
 
-	constructor(tonwa: Tonwa, appConfig: AppConfigCore) {
-		this.appConfig = appConfig;
-		this.tonwa = tonwa;
+	constructor(web: Web, uqConfigVersion: string, uqConfigs: UqConfig[]) {
+		this.web = web;
+		this.uqConfigVersion = uqConfigVersion;
+		this.uqConfigs = uqConfigs;
 	}
 
 	async build() {
-		let { app, uqs } = this.appConfig;
-		let retErrors: string[];
-		if (app) {
-			retErrors = await this.loadApp();
-		}
-		else if (uqs) {
-			retErrors = await this.loadUqs();
-		}
-		else {
-			throw new Error('either uqs or app must be defined in AppConfig');
-		}
-		return retErrors;
+		return await this.loadUqs();
 	}
-	/*
-	async buildUQs(uqsConfig: AppConfig) {
-		let {uqs, tvs, version} = uqsConfig;
-		let retErrors:string[];
-		if (uqs) {
-			UQsMan.isBuildingUQ = true;
-			retErrors = await this.loadUqs();
-		}
-		else {
-			throw new Error('either uqs or app must be defined in AppConfig');
-		}
-		return retErrors;
-	}
-	*/
 
+	/*
 	// 返回 errors, 每个uq一行
 	private async loadApp(): Promise<string[]> {
 		let { app, uqs: uqConfigs, version } = this.appConfig;
 
 		let { name, dev } = app;
-		let uqsManApp = new UQsManApp(this.tonwa, `${dev.name}/${name}`);
+		let uqsManApp = new UQsManApp(this.web, `${dev.name}/${name}`);
 		this.uqsMan = uqsManApp;
 		let { appOwner, appName, localData } = uqsManApp;
 		let uqAppData: UqAppData = localData.get();
@@ -74,17 +53,17 @@ export class UQsLoader {
 		uqsManApp.id = id;
 		return await this.uqsMan.buildUqs(uqs, version, uqConfigs, this.isBuildingUQ);
 	}
+	*/
 
 	// 返回 errors, 每个uq一行
-	async loadUqs(/*uqConfigs: UqConfig[], version:string, tvs:TVs*/): Promise<string[]> {
-		let { uqs: uqConfigs, version } = this.appConfig;
-		this.uqsMan = new UQsMan(this.tonwa);
-		let uqs = await this.loadUqData(uqConfigs);
-		return await this.uqsMan.buildUqs(uqs, version, uqConfigs, this.isBuildingUQ);
+	async loadUqs(): Promise<string[]> {
+		this.uqsMan = new UQsMan(this.web);
+		let uqs = await this.loadUqData(this.uqConfigs);
+		return await this.uqsMan.buildUqs(uqs, this.uqConfigVersion, this.uqConfigs, this.isBuildingUQ);
 	}
 
 	private async loadUqAppData(appOwner: string, appName: string): Promise<UqAppData> {
-		let centerAppApi = new CenterAppApi(this.tonwa.web, 'tv/', undefined);
+		let centerAppApi = new CenterAppApi(this.web, 'tv/', undefined);
 		let ret = await centerAppApi.appUqs(appOwner, appName);
 		return ret;
 	}
@@ -97,7 +76,7 @@ export class UQsLoader {
 				return { owner, ownerAlias, name, version, alias };
 			}
 		);
-		let centerAppApi = new CenterAppApi(this.tonwa.web, 'tv/', undefined);
+		let centerAppApi = new CenterAppApi(this.web, 'tv/', undefined);
 		let ret: UqData[] = uqs.length === 0 ? [] : await centerAppApi.uqs(uqs);
 		if (ret.length < uqs.length) {
 			let err = `下列UQ：\n${uqs.map(v => `${v.owner}/${v.name}`).join('\n')}之一不存在`;
@@ -113,26 +92,6 @@ export class UQsLoader {
 	}
 }
 
-class UQsManApp extends UQsMan {
-	readonly appOwner: string;
-	readonly appName: string;
-	readonly localMap: LocalMap;
-	readonly localData: LocalCache;
-	id: number;
-
-	constructor(tonwa: Tonwa, tonwaAppName: string/*, tvs:TVs*/) {
-		super(tonwa/*, tvs*/);
-		let parts = tonwaAppName.split('/');
-		if (parts.length !== 2) {
-			throw new Error('tonwaApp name must be / separated, owner/app');
-		}
-		this.appOwner = parts[0];
-		this.appName = parts[1];
-		this.localMap = env.localDb.map(tonwaAppName);
-		this.localData = this.localMap.child('uqData');
-	}
-}
-
 export class UQsBuildingLoader extends UQsLoader {
 	async build() {
 		//nav.forceDevelopment = true;
@@ -141,14 +100,7 @@ export class UQsBuildingLoader extends UQsLoader {
 		//await this.tonwa.web.navInit();
 		await this.tonwa.init();
 		this.isBuildingUQ = true;
-		let { uqs } = this.appConfig;
-		let retErrors: string[];
-		if (uqs) {
-			retErrors = await this.loadUqs();
-		}
-		else {
-			throw new Error('uqs must be defined in AppConfig');
-		}
+		let retErrors = await this.loadUqs();
 		return retErrors;
 	}
 }

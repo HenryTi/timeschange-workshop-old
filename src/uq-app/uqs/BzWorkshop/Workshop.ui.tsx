@@ -1,7 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId, FieldItemInt, UI, TFunc } from 'tonwa-react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Res, uqStringify, setRes } from "tonwa-core";
+import { uqStringify } from "tonwa-uq";
+import { Res, setRes } from "tonwa-core";
 import { Workshop } from "./BzWorkshop";
 
 /*--fields--*/
@@ -42,7 +43,7 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.no, fields.name, fields.vice, fields.staff, 
+	fields.no, fields.name, fields.vice, fields.staff,
 ];
 
 export const ui: UI = {

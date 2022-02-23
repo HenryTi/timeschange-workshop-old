@@ -29,7 +29,7 @@ RETURNS ret (
     }
     WITH Note as a ID=id SET a.staff=staff, a.client=client, a.note=note, a.sensitive=sensitive;
     -- WITH IxPersonNote IX=client XI=id;
-    WITH IxPersonLog IX=client XI=id;
+    WITH IxPersonLog (client, id);
     WITH IxPersonLog IX=staff XI=id;
     WITH IxStaffClient IX=staff XI=client SET tick=UNIX_TIMESTAMP();
     INTO ret SELECT id;

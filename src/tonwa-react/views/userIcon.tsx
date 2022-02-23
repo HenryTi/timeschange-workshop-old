@@ -3,7 +3,8 @@ import classNames from 'classnames';
 //import { nav } from '../nav';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import { tonwa, User, Web } from 'tonwa-core';
+import { tonwa } from 'tonwa-core';
+import { Web, User } from 'tonwa-uq';
 
 export type UserLoader = (userId: number) => Promise<any>;
 

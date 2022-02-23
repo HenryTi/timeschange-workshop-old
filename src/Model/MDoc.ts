@@ -1,4 +1,4 @@
-import { ID, IX, Uq } from "tonwa-core";
+import { ID, IX, Uq } from "tonwa-uq";
 import { Model } from "./Model";
 
 // main-detail structure

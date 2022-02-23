@@ -1,5 +1,5 @@
 import { CIdBase, Control, setReact, shallowReact, View } from "Control";
-import { IX } from "tonwa-core";
+import { IX } from "tonwa-uq";
 import { Tag, TagGroup, TagWithItems } from ".";
 import { CTagBase } from "./CTagBase";
 import { VTagInput } from "./VTagInput";

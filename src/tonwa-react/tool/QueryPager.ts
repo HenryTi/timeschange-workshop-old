@@ -1,4 +1,4 @@
-import { Query } from "tonwa-core";
+import { Query } from "tonwa-uq";
 import { PageItems } from "./PageItems";
 
 export class QueryPager<T extends any> extends PageItems<T> {

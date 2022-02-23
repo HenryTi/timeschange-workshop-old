@@ -2,7 +2,7 @@ import { VPage } from '../vm';
 import { Page, Form, ItemSchema, UiSchema, StringSchema, UiPasswordItem, Context, ButtonSchema, UiButton } from '../components';
 //import { CenterAppApi } from '../net';
 import { CLogin } from './CLogin';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 
 export class VChangePassword extends VPage<CLogin> {
     private schema: ItemSchema[] = [

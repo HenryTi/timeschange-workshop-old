@@ -1,5 +1,5 @@
 //import { ChangedHandler, ChangingHandler, PickId } from "../components";
-import { ID } from "tonwa-core";
+import { ID } from "tonwa-uq";
 import { FieldUIType } from "./fieldUI";
 
 export type FieldItemType = 'id' | 'integer' | 'number' | 'string' | 'image' | 'date' | 'boolean'

@@ -1,4 +1,5 @@
-import { Tonwa, User, Web } from "tonwa-core";
+import { Web, User } from "tonwa-uq";
+import { Tonwa } from "tonwa-core";
 import { VPage } from "./VPage";
 import { Controller, WebNav } from "./Controller";
 

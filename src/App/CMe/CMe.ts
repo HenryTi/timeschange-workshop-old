@@ -1,4 +1,4 @@
-import { User } from "tonwa-core";
+import { User } from 'tonwa-uq';
 import { QueryPager } from "tonwa";
 import { VMe } from "./VMe";
 import { VEditMe } from "./VEditMe";

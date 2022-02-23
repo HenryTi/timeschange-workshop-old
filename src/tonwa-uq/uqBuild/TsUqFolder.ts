@@ -61,7 +61,8 @@ export class TsUqFolder {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId, FieldItemInt, UI, TFunc } from 'tonwa-${this.buildContext.uiPlatform}';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Res, uqStringify, setRes } from "tonwa-core";
+import { uqStringify } from "tonwa-uq";
+import { Res, setRes } from "tonwa-core";
 import { Tuid${cName} } from "./${this.uqAlias}";
 
 const resRaw: Res<any> = {

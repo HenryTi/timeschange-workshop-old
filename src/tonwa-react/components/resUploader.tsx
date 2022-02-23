@@ -6,7 +6,7 @@ import { Page } from './page/page';
 import { observer } from 'mobx-react';
 import { makeObservable, observable } from 'mobx';
 import { LMR } from './simple';
-import { tonwa } from 'tonwa-core';
+import { tonwa } from "tonwa-core";
 
 export interface ResUploaderProps {
     className?: string;
@@ -53,7 +53,6 @@ export class ResUploader extends React.Component<ResUploaderProps> {
         let resUrl = tonwa.resUrl + 'upload';
         if (!formData) formData = this.buildFormData();
         try {
-            tonwa.nav.startWait();
             let headers = new Headers();
             headers.append('Access-Control-Allow-Origin', '*');
             //2019-12-18：因为 vivo按oppo某些版本不支持，暂时先不要 
@@ -72,7 +71,6 @@ export class ResUploader extends React.Component<ResUploaderProps> {
             return { error: err };
         }
         finally {
-            tonwa.nav.endWait();
         }
     }
 

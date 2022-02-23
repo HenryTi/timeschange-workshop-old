@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { UQsMan, TuidInner, uqStringify, TuidImport, Web } from "tonwa-core";
+import { UQsMan, TuidInner, uqStringify, TuidImport, Web } from "tonwa-uq";
 import { Render } from "../ui";
 import { Uq } from "./Uq";
 
@@ -13,7 +13,7 @@ export function createUQsProxy(web: Web, uqsMan: UQsMan) {
         if (lower !== uqKey) uqReacts[lower] = proxy;
     }
     for (let uqMan of uqsMan.uqMans) {
-        let uqReact = new Uq(web, uqMan);
+        let uqReact = new Uq(uqMan);
         let proxy = uqReact.$_createProxy();
         setUq(uqMan.getUqKey(), proxy);
         setUq(uqMan.getUqKeyWithConfig(), proxy);
@@ -23,7 +23,6 @@ export function createUQsProxy(web: Web, uqsMan: UQsMan) {
             let uqReact = uqReacts[i];
             uqReact.localMap.removeAll();
         }
-        //this.web.showReloadPage(msg);
         console.error(`uq proxy ${key} error`);
     }
     return new Proxy(uqReacts, {

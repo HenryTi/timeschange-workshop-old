@@ -1,4 +1,4 @@
-import { User } from "tonwa-core";
+import { User } from 'tonwa-uq';
 import { AppBase, CUser, Nav, UserApi } from "Control";
 import { UQs } from "uq-app";
 import { Role } from "uq-app/uqs/BzWorkshop";

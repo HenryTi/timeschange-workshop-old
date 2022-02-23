@@ -1,12 +1,18 @@
 class _LocalStorage {
-    getItem(key:string) {
-        return localStorage.getItem(key)
+    private ls: any;
+    constructor() {
+        this.ls = (global as any).localStorage;
     }
-    setItem(key:string, value:string) {
-        localStorage.setItem(key, value);
+
+    getItem(key: string): string {
+        if (!this.ls) return null;
+        return this.ls?.getItem(key)
     }
-    removeItem(key:string) {
-        localStorage.removeItem(key);
+    setItem(key: string, value: string) {
+        this.ls?.setItem(key, value);
+    }
+    removeItem(key: string) {
+        this.ls?.removeItem(key);
     }
 }
 
@@ -15,13 +21,13 @@ const __ls = new _LocalStorage(); // new Ls;
 export class LocalCache {
     private readonly local: Local;
     //private value: T;
-    readonly key: string|number;
+    readonly key: string | number;
 
-    constructor(local:Local, key:string|number) {
+    constructor(local: Local, key: string | number) {
         this.local = local;
         this.key = key;
     }
-    get():any {
+    get(): any {
         try {
             // 下面缓冲的内容不能有，可能会被修改，造成circular引用
             //if (this.value !== undefined) return this.value;
@@ -36,13 +42,13 @@ export class LocalCache {
             return;
         }
     }
-    set(value:any) {
-		let t = JSON.stringify(value, (key, value) => {
-			if (key !== '_tuid') return value;
-		});
-		this.local.setItem(this.key, t);
+    set(value: any) {
+        let t = JSON.stringify(value, (key, value) => {
+            if (key !== '_tuid') return value;
+        });
+        this.local.setItem(this.key, t);
     }
-    remove(local?:Local) {
+    remove(local?: Local) {
         if (local === undefined) {
             this.local.removeItem(this.key);
         }
@@ -50,20 +56,20 @@ export class LocalCache {
             this.local.removeLocal(local);
         }
     }
-    child(key:string|number):LocalCache {
+    child(key: string | number): LocalCache {
         return this.local.child(key);
     }
-    arr(key:string|number):LocalArr {
+    arr(key: string | number): LocalArr {
         return this.local.arr(key);
     }
-    map(key:string|number):LocalMap {
+    map(key: string | number): LocalMap {
         return this.local.map(key);
     }
 }
 
 abstract class Local {
-    private readonly caches: {[key:string]:LocalCache};
-    private readonly locals: {[key:string]:Local};
+    private readonly caches: { [key: string]: LocalCache };
+    private readonly locals: { [key: string]: Local };
     protected readonly name: string;
     constructor(name: string) {
         this.name = name;
@@ -71,25 +77,25 @@ abstract class Local {
         this.locals = {};
     }
 
-    protected abstract keyForGet(key:string|number):string;
-    protected abstract keyForSet(key:string|number):string;
-    protected abstract keyForRemove(key:string|number):string;
-    abstract removeAll():void;
-    getItem(key:string|number):string {
+    protected abstract keyForGet(key: string | number): string;
+    protected abstract keyForSet(key: string | number): string;
+    protected abstract keyForRemove(key: string | number): string;
+    abstract removeAll(): void;
+    getItem(key: string | number): string {
         let k = this.keyForGet(key);
         if (k === undefined) return;
         return __ls.getItem(k);
     }
-    setItem(key:string|number, value: string):void {
+    setItem(key: string | number, value: string): void {
         let k = this.keyForSet(key);
         __ls.setItem(k, value);
     }
-    removeItem(key:string|number):void {
+    removeItem(key: string | number): void {
         let k = this.keyForSet(key);
         if (k === undefined) return;
         localStorage.removeItem(k);
     }
-    arr(key:string|number):LocalArr {
+    arr(key: string | number): LocalArr {
         let sk = String(key);
         let arr = this.locals[sk] as LocalArr;
         if (arr === undefined) {
@@ -98,7 +104,7 @@ abstract class Local {
         }
         return arr;
     }
-    map(key:string|number):LocalMap {
+    map(key: string | number): LocalMap {
         let sk = String(key);
         let map = this.locals[sk] as LocalMap;
         if (map === undefined) {
@@ -107,7 +113,7 @@ abstract class Local {
         }
         return map;
     }
-    removeLocal(local:Local) {
+    removeLocal(local: Local) {
         let sk = local.name;
         let k = this.keyForRemove(sk);
         if (k === undefined) return;
@@ -116,11 +122,11 @@ abstract class Local {
         else this.locals[sk] = undefined;
         arr.removeAll();
     }
-    child(key:string|number):LocalCache {
+    child(key: string | number): LocalCache {
         let ks = String(key);
         let ret = this.caches[ks];
         if (ret !== undefined) return ret;
-        return this.caches[ks] =ret = new LocalCache(this, key);
+        return this.caches[ks] = ret = new LocalCache(this, key);
     }
 }
 
@@ -130,19 +136,19 @@ export class LocalArr extends Local {
     constructor(name: string) {
         super(name);
         let index = __ls.getItem(this.name);
-        this.index = index === null? [] : index.split('\n').map(v => Number(v));
+        this.index = index === null ? [] : index.split('\n').map(v => Number(v));
     }
     private saveIndex() {
         __ls.setItem(this.name, this.index.join('\n'));
     }
-    protected keyForGet(key:number):string {
+    protected keyForGet(key: number): string {
         let i = this.index.indexOf(key);
         if (i < 0) return undefined;
         return `${this.name}.${key}`;
     }
-    protected keyForSet(key:number):string {
+    protected keyForSet(key: number): string {
         let i = this.index.indexOf(key);
-        if (i<0) {
+        if (i < 0) {
             this.index.unshift(key);
             if (this.index.length > maxArrSize) this.index.pop();
         }
@@ -153,27 +159,27 @@ export class LocalArr extends Local {
         this.saveIndex();
         return `${this.name}.${key}`;
     }
-    protected keyForRemove(key:number):string {
+    protected keyForRemove(key: number): string {
         let i = this.index.indexOf(key);
-        if (i<0) return;
+        if (i < 0) return;
         this.index.splice(i, 1);
         this.saveIndex();
         return `${this.name}.${key}`;
     }
-    removeAll():void {
+    removeAll(): void {
         for (let i of this.index) {
             __ls.removeItem(`${this.name}.${i}`);
         }
         __ls.removeItem(this.name);
         this.index.splice(0);
     }
-    item(index:number):LocalCache {
+    item(index: number): LocalCache {
         return this.child(index);
     }
 }
 
 export class LocalMap extends Local {
-    private readonly index: {[key:string]:number};
+    private readonly index: { [key: string]: number };
     private max: number;
     constructor(name: string) {
         super(name);
@@ -184,17 +190,17 @@ export class LocalMap extends Local {
             let ls = index.split('\n');
             ls.forEach(l => {
                 let p = l.indexOf('\t');
-                if (p<0) return;
+                if (p < 0) return;
                 let key = l.substr(0, p);
-                let i = Number(l.substr(p+1));
+                let i = Number(l.substr(p + 1));
                 if (isNaN(i) === true) return;
                 this.index[key] = i;
-                if (i>this.max) this.max = i;
+                if (i > this.max) this.max = i;
             });
         }
     }
     private saveIndex() {
-        let ls:string[] = [];
+        let ls: string[] = [];
         for (let k in this.index) {
             let v = this.index[k];
             if (v === undefined) continue;
@@ -202,12 +208,12 @@ export class LocalMap extends Local {
         }
         __ls.setItem(this.name, ls.join('\n'));
     }
-    protected keyForGet(key:number):string {
+    protected keyForGet(key: number): string {
         let i = this.index[key];
         if (i === undefined) return undefined;
         return `${this.name}.${i}`;
     }
-    protected keyForSet(key:number):string {
+    protected keyForSet(key: number): string {
         let i = this.index[key];
         if (i === undefined) {
             ++this.max;
@@ -217,14 +223,14 @@ export class LocalMap extends Local {
         }
         return `${this.name}.${i}`;
     }
-    protected keyForRemove(key:string|number):string {
+    protected keyForRemove(key: string | number): string {
         let i = this.index[key];
-        if (i===undefined) return;
+        if (i === undefined) return;
         this.index[key] = undefined;
         this.saveIndex();
         return `${this.name}.${i}`;
     }
-    removeAll():void {
+    removeAll(): void {
         for (let i in this.index) {
             __ls.removeItem(`${this.name}.${this.index[i]}`);
             this.index[i] = undefined;
@@ -232,7 +238,7 @@ export class LocalMap extends Local {
         __ls.removeItem(this.name);
         this.max = 0;
     }
-    item(key:string):LocalCache {
+    item(key: string): LocalCache {
         return this.child(key);
     }
 }
