@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-chrome",
+            "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3392#test",
+            "url": "http://localhost:3393#test",
             "webRoot": "${workspaceFolder}"
         },
         {
@@ -23,13 +23,11 @@
                 "uq-app/build"
             ], // "--no-cache", 
             "cwd": "${workspaceRoot}",
-            "protocol": "inspector",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "env": {
                 "CI": "true"
             },
-            "disableOptimisticBPs": true
         },
     ]
 }
