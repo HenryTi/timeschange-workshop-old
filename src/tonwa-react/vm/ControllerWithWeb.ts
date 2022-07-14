@@ -1,13 +1,13 @@
-import { Web, User } from "tonwa-uq";
+import { Net, User } from "tonwa-uq";
 import { Tonwa } from "tonwa-core";
 import { VPage } from "./VPage";
 import { Controller, WebNav } from "./Controller";
 
 export abstract class ControllerWithWeb extends Controller {
-    readonly web: Web;
+    readonly net: Net;
     constructor(tonwa: Tonwa) {
         super(tonwa);
-        this.web = tonwa.web;
+        this.net = tonwa.net;
     }
 
     private receiveHandlerId: number;
@@ -16,7 +16,7 @@ export abstract class ControllerWithWeb extends Controller {
     protected dispose = () => {
         // message listener的清理
         //nav.unregisterReceiveHandler(this.receiveHandlerId);
-        this.web.messageHub.unregisterReceiveHandler(this.receiveHandlerId);
+        this.net.messageHub.unregisterReceiveHandler(this.receiveHandlerId);
         this.onDispose();
     }
 
@@ -69,7 +69,7 @@ export abstract class ControllerWithWeb extends Controller {
     protected async afterStart(): Promise<void> {
     }
     protected registerReceiveHandler() {
-        this.receiveHandlerId = this.web.messageHub.registerReceiveHandler(this.onMessageReceive);
+        this.receiveHandlerId = this.net.messageHub.registerReceiveHandler(this.onMessageReceive);
     }
 
     async start(param?: any, ...params: any[]): Promise<void> {

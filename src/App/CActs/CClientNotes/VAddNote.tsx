@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { BoolSchema, ButtonSchema, Context, Form, Schema, StringSchema, UiButton, UiCheckItem, UiSchema, UiTextAreaItem } from "tonwa-react";
 import { CClientNotes } from ".";
 
@@ -27,7 +27,7 @@ export class VAddNote extends Page<CClientNotes> {
     }
 
     private onSubmit = async (name: string, context: Context): Promise<void> => {
-        await this.control.saveNote(this.props, context.data);
-        this.control.close();
+        await this.controller.saveNote(this.props, context.data);
+        this.controller.close();
     }
 }

@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { appConfig } from "../../uq-app/appConfig";
 import { CMe } from "./CMe";
 
@@ -14,12 +14,5 @@ export class VAbout extends Page<CMe> {
 				<b className="text-danger h5 mb-0">About</b>
 			</div>
 		</div>;
-		/*
-			<button className="btn btn-primary" onClick={evt => this.waitingEvent(evt, async (params) => {
-				throw new Error('error throw');
-				await this.control.waitFor(1000);
-				alert(params);
-			}, 'a')}>dddd</button>
-		*/
 	}
 }

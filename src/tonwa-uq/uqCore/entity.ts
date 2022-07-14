@@ -1,5 +1,5 @@
-import { UqApi } from '../web';
-import { getObjPropIgnoreCase } from '../tool';
+import { UqApi } from '../net';
+import { getObjPropIgnoreCase, LocalCache } from '../tool';
 import { UqMan, Field, ArrFields, FieldMap } from './uqMan';
 import { Tuid } from './tuid';
 

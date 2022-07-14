@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { FA, LMR } from "tonwa-react";
 import { CIds } from "./CIds";
 
@@ -8,7 +8,7 @@ export class VStart extends Page<CIds> {
     }
 
     content() {
-        let { cWorkshop, cStaff, cClient, app } = this.control;
+        let { cWorkshop, cStaff, cClient, app } = this.controller;
         return <div>{
             [cWorkshop, cStaff, cClient, app.cTag].map((v, index) => {
                 if (v.isVisible() === false) return null;

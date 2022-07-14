@@ -1,6 +1,6 @@
 import { Navigo, Hooks, NamedRoute, RouteFunc } from "./Navigo";
 import { Nav, NavPage } from './Nav';
-import { Web, User, Guest } from 'tonwa-uq';
+import { Net, User, Guest } from 'tonwa-uq';
 import { resOptions } from '../res';
 import { LocalData, env } from '../tool';
 import { Login } from './Login';
@@ -18,18 +18,18 @@ const logs: string[] = [];
 export let tonwa: Tonwa;
 
 export abstract class TonwaBase {
-	readonly web: Web;
+	readonly net: Net;
 	testing: boolean;
 
 	constructor() {
 		this.testing = false;
-		this.web = this.createWeb();
+		this.net = this.createWeb();
 	}
-	abstract createWeb(): Web;
+	abstract createWeb(): Net;
 	abstract createObservableMap<K, V>(): Map<K, V>;
 	async init() {
 		this.testing = env.testing;
-		await this.web.host.start(this.testing);
+		await this.net.host.start(this.testing);
 	}
 }
 
@@ -80,7 +80,7 @@ export abstract class Tonwa extends TonwaBase {
 	}
 	async onReceive(msg: any) {
 		//if (this.ws === undefined) return;
-		await this.web.messageHub.dispatch(msg);
+		await this.net.messageHub.dispatch(msg);
 	}
 
 	private async loadUnitJson() {
@@ -151,14 +151,14 @@ export abstract class Tonwa extends TonwaBase {
 		if (this.forceDevelopment === true) {
 			env.isDevelopment = true;
 		}
-		let { url, ws, resHost } = this.web.host;
-		this.resUrl = this.web.resUrlFromHost(resHost);
+		let { url, ws, resHost } = this.net.host;
+		this.resUrl = this.net.resUrlFromHost(resHost);
 		this.wsHost = ws;
-		this.web.setCenterUrl(url);
+		this.net.setCenterUrl(url);
 
 		let guest: Guest = this.local.guest.get();
 		if (guest === undefined) {
-			guest = await this.web.guestApi.guest();
+			guest = await this.net.guestApi.guest();
 		}
 		if (!guest) {
 			debugger;
@@ -211,7 +211,7 @@ export abstract class Tonwa extends TonwaBase {
 					let ret = await this.userPassword();
 					if (ret) {
 						let { user: userName, password } = ret;
-						let logindUser = await this.web.userApi.login({
+						let logindUser = await this.net.userApi.login({
 							user: userName,
 							pwd: password,
 							guest: this.guest,
@@ -286,7 +286,7 @@ export abstract class Tonwa extends TonwaBase {
 
 	setGuest(guest: Guest) {
 		this.local.guest.set(guest);
-		this.web.setNetToken(0, guest.token);
+		this.net.setNetToken(0, guest.token);
 	}
 
 	saveLocalUser() {
@@ -303,16 +303,16 @@ export abstract class Tonwa extends TonwaBase {
 	}
 
 	async loadMe() {
-		let me = await this.web.userApi.me();
+		let me = await this.net.userApi.me();
 		this.user.icon = me.icon;
 		this.user.nick = me.nick;
 	}
 
 	private async internalLogined(user: User, callback: (user: User) => Promise<void>, isUserLogin: boolean) {
-		this.web.logoutApis();
+		this.net.logoutApis();
 		this.user = user;
 		this.saveLocalUser();
-		this.web.setNetToken(user.id, user.token);
+		this.net.setNetToken(user.id, user.token);
 		this.nav.clear();
 
 		await this.onChangeLogin?.(this.user);
@@ -346,9 +346,9 @@ export abstract class Tonwa extends TonwaBase {
 	async logout(callback?: () => Promise<void>) { //notShowLogin?:boolean) {
 		this.local.logoutClear();
 		this.user = undefined; //{} as User;
-		this.web.logoutApis();
+		this.net.logoutApis();
 		let guest = this.local.guest.get();
-		this.web.setCenterToken(0, guest && guest.token);
+		this.net.setCenterToken(0, guest && guest.token);
 		this.nav.clear();
 		if (callback === undefined)
 			await this.start();

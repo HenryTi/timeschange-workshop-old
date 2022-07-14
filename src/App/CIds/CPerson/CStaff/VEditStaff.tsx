@@ -16,32 +16,6 @@ export class VEditStaff extends VEditPerson<CStaff> {
     }
 
     protected renderRoles() {
-        return this.control.cRoleSingle.renderInput();
-        /*
-        let { currentItem } = this.control.deepData;
-        let { role } = currentItem as MPerson;
-        return <div className="container">
-            <div
-                className="mb-3 row bg-white align-items-center cursor-pointer">
-                <label className="col-sm-2 col-form-label">Role</label>
-                <div className="col-sm-10">
-                    {staffRoles.map(v => {
-                        return <label className="me-4 form-check-inline">
-                            <input type="radio" name="staff-role"
-                                onChange={this.onChange}
-                                defaultChecked={v === role}
-                                defaultValue={v} /> {staffRoleCaptions[v]}
-                        </label>;
-                    })}
-                </div>
-            </div>
-        </div>;
-        */
+        return this.controller.cRoleSingle.renderInput();
     }
-    /*
-    private onChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
-        let { currentTarget } = evt;
-        await this.control.saveStaffRole(Number(currentTarget.value) as Role);
-    }
-    */
 }

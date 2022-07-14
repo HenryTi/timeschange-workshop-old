@@ -1,6 +1,6 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { EasyTime, FA, List, LMR } from "tonwa-react";
-import { renderDate, renderHourMinute } from "tool";
+import { renderDate, renderHourMinute } from "../../tool";
 import { CSessionAct } from "./CSessionAct";
 
 export class VSession extends Page<CSessionAct> {
@@ -9,7 +9,7 @@ export class VSession extends Page<CSessionAct> {
     }
 
     content(): JSX.Element {
-        let { cWorkshop, session, deep: shallow } = this.control;
+        let { cWorkshop, session, deep: shallow } = this.controller;
         let { icon, iconClass } = cWorkshop;
         let { date, time, span, substitue, done, workshop } = session;
         let right = <button className="btn btn-sm btn-outline-primary" onClick={this.onAddAttendee}>
@@ -32,7 +32,7 @@ export class VSession extends Page<CSessionAct> {
                     right={right}>
                     Attendees
                 </LMR>
-                <List items={shallow.list} item={{ render: this.renderAttendee, onClick: this.control.showAttendee }} />
+                <List items={shallow.list} item={{ render: this.renderAttendee, onClick: this.controller.showAttendee }} />
             </div>
         </div>;
     }
@@ -53,12 +53,12 @@ export class VSession extends Page<CSessionAct> {
         </div>;
         return <LMR className={cn} right={right}>
             <div className="d-flex align-items-center">
-                {this.control.cClient.renderId(attendee.xi)}
+                {this.controller.cClient.renderId(attendee.xi)}
             </div>
         </LMR>;
     }
 
     private onAddAttendee = () => {
-        this.control.addAttendee();
+        this.controller.addAttendee();
     }
 }

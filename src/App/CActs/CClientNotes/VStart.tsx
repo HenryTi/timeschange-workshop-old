@@ -1,4 +1,4 @@
-import { CSelectOne, Page } from "Control";
+import { CSelectOne, Page } from "tonwa-contoller";
 import { FA, List, LMR } from "tonwa-react";
 import { CClientNotes } from "./CClientNotes";
 
@@ -14,16 +14,15 @@ export class VStart extends Page<CClientNotes> {
     }
 
     content(): JSX.Element {
-        //let { cClient } = this.control;
-        let { clients } = this.control.deepData;
+        let { clients } = this.controller.deepData;
         return <div className="">
             <List items={clients}
-                item={{ render: this.renderItem, onClick: this.control.showClient }} />
+                item={{ render: this.renderItem, onClick: this.controller.showClient }} />
         </div>;
     }
 
     private renderItem = (item: any, index: number) => {
-        let { icon } = this.control.cClient;
+        let { icon } = this.controller.cClient;
         let vIcon: any;
         if (icon) {
             vIcon = <FA name="user-o" className="me-3 text-primary " fixWidth={true} />;
@@ -31,15 +30,15 @@ export class VStart extends Page<CClientNotes> {
         let right = <FA name="angle-right" />
         return <LMR className="px-3 py-2 align-items-center" left={vIcon} right={right}>
             <div>
-                {this.control.cClient.renderItemInList(item)}
+                {this.controller.cClient.renderItemInList(item)}
             </div>
         </LMR>;
     }
 
     private onSearch = async () => {
-        let cSelectOne = new CSelectOne(this.control.cClient);
-        let ret = await cSelectOne.select(); //this.control.cClient.selectOne();
+        let cSelectOne = new CSelectOne(this.controller.cClient);
+        let ret = await cSelectOne.select();
         if (!ret) return;
-        this.control.showClient(ret as any);
+        this.controller.showClient(ret as any);
     }
 }

@@ -1,5 +1,5 @@
 import { App } from "App";
-import { CIdBase, CTagInput } from "Control";
+import { CIdBase, CTagInput } from "tonwa-contoller";
 import { UQs } from "uq-app";
 import { CIds } from "./CIds";
 

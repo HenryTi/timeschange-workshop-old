@@ -1,7 +1,6 @@
-import { makeObservable, observable } from "mobx";
-import { Web } from "tonwa-uq";
-import { Nav, Tonwa } from "tonwa-core";
-
+import { makeObservable, observable, ObservableMap } from "mobx";
+import { LocalDb, Net, NetProps } from "tonwa-uq";
+import { env, Nav, Tonwa } from "tonwa-core";
 import { Page } from './components';
 
 import 'font-awesome/css/font-awesome.min.css';
@@ -23,7 +22,13 @@ export class TonwaReact extends Tonwa {
         this.setCreateLogin(createLogin);
     }
 
-    createWeb(): Web { return new Web(); }
+    createWeb(): Net {
+        let props: NetProps = {
+            unit: env.unit,
+            testing: env.testing,
+        }
+        return new WebInReact(props);
+    }
 
     createObservableMap<K, V>(): Map<K, V> {
         return observable.map({}, { deep: false });
@@ -157,5 +162,26 @@ export class TonwaReact extends Tonwa {
                 <button className="btn btn-primary" onClick={this.upgradeUq}>升级</button>
             </div>
         </Page>)
+    }
+}
+
+class LocalStorageDb extends LocalDb {
+    getItem(key: string): string {
+        return localStorage.getItem(key);
+    }
+    setItem(key: string, value: string): void {
+        localStorage.setItem(key, value);
+    }
+    removeItem(key: string): void {
+        localStorage.removeItem(key);
+    }
+}
+
+class WebInReact extends Net {
+    createLocalDb(): LocalDb {
+        return new LocalStorageDb();
+    }
+    createObservableMap(): Map<number, any> {
+        return new ObservableMap();
     }
 }

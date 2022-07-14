@@ -1,4 +1,4 @@
-import { MDraft } from "Model";
+import { MDraft } from "tonwa-uq";
 import { CControl } from "../../CControl";
 import { App } from "../../App";
 import { PMain } from "./PMain";

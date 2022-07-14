@@ -11,3 +11,7 @@ export interface UqConfig {
     version?: string;
     memo?: string;
 }
+
+export interface UqsConfig {
+    uqs: UqConfig[];
+}

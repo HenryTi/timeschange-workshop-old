@@ -1,6 +1,6 @@
 import { makeObservable, observable } from 'mobx';
 import { Navigo, RouteFunc, Hooks, NamedRoute, resOptions, Tonwa, Login } from 'tonwa-core';
-import { Web, User, Guest } from 'tonwa-uq';
+import { Net, User, Guest } from 'tonwa-uq';
 import { Page } from '../components';
 
 import 'font-awesome/css/font-awesome.min.css';
@@ -25,7 +25,7 @@ let logMark: number;
 const logs: string[] = [];
 export class Nav {
     private readonly tonwa: Tonwa;
-    private readonly web: Web;
+    private readonly net: Net;
     private navView: NavView;
     private wsHost: string;
     private local: LocalData = new LocalData();
@@ -41,7 +41,7 @@ export class Nav {
         makeObservable(this, {
             user: observable,
         });
-        this.web = tonwa.web;
+        this.net = tonwa.net;
         let { lang, district } = resOptions;
         this.language = lang;
         this.culture = district;
@@ -84,7 +84,7 @@ export class Nav {
     */
     async onReceive(msg: any) {
         //if (this.ws === undefined) return;
-        await this.web.messageHub.dispatch(msg);
+        await this.net.messageHub.dispatch(msg);
     }
 
     private async loadUnitJson() {
@@ -117,30 +117,6 @@ export class Nav {
         catch (err) {
             return await this.loadUnitJson();
         }
-    }
-
-    private async loadPredefinedUnit() {
-        let envUnit = process.env.REACT_APP_UNIT;
-        if (envUnit !== undefined) {
-            return Number(envUnit);
-        }
-        let unitName: string;
-        let unit = this.local.unit.get();
-        if (unit !== undefined) {
-            if (env.isDevelopment !== true) return unit.id;
-            unitName = await this.getPredefinedUnitName();
-            if (unitName === undefined) return;
-            if (unit.name === unitName) return unit.id;
-        }
-        else {
-            unitName = await this.getPredefinedUnitName();
-            if (unitName === undefined) return;
-        }
-        let unitId = await this.web.guestApi.unitFromName(unitName);
-        if (unitId !== undefined) {
-            this.local.unit.set({ id: unitId, name: unitName });
-        }
-        return unitId;
     }
 
     setSettings(settings?: NavSettings) {
@@ -208,7 +184,7 @@ export class Nav {
         if (this.forceDevelopment === true) {
             env.isDevelopment = true;
         }
-        await this.web.host.start(this.testing);
+        await this.net.host.start(this.testing);
         /*
         let hash = document.location.hash;
         if (hash !== undefined && hash.length > 0) {
@@ -217,15 +193,15 @@ export class Nav {
             this.hashParam = hash.substring(1, pos);
         }
         */
-        let { url, ws, resHost } = this.web.host;
+        let { url, ws, resHost } = this.net.host;
         this.centerHost = url;
-        this.resUrl = this.web.resUrlFromHost(resHost);
+        this.resUrl = this.net.resUrlFromHost(resHost);
         this.wsHost = ws;
-        this.web.setCenterUrl(url);
+        this.net.setCenterUrl(url);
 
         let guest: Guest = this.local.guest.get();
         if (guest === undefined) {
-            guest = await this.web.guestApi.guest();
+            guest = await this.net.guestApi.guest();
         }
         if (!guest) {
             debugger;
@@ -273,7 +249,7 @@ export class Nav {
                     let ret = await userPassword();
                     if (ret) {
                         let { user: userName, password } = ret;
-                        let logindUser = await this.web.userApi.login({
+                        let logindUser = await this.net.userApi.login({
                             user: userName,
                             pwd: password,
                             guest: this.guest,
@@ -438,7 +414,7 @@ export class Nav {
 
     setGuest(guest: Guest) {
         this.local.guest.set(guest);
-        this.web.setNetToken(0, guest.token);
+        this.net.setNetToken(0, guest.token);
     }
 
     saveLocalUser() {
@@ -455,16 +431,16 @@ export class Nav {
     }
 
     async loadMe() {
-        let me = await this.web.userApi.me();
+        let me = await this.net.userApi.me();
         this.user.icon = me.icon;
         this.user.nick = me.nick;
     }
 
     private async internalLogined(user: User, callback: (user: User) => Promise<void>, isUserLogin: boolean) {
-        this.web.logoutApis();
+        this.net.logoutApis();
         this.user = user;
         this.saveLocalUser();
-        this.web.setNetToken(user.id, user.token);
+        this.net.setNetToken(user.id, user.token);
         this.clear();
 
         await this.onChangeLogin?.(this.user);
@@ -563,9 +539,9 @@ export class Nav {
     async logout(callback?: () => Promise<void>) { //notShowLogin?:boolean) {
         this.local.logoutClear();
         this.user = undefined; //{} as User;
-        this.web.logoutApis();
+        this.net.logoutApis();
         let guest = this.local.guest.get();
-        this.web.setCenterToken(0, guest && guest.token);
+        this.net.setCenterToken(0, guest && guest.token);
         this.clear();
         if (callback === undefined)
             await this.start();

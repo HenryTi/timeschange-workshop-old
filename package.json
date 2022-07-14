@@ -28,8 +28,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "SET port=3391 && react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
+    "start": "SET port=3392 && react-scripts start",
+    "build": "react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",

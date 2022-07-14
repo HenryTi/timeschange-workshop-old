@@ -4,19 +4,19 @@ import classNames from 'classnames';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { tonwa } from 'tonwa-core';
-import { Web, User } from 'tonwa-uq';
+import { Net, User } from 'tonwa-uq';
 
 export type UserLoader = (userId: number) => Promise<any>;
 
 export class UserCache<T> {
-	private readonly web: Web;
+	private readonly net: Net;
 	private readonly loader: UserLoader;
 	private onLoaded: (user: User) => void;
 	private map = observable(new Map<number, T | number>());
 
-	constructor(web: Web, loader: UserLoader) {
-		this.web = web;
-		if (loader === undefined) loader = (userId: number) => this.web.userApi.user(userId);
+	constructor(net: Net, loader: UserLoader) {
+		this.net = net;
+		if (loader === undefined) loader = (userId: number) => this.net.userApi.user(userId);
 		this.loader = loader;
 	}
 
@@ -61,15 +61,15 @@ export class UserCache<T> {
 }
 
 let staticUserCache: UserCache<any>;
-function getUserCache(web: Web) {
+function getUserCache(net: Net) {
 	if (staticUserCache === undefined) {
-		staticUserCache = new UserCache(web, undefined);
+		staticUserCache = new UserCache(net, undefined);
 	}
 	return staticUserCache;
 }
 
 export interface UserIconProps {
-	web: Web;
+	net: Net;
 	id: number;
 	className?: string;
 	style?: React.CSSProperties;
@@ -79,7 +79,7 @@ export interface UserIconProps {
 
 export const UserIcon = observer((props: UserIconProps): JSX.Element => {
 	let { className, style, id, altImage, noneImage } = props;
-	let userCache = getUserCache(props.web);
+	let userCache = getUserCache(props.net);
 	let user = userCache.getValue(id);
 	switch (typeof user) {
 		case 'undefined':
@@ -106,7 +106,7 @@ export const UserIcon = observer((props: UserIconProps): JSX.Element => {
 });
 
 export interface UserViewProps {
-	web: Web;
+	net: Net;
 	id?: number;
 	user?: number | User;
 	render: (user: User) => JSX.Element;
@@ -114,9 +114,9 @@ export interface UserViewProps {
 }
 
 export const UserView = observer((props: UserViewProps): JSX.Element => {
-	let { web, id: idProp, user, render, onLoaded } = props;
+	let { net, id: idProp, user, render, onLoaded } = props;
 	if (user === null) return <>null</>;
-	let userCache = getUserCache(web);
+	let userCache = getUserCache(net);
 	switch (typeof user) {
 		case 'undefined':
 			user = userCache.getValue(idProp);
@@ -124,16 +124,16 @@ export const UserView = observer((props: UserViewProps): JSX.Element => {
 		case 'object':
 			let {/*obj, */id } = user as any;
 			//if (typeof obj !== 'object') {
-			useUser(web, id, onLoaded);
+			useUser(net, id, onLoaded);
 			user = userCache.getValue(id);
 			//}
 			break;
 		case 'number':
-			useUser(web, user as number, onLoaded);
+			useUser(net, user as number, onLoaded);
 			user = userCache.getValue(user as number);
 			break;
 		case 'string':
-			useUser(web, Number(user), onLoaded);
+			useUser(net, Number(user), onLoaded);
 			user = userCache.getValue(Number(user));
 			break;
 		default:
@@ -148,11 +148,11 @@ export const UserView = observer((props: UserViewProps): JSX.Element => {
 	return render(user);
 });
 
-export function useUser(web: Web, id: number | object, onLoaded?: (user: User) => void) {
+export function useUser(net: Net, id: number | object, onLoaded?: (user: User) => void) {
 	if (!id) return;
 	if (typeof (id) === 'object') {
 		id = (id as any).id;
 	}
-	let userCache = getUserCache(web);
+	let userCache = getUserCache(net);
 	userCache.use(id, onLoaded);
 }

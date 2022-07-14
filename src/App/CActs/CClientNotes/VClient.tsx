@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { EasyTime, FA, List } from "tonwa-react";
 import { dateFromMinuteId } from "tonwa-core";
 import { Note, SessionPerson } from "uq-app/uqs/BzWorkshop";
@@ -11,14 +11,14 @@ export class VClient extends Page<CClientNotes> {
     }
 
     right(): JSX.Element {
-        return <button className="btn btn-sm btn-success me-2" onClick={() => this.control.showAddNote(this.props)}>
+        return <button className="btn btn-sm btn-success me-2" onClick={() => this.controller.showAddNote(this.props)}>
             <FA name="plus" />
         </button>;
     }
 
     content(): JSX.Element {
         return <div className="">
-            <List items={this.control.deepData.notes}
+            <List items={this.controller.deepData.notes}
                 item={{ render: this.renderLog, className: "mt-1 mb-3", key: (item) => item.id }} />
         </div>;
     }
@@ -47,7 +47,7 @@ export class VClient extends Page<CClientNotes> {
         let vLock: any;
         if (sensitive === 1) {
             vLock = <FA name="lock" className="text-danger me-3" />
-            if (this.control.app.isPersonMe(staff) === true) {
+            if (this.controller.app.isPersonMe(staff) === true) {
                 return <div className="text-muted small">{vLock} #sensitive</div>;
             }
         }
@@ -57,7 +57,7 @@ export class VClient extends Page<CClientNotes> {
     }
 
     private renderSessionPerson(sessionPerson: SessionPerson) {
-        let { cWorkshop, cStaff } = this.control.app.cIds;
+        let { cWorkshop, cStaff } = this.controller.app.cIds;
         let { cSession } = cWorkshop;
         let { session, person, workshop } = sessionPerson;
         return <>

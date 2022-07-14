@@ -20,7 +20,6 @@ const __ls = new _LocalStorage(); // new Ls;
 
 export class LocalCache {
     private readonly local: Local;
-    //private value: T;
     readonly key: string | number;
 
     constructor(local: Local, key: string | number) {

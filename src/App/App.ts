@@ -1,23 +1,26 @@
 import { User } from 'tonwa-uq';
-import { AppBase, CUser, Nav, UserApi } from "Control";
+import { AppBase, CUser, Nav, UserApi } from "tonwa-contoller";
 import { UQs } from "uq-app";
 import { Role } from "uq-app/uqs/BzWorkshop";
 import { CActs } from "./CActs";
 import { CIds } from "./CIds";
 import { CMe } from "./CMe";
 import { CTag } from "./CTag";
-import { AppNav } from "../tool";
+import { AutoRun } from "./tool";
 import { CMain } from "./CMain";
-import { pathControls } from "./pathControls";
+import { routers } from "./CRouter";
+import { CHome } from './CHome';
 
 type Roles = { [role in Role]: number };
 
 export class App extends AppBase {
-    appNav: AppNav;
+    private readonly autoRun: AutoRun;
+    appNav: Nav;
     user: User;
     meAdmin: boolean;
     meRoles: Roles;
     readonly uqs: UQs;
+    readonly cHome: CHome;
     readonly cTag: CTag;
     readonly cActs: CActs;
     readonly cIds: CIds;
@@ -31,7 +34,11 @@ export class App extends AppBase {
 
     constructor(uqs: UQs) {
         super();
+        let poked = uqs.BzWorkshop.$poked.query(undefined, undefined, false);
+        let autoLoader: Promise<any> = undefined; // new Promise<any>((resolve, reject) => { });
+        this.autoRun = new AutoRun(poked, autoLoader);
         this.uqs = uqs;
+        this.cHome = new CHome(this);
         this.cTag = new CTag(this);
         this.cActs = new CActs(this);
         this.cIds = new CIds(this);
@@ -40,7 +47,8 @@ export class App extends AppBase {
     }
 
     openMain() {
-        let ret = pathControls(this);
+        this.autoRun.start();
+        let ret = routers(this);
         if (ret === true) return;
         if (!this.user) {
             this.nav.openLogin();

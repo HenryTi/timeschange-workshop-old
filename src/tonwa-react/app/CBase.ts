@@ -1,5 +1,5 @@
 import { User } from 'tonwa-uq';
-import { Web } from 'tonwa-uq';
+import { Net } from 'tonwa-uq';
 import { ControllerWithWeb, WebNav } from "../vm";
 import { CAppBase, IConstructor } from "./CAppBase";
 
@@ -8,16 +8,16 @@ export abstract class CBase<A extends CAppBase<U>, U> extends ControllerWithWeb 
 		super(cApp.getTonwa());
 		this.cApp = cApp;
 		if (cApp) {
-			let { uqs, web } = cApp;
+			let { uqs, net } = cApp;
 			this.uqs = uqs;
-			this.web = web;
+			this.net = net;
 			//this.nav = nav;
 		}
 	}
 
 	readonly cApp: A;
 	readonly uqs: U;
-	readonly web: Web;
+	readonly net: Net;
 	get timezone(): number { return this.cApp.timezone; }
 	get unitTimezone(): number { return this.cApp.unitTimezone; }
 	bizDate(date: Date): Date { return this.cApp.bizDate(date); }
@@ -55,10 +55,10 @@ export abstract class CBase<A extends CAppBase<U>, U> extends ControllerWithWeb 
 	}
 
 	async userFromId(userId: number): Promise<User> {
-		return await this.web.centerApi.userFromId(userId);
+		return await this.net.centerApi.userFromId(userId);
 	}
 	async userFromKey(userName: string): Promise<User> {
-		return await this.web.centerApi.userFromKey(userName);
+		return await this.net.centerApi.userFromKey(userName);
 	}
 }
 

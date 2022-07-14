@@ -2,7 +2,7 @@ import { Schema, UiSchema, UiTextItem } from "tonwa-react";
 import { Uq } from "tonwa-uq";
 import { CId } from "../CId";
 import { renderPerson, renderSelectPerson } from "./renderPerson";
-import { CIdBase, IdValue, Page, react, setReact, User } from "Control";
+import { CIdBase, IdValue, Page, react, setReact, User } from "tonwa-contoller";
 import { Role, Person } from "uq-app/uqs/BzWorkshop";
 import { VBound, VEditPerson } from "./VEditPerson";
 

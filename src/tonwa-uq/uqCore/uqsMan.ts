@@ -1,21 +1,16 @@
 import { UqMan } from './uqMan';
 import { TuidImport, TuidInner } from './tuid';
-import { Web, UqData } from '../web';
+import { Net, UqData } from '../net';
 import { UqConfig, UqError } from '../tool';
 
 export class UQsMan {
-	//private readonly tonwa: TonwaBase;
-	private readonly web: Web;
+	private readonly net: Net;
 	private collection: { [uqLower: string]: UqMan };
-	//private readonly tvs: TVs;
 	proxy: any;
 	uqMans: UqMan[] = [];
 
-	constructor(web: Web) {
-		//this.tonwa = tonwa;
-		this.web = web;
-		//this.tvs = tvs || {};
-		//this.buildTVs();
+	constructor(net: Net) {
+		this.net = net;
 		this.uqMans = [];
 		this.collection = {};
 	}
@@ -23,7 +18,7 @@ export class UQsMan {
 	async buildUqs(uqDataArr: UqData[], version: string, uqConfigs: UqConfig[], isBuildingUQ: boolean): Promise<string[]> {
 		await this.init(uqDataArr);
 
-		let localMap = env.localDb.map('$app');
+		let localMap = this.net.localDb.createLocalMap('$app');
 		let localCacheVersion = localMap.child('version');
 		let cacheVersion = localCacheVersion.get();
 		if (version !== cacheVersion) {
@@ -75,7 +70,7 @@ export class UQsMan {
 				uq = uqFull;
 			}
 			else {
-				uq = new UqMan(this.web, uqData/*, undefined, this.tvs[uqFullName] || this.tvs[uqName]*/);
+				uq = new UqMan(this.net, uqData/*, undefined, this.tvs[uqFullName] || this.tvs[uqName]*/);
 				this.collection[uqFullName] = uq;
 				promiseInits.push(uq.init());
 			}
@@ -169,7 +164,7 @@ export class UQsMan {
 		let uq = this.collection[fromName];
 		if (uq === undefined) {
 			//debugger;
-			if (env.buildingUq === false) {
+			if (this.net.props.buildingUq !== true) {
 				console.error(`setInner(tuidImport: TuidImport): uq ${fromName} is not loaded`);
 			}
 			return;

@@ -1,9 +1,9 @@
-import { Control, CSelectOne, deepReact, react, setReact } from "Control";
+import { Controller, CSelectOne, deepReact, react, setReact } from "tonwa-contoller";
 import { Pick } from "tonwa-react";
-import { mutedSmall } from "tool";
+import { mutedSmall } from "../tool";
 import { CId } from "./CId";
 
-export class CIdPick<C extends CId> extends Control implements Pick<number> {
+export class CIdPick<C extends CId> extends Controller implements Pick<number> {
     protected readonly cId: C;
     // protected id: number;
     deepValue: {

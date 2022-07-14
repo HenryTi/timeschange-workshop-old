@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { FA, LMR } from "tonwa-react";
 import { CActs } from "./CActs";
 
@@ -14,7 +14,7 @@ export class VStart extends Page<CActs> {
     }
 
     content() {
-        let { showClientNotes, showRegisterWorkshop, showTest } = this.control;
+        let { showClientNotes, showRegisterWorkshop, showTest } = this.controller;
         let arr: DirItem[] = [
             { icon: 'user-o', caption: 'Client notes', onClick: showClientNotes },
             { icon: 'user-o', caption: 'Workshops', onClick: showRegisterWorkshop },

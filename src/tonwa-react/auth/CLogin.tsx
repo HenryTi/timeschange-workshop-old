@@ -12,7 +12,7 @@ export class CLogin extends ControllerWithWeb implements Login {
 
 	async showLogin(callback?: (user: User) => Promise<void>, withBack?: boolean): Promise<void> {
 		let onLogin = async (un: string, pwd: string): Promise<boolean> => {
-			let user = await this.web.userApi.login({
+			let user = await this.net.userApi.login({
 				user: un,
 				pwd: pwd,
 				guest: this.tonwa.guest,
@@ -49,7 +49,7 @@ export class CLogin extends ControllerWithWeb implements Login {
 	async showChangePassword() {
 		let vPage = this.getVChangePassword();
 		this.openVPage(vPage, async (orgPassword: string, newPassword: string): Promise<boolean> => {
-			let centerAppApi = new CenterAppApi(this.web, 'tv/', undefined);
+			let centerAppApi = new CenterAppApi(this.net, 'tv/');
 			let ret = await centerAppApi.changePassword({ orgPassword, newPassword });
 			return ret;
 		});

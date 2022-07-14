@@ -4,7 +4,7 @@ import {
     Edit, UiSchema, Prop, FA, IconText, PropGrid
 } from "tonwa";
 import { tonwa } from "tonwa-core";
-import { Page } from 'Control';
+import { Page } from 'tonwa-contoller';
 import { CMe } from './CMe';
 
 export class VEditMe extends Page<CMe>{
@@ -34,7 +34,7 @@ export class VEditMe extends Page<CMe>{
 
     private onItemChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
         let { name } = itemSchema;
-        await tonwa.web.userApi.userSetProp(name, newValue);
+        await tonwa.net.userApi.userSetProp(name, newValue);
         this.data[name] = newValue;
         tonwa.user.name = newValue;
         tonwa.saveLocalUser();

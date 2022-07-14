@@ -1,4 +1,5 @@
 export * from './tool';
-export * from './web';
+export * from './net';
 export * from './uqBuild';
 export * from './uqCore';
+export * from './Model';

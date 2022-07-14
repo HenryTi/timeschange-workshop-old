@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { env } from '../tool';
 import { lastBuildTime, red, saveTsFile, saveSrcTsFileIfNotExists } from './tools';
 import { buildUqsFolder } from './uqsFolder';
 import { UqBuildContext } from './UqBuildContext';
@@ -7,17 +6,14 @@ import { UqBuildContext } from './UqBuildContext';
 export async function build(buildContext: UqBuildContext) {
 	//let buildContext = new BuildContext(uqSrcPath);
 	// 只从test 数据库构建uq ts
-	env.testing = true;
-	env.buildingUq = true;
-
 	if (lastBuildTime > 0) {
 		console.log(red, 'quit !');
 		return;
 	}
 
-	let {tsTemplate} = buildContext;
+	let { tsTemplate } = buildContext;
 
-	let {uqTsSrcPath} = buildContext;
+	let { uqTsSrcPath } = buildContext;
 	if (!fs.existsSync(uqTsSrcPath)) {
 		fs.mkdirSync(uqTsSrcPath);
 	}

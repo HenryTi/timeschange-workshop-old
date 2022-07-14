@@ -1,13 +1,13 @@
 import { Schema, UiSchema, UiTextAreaItem, UiTextItem, UiPick } from "tonwa-react";
 import { Uq } from "tonwa-uq";
+import { IdValue } from "tonwa-contoller";
+import { Workshop } from "uq-app/uqs/BzWorkshop";
 import { CId } from "../CId";
 import { renderWorkshopItem } from "./renderItem";
-import { CIds } from "App/CIds";
+import { CIds } from "../CIds";
 import { VEditWorkshop } from "./VEditWorkshop";
 import { CSession } from "./CSession";
 import { CIdPick } from "../CIdPick";
-import { IdValue } from "Control";
-import { Workshop } from "uq-app/uqs/BzWorkshop";
 import { VAddWorkshop } from "./VAddWorkshop";
 
 export class CWorkshop extends CId {

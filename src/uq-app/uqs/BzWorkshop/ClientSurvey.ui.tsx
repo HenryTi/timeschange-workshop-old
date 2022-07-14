@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { uqStringify } from "tonwa-uq";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FieldItem, FieldItemNumber, FieldItemString, FieldItemId, FieldItemInt, UI, TFunc } from 'tonwa-react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { uqStringify } from "tonwa-uq";
 import { Res, setRes } from "tonwa-core";
-
 import { ClientSurvey } from "./BzWorkshop";
 
 /*--fields--*/
@@ -24,28 +24,28 @@ const fields = {
 /*==fields==*/
 
 const fieldArr: FieldItem[] = [
-	fields.client,
+	fields.client, 
 ];
 
 export const ui: UI = {
-	label: "ClientSurvey",
-	fieldArr,
-	fields,
+label: "ClientSurvey",
+fieldArr,
+fields,
 };
 
 const resRaw: Res<any> = {
-	$zh: {
-	},
-	$en: {
-	}
+$zh: {
+},
+$en: {
+}
 };
 const res: any = {};
 setRes(res, resRaw);
 
-export const t: TFunc = (str: string | JSX.Element): string | JSX.Element => {
-	return res[str as string] ?? str;
+export const t:TFunc = (str:string|JSX.Element): string|JSX.Element => {
+return res[str as string] ?? str;
 }
 
-export function render(item: ClientSurvey): JSX.Element {
-	return <>{uqStringify(item)}</>;
+export function render(item: ClientSurvey):JSX.Element {
+return <>{uqStringify(item)}</>;
 };

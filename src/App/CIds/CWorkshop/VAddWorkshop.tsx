@@ -1,4 +1,4 @@
-import { VAdd } from "Control";
+import { VAdd } from "tonwa-contoller";
 import { CWorkshop } from "./CWorkshop";
 
 export class VAddWorkshop extends VAdd<CWorkshop> {

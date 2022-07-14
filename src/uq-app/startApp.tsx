@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { NavView, start, TonwaReact } from "tonwa";
 import { CApp } from './CApp';
 import { appConfig } from './appConfig';
-// import { App } from './App';
+//import { App } from './App';
 
 export async function startApp() {
     let tonwa = new TonwaReact();

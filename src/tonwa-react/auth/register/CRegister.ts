@@ -22,7 +22,7 @@ export abstract class CRegBase extends ControllerWithWeb {
         //this.account = account;
         this.openVPage(this.VVerify, async (verify: string) => {
             this.verify = verify;
-            let ret = await this.web.userApi.checkVerify(this.account, verify);
+            let ret = await this.net.userApi.checkVerify(this.account, verify);
             if (ret === 0) return ret;
             this.toPassword();
         });
@@ -39,7 +39,7 @@ export abstract class CRegBase extends ControllerWithWeb {
     }
 
     login = async (account?: string) => {
-        let retUser = await this.web.userApi.login({ user: account || this.account, pwd: this.password, guest: this.tonwa.guest });
+        let retUser = await this.net.userApi.login({ user: account || this.account, pwd: this.password, guest: this.tonwa.guest });
         if (retUser === undefined) {
             alert('something wrong!');
             return;
@@ -50,10 +50,10 @@ export abstract class CRegBase extends ControllerWithWeb {
     }
 
     async checkAccount(): Promise<string> {
-        let ret = await this.web.userApi.isExists(this.account);
+        let ret = await this.net.userApi.isExists(this.account);
         let error = this.accountError(ret);
         if (error !== undefined) return error;
-        ret = await this.web.userApi.sendVerify(this.account, this.type, this.tonwa.oem);
+        ret = await this.net.userApi.sendVerify(this.account, this.type, this.tonwa.oem);
         this.toVerify();
         return;
     }
@@ -91,7 +91,7 @@ export class CRegister extends CRegBase {
                 params.email = this.account;
                 break;
         }
-        let ret = await this.web.userApi.register(params);
+        let ret = await this.net.userApi.register(params);
         if (ret === 0) {
             this.tonwa.nav.clear();
             this.toSuccess();
@@ -124,7 +124,7 @@ export class CForget extends CRegBase {
     }
     async onPasswordSubmit(pwd: string): Promise<string> {
         this.password = pwd;
-        let ret = await this.web.userApi.resetPassword(this.account, this.password, this.verify, this.type);
+        let ret = await this.net.userApi.resetPassword(this.account, this.password, this.verify, this.type);
         if (ret.length === 0) {
             let err = 'something wrong in reseting password';
             console.log(err);

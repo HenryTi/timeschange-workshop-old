@@ -1,5 +1,5 @@
 import { App } from "../App";
-import { CTagBase, Tag } from "Control";
+import { CTagBase, Tag } from "tonwa-contoller";
 import { ID, IX } from "tonwa-uq";
 import { UQs } from "uq-app";
 import * as BzWorkshop from 'uq-app/uqs/BzWorkshop';

@@ -1,6 +1,6 @@
 //import { env } from "../tool";
 
-import { Web } from "tonwa-uq";
+import { Net } from "tonwa-uq";
 
 let subAppWindow: any; // Window;
 function postWsToSubApp(msg: any) {
@@ -23,10 +23,10 @@ export function postWsToTop(msg: any) {
 }
 
 export abstract class WsBase {
-    protected web: Web;
+    protected net: Net;
     //private messageHub = messageHub;
-    constructor(web: Web) {
-        this.web = web;
+    constructor(net: Net) {
+        this.net = net;
     }
 
     /*
@@ -52,7 +52,7 @@ export abstract class WsBase {
     }
     */
     async receive(msg: any) {
-        this.web.messageHub.dispatch(msg);
+        this.net.messageHub.dispatch(msg);
         /*
         let {$type} = msg;
         for (let i in this.anyHandlers) {
@@ -79,8 +79,8 @@ export class WSChannel extends WsBase {
     private token: string;
     private ws: WebSocket;
 
-    constructor(web: Web, wsHost: string, token: string) {
-        super(web);
+    constructor(net: Net, wsHost: string, token: string) {
+        super(net);
         this.wsHost = wsHost;
         this.token = token;
     }

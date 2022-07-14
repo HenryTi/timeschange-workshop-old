@@ -1,4 +1,4 @@
-import { CUser, User } from "Control";
+import { CUser, User } from "tonwa-contoller";
 import { FA } from "tonwa-react";
 import { Role } from "uq-app/uqs/BzWorkshop";
 import { MPerson } from "../CPerson";

@@ -25,13 +25,11 @@ ID SessionPerson MINUTE (
     deleted TINYINT DEFAULT 0,
 );
 
-/*
-IX 就可以表达。反向的xi index不再需要。session中已经包含workshop
+-- IX 就可以表达。反向的xi index不再需要。session中已经包含workshop
 IX *IxWorkshopSession (
     ix Workshop,
     xi Session INDEX,
 );
-*/
 
 IX *IxSessionStaff (
     ix Session,

@@ -4,7 +4,7 @@ import { CMe } from './CMe';
 import { appConfig } from '../../uq-app/appConfig';
 import { VAbout } from './VAbout';
 import { tonwa } from "tonwa-core";
-import { View } from 'Control';
+import { View } from 'tonwa-contoller';
 
 export class VMe extends View<CMe> {
     render(): JSX.Element {
@@ -45,7 +45,7 @@ export class VMe extends View<CMe> {
                 },
             ]
 
-            let { onAdmin } = this.control.cAdmin;
+            let { onAdmin } = this.controller.cAdmin;
             if (onAdmin) {
                 rows.push('');
                 rows.push({
@@ -70,7 +70,7 @@ export class VMe extends View<CMe> {
         return <LMR className="py-2 cursor-pointer w-100"
             left={<Image className="w-3c h-3c me-3" src={icon || '.user-o'} />}
             right={<FA className="align-self-end" name="angle-right" />}
-            onClick={this.control.showEditMe}>
+            onClick={this.controller.showEditMe}>
             <div>
                 <div>{userSpan(name, nick)}</div>
                 <div className="small"><span className="text-muted">ID:</span> {id > 10000 ? id : String(id + 10000).substr(1)}</div>
@@ -79,7 +79,7 @@ export class VMe extends View<CMe> {
     });
 
     private about = () => {
-        this.control.open(VAbout);
+        this.controller.open(VAbout);
     }
 }
 

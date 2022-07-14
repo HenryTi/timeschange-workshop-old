@@ -1,4 +1,4 @@
-import { CUser, User } from "Control";
+import { CUser, User } from "tonwa-contoller";
 import { LMR } from "tonwa-react";
 
 export function renderPerson(item: any, cUser?: CUser) {

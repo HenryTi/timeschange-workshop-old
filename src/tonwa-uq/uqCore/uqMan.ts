@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { UqApi, UqData, UnitxApi } from '../web';
+import { UqApi, UqData } from '../net';
 import { Tuid, TuidDiv, TuidImport, TuidInner, TuidBox, TuidsCache } from './tuid';
 import { Action } from './action';
 import { Sheet } from './sheet';
@@ -8,15 +8,12 @@ import { Book } from './book';
 import { History } from './history';
 import { Map } from './map';
 import { Pending } from './pending';
-import { capitalCase, UqConfig, UqError } from '../tool';
+import { capitalCase, LocalCache, LocalMap, UqConfig, UqError } from '../tool';
 import { UqEnum } from './enum';
 import { Entity } from './entity';
 import { ID, IX, IDX } from './ID';
 import { IDCache } from './IDCache';
-import { Web } from '../web';
-
-// import { LocalMap, LocalCache, env } from '../tool';
-// import { Tonwa, TonwaBase, UqConfig } from '../../tonwa-core/core';
+import { Net } from '../net';
 
 export type FieldType = 'id' | 'tinyint' | 'smallint' | 'int' | 'bigint' | 'dec' | 'float' | 'double' | 'char' | 'text'
 	| 'datetime' | 'date' | 'time' | 'timestamp' | 'enum';
@@ -256,28 +253,29 @@ export interface Uq {
 	ActIX<T>(param: ParamActIX<T>): Promise<number[]>;
 	ActIXSort(param: ParamActIXSort): Promise<void>;
 	ActIDProp(ID: ID, id: number, name: string, value: any): Promise<void>;
-	ActDetail<M, D>(param: ParamActDetail<M, D>): Promise<RetActDetail>;
-	ActDetail<M, D, D2>(param: ParamActDetail2<M, D, D2>): Promise<RetActDetail2>;
-	ActDetail<M, D, D2, D3>(param: ParamActDetail3<M, D, D2, D3>): Promise<RetActDetail3>;
 	QueryID<T>(param: ParamQueryID): Promise<T[]>;
 	IDNO(param: ParamIDNO): Promise<string>;
 	IDEntity(typeId: number): ID;
-	IDDetailGet<M, D>(param: ParamIDDetailGet): Promise<[M[], D[]]>;
-	IDDetailGet<M, D, D2>(param: ParamIDDetailGet): Promise<[M[], D[], D2[]]>;
-	IDDetailGet<M, D, D2, D3>(param: ParamIDDetailGet): Promise<[M[], D[], D2[], D3[]]>;
 	ID<T = any>(param: ParamID): Promise<T[]>;
 	IXr<T>(param: ParamIX): Promise<T[]>; // IX id 反查IX list
 	KeyID<T>(param: ParamKeyID): Promise<T[]>;
 	IX<T = any>(param: ParamIX): Promise<T[]>;
 	IXValues(param: ParamIXValues): Promise<{ type: string, value: string }[]>;
 	KeyIX<T>(param: ParamKeyIX): Promise<T[]>;
-	IDLog<T>(param: ParamIDLog): Promise<T[]>;
-	IDSum<T>(param: ParamIDSum): Promise<T[]>;
 	IDxID<T, T2>(param: ParamIDxID): Promise<[T[], T2[]]>; // ID list with IX 对应的子集
 	IDinIX<T>(param: ParamIDinIX): Promise<T & { $in: boolean }[]>;
-	IDTree<T>(param: ParamIDTree): Promise<T[]>;
 
 	IDTv(ids: number[]): Promise<any[]>;
+
+	IDTree<T>(param: ParamIDTree): Promise<T[]>;
+	IDLog<T>(param: ParamIDLog): Promise<T[]>;
+	IDSum<T>(param: ParamIDSum): Promise<T[]>;
+	IDDetailGet<M, D>(param: ParamIDDetailGet): Promise<[M[], D[]]>;
+	IDDetailGet<M, D, D2>(param: ParamIDDetailGet): Promise<[M[], D[], D2[]]>;
+	IDDetailGet<M, D, D2, D3>(param: ParamIDDetailGet): Promise<[M[], D[], D2[], D3[]]>;
+	ActDetail<M, D>(param: ParamActDetail<M, D>): Promise<RetActDetail>;
+	ActDetail<M, D, D2>(param: ParamActDetail2<M, D, D2>): Promise<RetActDetail2>;
+	ActDetail<M, D, D2, D3>(param: ParamActDetail3<M, D, D2, D3>): Promise<RetActDetail3>;
 }
 
 export class UqMan {
@@ -297,27 +295,25 @@ export class UqMan {
 	private readonly pendings: { [name: string]: Pending } = {};
 	private readonly tuidsCache: TuidsCache;
 	private readonly localEntities: LocalCache;
-	//private readonly tvs:{[entity:string]:(values:any)=>JSX.Element};
 	idCache: IDCache;
 	proxy: any;
 	$proxy: any;
 	readonly localMap: LocalMap;
 	readonly localModifyMax: LocalCache;
 	readonly tuids: { [name: string]: Tuid } = {};
-	//readonly createBoxId: CreateBoxId;
 	readonly newVersion: boolean;
 	readonly uqOwner: string;
 	readonly uqName: string;
 	readonly name: string;
 	readonly uqApi: UqApi;
 	readonly id: number;
-	readonly web: Web;
+	readonly net: Net;
 
 	uqVersion: number;
 	config: UqConfig;
 
-	constructor(web: Web, uqData: UqData) {
-		this.web = web;
+	constructor(net: Net, uqData: UqData) {
+		this.net = net;
 		let { id, uqOwner, uqName, newVersion } = uqData;
 		this.newVersion = newVersion;
 		this.uqOwner = uqOwner;
@@ -325,19 +321,12 @@ export class UqMan {
 		this.id = id;
 		this.name = uqOwner + '/' + uqName;
 		this.uqVersion = 0;
-		this.localMap = env.localDb.map(this.name);
+		this.localMap = net.localDb.createLocalMap(this.name);
 		this.localModifyMax = this.localMap.child('$modifyMax');
 		this.localEntities = this.localMap.child('$access');
 		let baseUrl = 'tv/';
 
-		if (this.name === '$$$/$unitx') {
-			// 这里假定，点击home link之后，已经设置unit了
-			// 调用 UnitxApi会自动搜索绑定 unitx service
-			this.uqApi = new UnitxApi(this.web, env.unit);
-		}
-		else {
-			this.uqApi = new UqApi(this.web, baseUrl, uqOwner, uqName, true);
-		}
+		this.uqApi = new UqApi(this.net, baseUrl, uqOwner, uqName);
 		this.tuidsCache = new TuidsCache(this);
 	}
 

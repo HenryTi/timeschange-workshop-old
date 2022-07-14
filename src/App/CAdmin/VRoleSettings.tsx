@@ -1,4 +1,4 @@
-import { View } from "Control";
+import { View } from "tonwa-contoller";
 import { CAdmin } from "./CAdmin";
 
 const cnRow = ' px-3 py-2 ';

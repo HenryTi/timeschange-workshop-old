@@ -70,7 +70,7 @@ class VQuitConfirm extends VUserQuitBase {
     }
 
     protected async onClickButton2() {
-        let centerAppApi = new CenterAppApi(this.controller.web, 'tv/', undefined);
+        let centerAppApi = new CenterAppApi(this.controller.net, 'tv/');
         await centerAppApi.userQuit();
         this.openVPage(VQuitDone);
     }

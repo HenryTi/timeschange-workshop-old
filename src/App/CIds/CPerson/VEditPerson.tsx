@@ -1,4 +1,4 @@
-import { Page, VEditId } from "Control";
+import { Page, VEditId } from "tonwa-contoller";
 import { FA, LMR } from "tonwa-react";
 import { CPerson } from "./CPerson";
 
@@ -13,14 +13,14 @@ export class VEditPerson<C extends CPerson = CPerson> extends VEditId<C> {
 
     protected renderBindUser(): JSX.Element {
         return this.renderAdmin(() => {
-            let rightIcon = this.control.deepData.currentItem.user ? 'angle-right' : 'pencil-square-o';
+            let rightIcon = this.controller.deepData.currentItem.user ? 'angle-right' : 'pencil-square-o';
             return <div className="container">
-                <div onClick={this.control.onBindUser}
+                <div onClick={this.controller.onBindUser}
                     className="mb-3 row bg-white align-items-center cursor-pointer">
                     <label className="col-sm-2 col-form-label">Bind user</label>
                     <div className="col-sm-10">
                         <LMR right={<FA name={rightIcon} className="text-primary" />}>
-                            {this.control.renderCurrentUser((user => {
+                            {this.controller.renderCurrentUser((user => {
                                 let { name } = user;
                                 return <>{name}</>;
                             }))}
@@ -43,7 +43,7 @@ export class VBound extends Page<CPerson> {
             <div className="mb-5 text-center">
                 The person has bound to website user account:
                 <br /><br />
-                {this.control.renderCurrentUser((user => {
+                {this.controller.renderCurrentUser((user => {
                     let { name } = user;
                     return <b className="text-primary ms-3">{name}</b>;
                 }))}
@@ -56,11 +56,11 @@ export class VBound extends Page<CPerson> {
 
     private onChange = async () => {
         if (await this.confirm('Change user account bound is not recommented. Still want to do so?') === true) {
-            await this.control.onChangeUser();
+            await this.controller.onChangeUser();
         }
     }
 
     private onRemoveBound = async () => {
-        await this.control.onRemoveBound();
+        await this.controller.onRemoveBound();
     }
 }

@@ -1,6 +1,6 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { FA, List } from "tonwa-react";
-import { renderDate, renderHourMinute } from "tool";
+import { renderDate, renderHourMinute } from "../../tool";
 import { CWorkshops, MSession, WorkshopItem } from ".";
 
 export class VStart extends Page<CWorkshops> {
@@ -10,7 +10,7 @@ export class VStart extends Page<CWorkshops> {
 
     content(): JSX.Element {
         return this.react(() => {
-            let { workshopItems } = this.control.shallow;
+            let { workshopItems } = this.controller.shallow;
             return <div>
                 <List items={workshopItems} item={{ render: this.renderWorkshopItem }} />
             </div>;
@@ -19,7 +19,7 @@ export class VStart extends Page<CWorkshops> {
 
     private renderWorkshopItem = (item: WorkshopItem, index: number) => {
         let { workshop, sessions } = item;
-        let { cWorkshop } = this.control;
+        let { cWorkshop } = this.controller;
         let { icon, iconClass } = cWorkshop;
         return <div className="px-3 py-2 d-block mb-3">
             <div onClick={() => this.onWorkshopClick(workshop)}
@@ -48,6 +48,6 @@ export class VStart extends Page<CWorkshops> {
     }
 
     private onSessionClick = (session: MSession) => {
-        this.control.openSession(session);
+        this.controller.openSession(session);
     }
 }

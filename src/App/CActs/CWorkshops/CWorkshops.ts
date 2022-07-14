@@ -1,6 +1,6 @@
-import { CActs } from "App/CActs";
-import { CWorkshop } from "App/CIds";
-import { setReact, shallowReact } from "Control";
+import { CActs } from "../../CActs";
+import { CWorkshop } from "../../CIds";
+import { setReact, shallowReact } from "tonwa-contoller";
 import { Session } from "uq-app/uqs/BzWorkshop";
 import { CAct } from "../CAct";
 import { CSessionAct } from "./CSessionAct";

@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { CTest } from "./CTest";
 
 export class PMain extends Page<CTest> {
@@ -11,11 +11,11 @@ export class PMain extends Page<CTest> {
             Test
             <div>
                 <button className="btn btn-primary me-3"
-                    onClick={evt => this.waitingEvent(evt, this.control.onTestSave)}>
+                    onClick={evt => this.waitingEvent(evt, this.controller.onTestSave)}>
                     save
                 </button>
                 <button className="btn btn-primary me-3"
-                    onClick={evt => this.waitingEvent(evt, this.control.onTestLoad)}>
+                    onClick={evt => this.waitingEvent(evt, this.controller.onTestLoad)}>
                     load
                 </button>
             </div>

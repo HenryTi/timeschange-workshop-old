@@ -373,8 +373,8 @@ import { Render, IDXEntity } from "tonwa-${this.buildContext.uiPlatform}";`;
 	}
 
 	private buildIDXInterface = (idx: IDX): string => {
-		let { sName, fields, schema } = idx;
-		let { exFields } = schema;
+		let { sName, fields/*, schema*/ } = idx;
+		//let { exFields } = schema;
 		let ts = `export interface ${capitalCase(sName)} {`;
 		let indent = 1;
 		for (let field of fields) {
@@ -387,7 +387,7 @@ import { Render, IDXEntity } from "tonwa-${this.buildContext.uiPlatform}";`;
 		}
 
 		ts += `\n\t$act?: number;`;
-
+		/*
 		let hasTrack: boolean = false;
 		let hasMemo: boolean = false;
 		if (exFields) {
@@ -403,13 +403,14 @@ import { Render, IDXEntity } from "tonwa-${this.buildContext.uiPlatform}";`;
 		if (hasMemo === true) {
 			ts += `\n\t$memo?: string;`;
 		}
+		*/
 		ts += '\n}';
 		return ts;
 	}
 
 	private buildIDXActParamInterface = (idx: IDX): string => {
-		let { sName, fields, schema } = idx;
-		let { exFields } = schema;
+		let { sName, fields/*, schema*/ } = idx;
+		//let { exFields } = schema;
 		let ts = `export interface ActParam${capitalCase(sName)} {`;
 		let indent = 1;
 		for (let field of fields) {
@@ -422,7 +423,7 @@ import { Render, IDXEntity } from "tonwa-${this.buildContext.uiPlatform}";`;
 		}
 
 		ts += `\n\t$act?: number;`;
-
+		/*
 		let hasTrack: boolean = false;
 		let hasMemo: boolean = false;
 		if (exFields) {
@@ -438,6 +439,7 @@ import { Render, IDXEntity } from "tonwa-${this.buildContext.uiPlatform}";`;
 		if (hasMemo === true) {
 			ts += `\n\t$memo?: string;`;
 		}
+		*/
 		ts += '\n}';
 		return ts;
 	}

@@ -1,11 +1,11 @@
-import { /*centerApi, logoutApis, */AppConfig as AppConfigCore, Tonwa } from "tonwa-core";
-import { UqsConfig as UqsConfigCore } from 'tonwa-core';
-import { RouteFunc, Hooks, Navigo, NamedRoute } from "tonwa-core";
-import { User, UQsLoader, UQsMan, UqQuery, Web } from "tonwa-uq";
-import { setGlobalRes } from 'tonwa-core';
+import { User, UQsLoader, UQsMan, UqQuery, Net, UqsConfig } from "tonwa-uq";
+import {
+	//UqsConfig as UqsConfigCore, AppConfig as AppConfigCore
+	Tonwa, setGlobalRes, RouteFunc, Hooks, Navigo, NamedRoute
+} from "tonwa-core";
 import { ControllerWithWeb } from '../vm';
 import { VErrorsPage, VStartError } from "./vMain";
-import { createUQsProxy } from "../uq";
+import { uqsProxy } from "../uq";
 import { t } from "../ui";
 
 export interface IConstructor<T> {
@@ -37,8 +37,8 @@ export interface UqsConfig {
 }
 */
 
-export type UqsConfig = UqsConfigCore;
-export interface AppConfig extends AppConfigCore /*UqsConfig*/ {
+//export type UqsConfig = UqsConfigCore;
+export interface AppConfig extends UqsConfig {
 	/*
 	app?: {
 		name: string;
@@ -65,7 +65,7 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 	private appConfig: AppConfig;
 	private uqsMan: UQsMan;
 	protected _uqs: U;
-	readonly web: Web;
+	readonly net: Net;
 	timezone: number;
 	unitTimezone: number;
 	unitBizMonth: number;
@@ -73,13 +73,13 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 
 	constructor(tonwa: Tonwa, config?: AppConfig) {
 		super(tonwa);
-		this.web = tonwa.web;
+		this.net = tonwa.net;
 		//this.nav = new Nav(tonwa); // nav;
 		this.appConfig = config || (tonwa.navSettings as AppConfig);
 		if (this.appConfig) {
-			let { app, uqs } = this.appConfig;
-			if (app === undefined && uqs === undefined) {
-				throw new Error('app or uqs must be defined in AppConfig');
+			let { uqs } = this.appConfig;
+			if (uqs === undefined) {
+				throw new Error('uqs must be defined in AppConfig');
 			}
 		}
 	}
@@ -134,12 +134,12 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 		let { user } = this.tonwa;
 		if (user === this.uqsUser) return;
 		this.uqsUser = user;
-		this.web.logoutApis();
+		this.net.logoutApis();
 		let { version, uqs } = this.appConfig;
-		let uqsLoader = new UQsLoader(this.tonwa.web, version, uqs);
+		let uqsLoader = new UQsLoader(this.tonwa.net, version, uqs);
 		let retErrors = await uqsLoader.build();
 		this.uqsMan = uqsLoader.uqsMan;
-		this._uqs = createUQsProxy(this.web, uqsLoader.uqsMan) as any; //  this.uqsMan.proxy;
+		this._uqs = uqsProxy(uqsLoader.uqsMan) as any; //  this.uqsMan.proxy;
 		this.afterBuiltUQs(this._uqs);
 		return retErrors;
 	}
@@ -166,11 +166,11 @@ export abstract class CAppBase<U> extends ControllerWithWeb {
 	}
 
 	async userFromId(userId: number): Promise<any> {
-		return await this.web.centerApi.userFromId(userId);
+		return await this.net.centerApi.userFromId(userId);
 	}
 
 	async userFromName(userName: string): Promise<any> {
-		return await this.web.centerApi.userFromKey(userName);
+		return await this.net.centerApi.userFromKey(userName);
 	}
 
 	protected on(routeFunc: RouteFunc, hooks?: Hooks): Navigo;

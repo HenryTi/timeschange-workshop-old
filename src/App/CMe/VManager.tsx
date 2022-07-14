@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { CMe } from "./CMe";
 
 export class VManager extends Page<CMe> {

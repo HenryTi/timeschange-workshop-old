@@ -1,2 +1,2 @@
-export * from './createUQsProxy';
+export * from './uqsProxy';
 export * from './IDXEntity';

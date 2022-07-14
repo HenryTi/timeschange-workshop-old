@@ -2,7 +2,7 @@ UQ [BizDev]/[workshop] version='0.1.1' author='henry' {
     -- SCHEDULE Test ON 6:31;
 };
 
-IX IX;
+IX IXAll;
 /*
 -- can be removed
 ID LOG UMin (
@@ -39,4 +39,16 @@ IX *IxPersonRole (
 BUS B ver 0.3 FROM [$$$]/[test]
 ACCEPT schema1 {
     LOG CONCAT_WS(',', a1,a2,a3,a4) SUBJECT 'BUS B ';
+};
+
+SYSPROC IsA(
+    out yes TINYINT
+) {
+    set yes = 1;
+};
+
+ACT TrialAct
+AUTH IsA
+() {
+    -- 实际的uq代码
 };

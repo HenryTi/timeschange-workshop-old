@@ -1,4 +1,4 @@
-import { Page } from "Control";
+import { Page } from "tonwa-contoller";
 import { FA } from "tonwa-react";
 import { CSessionAct } from "./CSessionAct";
 
@@ -9,7 +9,7 @@ export class VAttendee extends Page<CSessionAct> {
 
     right(): JSX.Element {
         let { deleted } = this.props;
-        let onClick = () => this.control.changeSessionClient(this.props);
+        let onClick = () => this.controller.changeSessionClient(this.props);
         let cn = 'btn btn-sm me-2 ';
         let content: any;
         if (deleted === 0) {
@@ -27,7 +27,7 @@ export class VAttendee extends Page<CSessionAct> {
 
     content() {
         return <div className="p-3">
-            {this.control.cClient.renderId(this.props.xi)}
+            {this.controller.cClient.renderId(this.props.xi)}
         </div>;
     }
 }

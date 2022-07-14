@@ -1,5 +1,5 @@
-import { CIdBase, Page, setReact } from "Control";
-import { CEnumSingle } from "Control/CEnumBase";
+import { CIdBase, Page, setReact } from "tonwa-contoller";
+import { CEnumSingle } from "tonwa-contoller/CEnumBase";
 import { IX } from "tonwa-uq";
 import { Role } from "uq-app/uqs/BzWorkshop";
 import { CPerson, MPerson } from "../CPerson";
